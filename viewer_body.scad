@@ -8,16 +8,15 @@ phone_thickness=7.9;
 view_width=65;
 view_height=110;
 
-// Convert polygon opposite face distance to radius
-function radius_from_side(dist,sides) = dist/cos(180/sides);
-
+// Potentially user-specific data
 face_width=116;
+forehead_depth=37.5;
+
 front_width=phone_height;
 height=phone_width;
 //front_width=126;
 //height=67;
 depth=65;
-forehead_depth=37.5;
 thick=3;
 
 main_body();
@@ -38,43 +37,38 @@ module main_body()
     }
 }
 
+// Define the front rectangular portion of the viewer
 module body_front_outer()
 {
-    front_height=0.5*phone_width;
-    front_rad=radius_from_side( phone_height, 4 );
     scale( [1,phone_width/phone_height,1] )
-        polyprism( len=front_height, bottom=front_rad/2, top=front_rad/4, sides=4 );
+        polyprism( len=phone_width/2, bottom=phone_height/2, top=phone_height/4, sides=4 );
 }
 
 module body_front_inner()
 {
-    front_height=0.5*phone_width;
-    front_rad=radius_from_side( phone_height, 4 );
     scale( [1,phone_width/phone_height,1] )
-        polyprism_hole( len=front_height, bottom=front_rad/2, top=front_rad/4, wall=thick, sides=4 );
+        polyprism_hole( len=phone_width/2, bottom=phone_height/2, top=phone_height/4, wall=thick, sides=4 );
 }
 
+// Define the rear "squashed octagon" portion of the viewer
 module shell_outer()
 {
-    front_rad=radius_from_side( front_width, 8 );
-    face_rad=radius_from_side( face_width, 8 );
     scale( [1,height/front_width,1] )
-        polyprism( len=depth, bottom=front_rad/2, top=face_rad/2, sides=8 );
+        polyprism( len=depth, bottom=front_width/2, top=face_width/2, sides=8 );
 }
 
 module shell_inner()
 {
-    front_rad=radius_from_side( front_width, 8 );
-    face_rad=radius_from_side( face_width, 8 );
     scale( [1,height/front_width,1] )
-        polyprism_hole( len=depth, bottom=front_rad/2, top=face_rad/2, wall=thick, sides=8 );
+        polyprism_hole( len=depth, bottom=front_width/2, top=face_width/2, wall=thick, sides=8 );
 }
 
+// Define the portions to remove to fit a face.
 module face()
 {
-    radius=0.75*face_width-thick;
+    radius=0.75*face_width;
     translate([0,0,radius+forehead_depth]) rotate([90,0,0])
-        cylinder( h=depth+10, r=radius, center=true, $fn=32 );
+        cylinder( h=1.25*depth, r=radius, center=true, $fn=32 );
 }
 
 module nose_slice( thickness )
@@ -90,6 +84,9 @@ module nose_slice( thickness )
     }
 }
 
+// Convert polygon opposite face distance to radius
+function radius_from_side(dist,sides) = dist/cos(180/sides);
+
 //
 //  Polygonal prism centered in x-y, with sitting on z-origin.
 //  len - length of prism
@@ -99,19 +96,25 @@ module nose_slice( thickness )
 module polyprism( len, bottom, top, sides )
 {
     translate( [0,0,len/2] ) rotate( [0,0,180/sides] )
-        cylinder( h=len, r1=bottom, r2=top, center=true, $fn=sides );
+        cylinder( h=len,
+                  r1=radius_from_side( bottom, sides ), r2=radius_from_side( top, sides ),
+                  center=true, $fn=sides
+        );
 }
 
 //
 //  Polygonal prism hole, expected to be subtracted from a polyprism
 //  len    - length of prism
-//  bottom - bottom radius
-//  top    - top radius
+//  bottom - bottom face-distance
+//  top    - top face-distance
 //  wall   - thickness of remaining wall
 //  sides  - number of sides of the polygon
 module polyprism_hole( len, bottom, top, wall, sides )
 {
     fudge=0.04;
     translate( [0,0,(len-fudge)/2] ) rotate( [0,0,180/sides] )
-        cylinder( h=len+fudge, r1=bottom-wall, r2=top-wall, center=true, $fn=sides );
+        cylinder( h=len+fudge,
+                  r1=radius_from_side( bottom, sides )-wall, r2=radius_from_side( top, sides )-wall,
+                  center=true, $fn=sides
+        );
 }
