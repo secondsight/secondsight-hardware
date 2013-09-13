@@ -11,7 +11,7 @@ view_height=110;
 // Potentially user-specific data
 face_width=116;
 forehead_depth=37.5;
-variant="A";
+variant="test";
 
 strap_width=40;
 front_width=126;
@@ -31,7 +31,7 @@ if( variant == "test" )
 {
     intersection()
     {
-        translate( [0,0,-depth/2] ) main_body( phone_height, phone_width, face_width, forehead_depth );
+        translate( [0,0,-0.55*depth] ) main_body( phone_height, phone_width, face_width, forehead_depth );
         translate( [0,0,phone_height/2] ) cube( phone_height, center=true );
     }
 }
@@ -56,8 +56,8 @@ module main_body( fwidth, fheight, face, forehead_depth )
                 nose_slice( thick );
             }
             // add straps
-            translate([face/2+thick, 0, depth-7]) rotate([180,-90,0]) strap_mount();
-            translate([-face/2-thick, 0, depth-7]) rotate([0,-90,0]) strap_mount();
+            translate([face/2+thick, 0, depth-7]) rotate([180,-85,0]) strap_mount();
+            translate([-face/2-thick, 0, depth-7]) rotate([0,-95,0]) strap_mount();
         }
         // These must be subtracted last to deal with any added parts that might
         //  intrude on the middle volume.
