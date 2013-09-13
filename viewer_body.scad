@@ -13,6 +13,7 @@ face_width=116;
 forehead_depth=37.5;
 variant="A";
 
+strap_width=40;
 front_width=126;
 height=67;
 depth=65;
@@ -22,7 +23,7 @@ if( variant == "A" )
 {
     main_body( phone_height, phone_width, face_width, forehead_depth );
 }
-else
+if( variant == "B" )
 {
     main_body( front_width, height, face_width, forehead_depth );
 }
@@ -34,13 +35,41 @@ module main_body( fwidth, fheight, face, forehead_depth )
     {
         union()
         {
-            shell_outer( fwidth, fheight, face );
-            body_front_outer();
+            difference()
+            {
+                union()
+                {
+                    shell_outer( fwidth, fheight, face );
+                    body_front_outer();
+                }
+                face( face, forehead_depth, depth );
+                nose_slice( thick );
+            }
+            translate([face/2+thick, 0, depth-7]) rotate([180,-90,0]) strap_mount();
+            translate([-face/2-thick, 0, depth-7]) rotate([0,-90,0]) strap_mount();
         }
         shell_inner( fwidth, fheight, face );
         body_front_inner();
-        face( face, forehead_depth, depth );
-        nose_slice( thick );
+    }
+}
+
+module strap_mount()
+{
+    length=30;
+    width=strap_width+2*thick;
+    thickness=2*thick;
+    difference()
+    {
+        cube( [length, width, thickness], center=true );
+        // gap for strap
+        translate( [length/2-1.5*thick,0,0] ) cube( [thick, strap_width, 1.5*thickness], center=true );
+        // slope on face of mount
+        translate( [-length/2-thick,0,0] ) rotate([0,-20,0]) cube( [1.5*width,1.5*width,thickness], center=true );
+        // slopes on edges of mount
+        for( dir = [1,-1] )
+        {
+            translate( [-0.4*width,dir*0.82*width,0] ) rotate( [0,0,dir*20] ) cube( width, center=true );
+        }
     }
 }
 
