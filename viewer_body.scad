@@ -12,6 +12,9 @@ view_height=110;
 face_width=116;
 forehead_depth=37.5;
 
+// Two variations of the design:
+//  In the first, the main body slopes all of the way to the edges.
+//  In the second, the body is slightly straighter, with a flare at the front.
 front_width=phone_height;
 height=phone_width;
 //front_width=126;
@@ -21,6 +24,7 @@ thick=3;
 
 main_body();
 
+// Build the body from the pieces
 module main_body()
 {
     difference()
@@ -41,13 +45,13 @@ module main_body()
 module body_front_outer()
 {
     scale( [1,phone_width/phone_height,1] )
-        polyprism( len=phone_width/2, bottom=phone_height/2, top=phone_height/4, sides=4 );
+        polyprism( len=1.2*phone_width/2, bottom=phone_height/2, top=phone_height/4, sides=4 );
 }
 
 module body_front_inner()
 {
     scale( [1,phone_width/phone_height,1] )
-        polyprism_hole( len=phone_width/2, bottom=phone_height/2, top=phone_height/4, wall=thick, sides=4 );
+        polyprism_hole( len=1.2*phone_width/2, bottom=phone_height/2, top=phone_height/4, wall=thick, sides=4 );
 }
 
 // Define the rear "squashed octagon" portion of the viewer
