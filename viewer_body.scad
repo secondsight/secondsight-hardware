@@ -113,7 +113,7 @@ module shell_inner( fwidth, fheight, face )
         polyprism_hole( len=depth, bottom=fwidth/2, top=face/2, wall=thick, sides=8 );
 }
 
-// Define the portions to remove to fit a face.
+// Define the portions to remove to fit a forehead.
 // face_width - across forehead
 // depth      - distance from forehead touch to temples of viewer
 // height     - distance from front to back of viewer
@@ -124,16 +124,23 @@ module face( face_width, depth, height )
         cylinder( h=1.25*height, r=radius, center=true, $fn=32 );
 }
 
+// Define the portion that is open around the nose.
+//  thickness  - wall thickness
 module nose_slice( thickness )
 {
     theta=10;
     spread=5.8;
     slice=35;
     translate( [0,-height/2+0.75*thickness,depth/2] )
-    union()
+    intersection()
     {
-        translate([spread,0,0] ) rotate( [0,theta,0] ) cube( [slice, thickness*4, 1.2*depth], center=true );
-        translate([-spread,0,0] ) rotate( [0,-theta,0] ) cube( [slice, thickness*4, 1.2*depth], center=true );
+        union()
+        {
+            translate([spread,0,0] ) rotate( [0,theta,0] ) cube( [slice, thickness*4, 1.2*depth], center=true );
+            translate([-spread,0,0] ) rotate( [0,-theta,0] ) cube( [slice, thickness*4, 1.2*depth], center=true );
+        }
+        // cut it off slightly above the base
+        translate([0,0,thickness]) cube( depth, center=true );
     }
 }
 
