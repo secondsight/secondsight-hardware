@@ -45,22 +45,29 @@ module main_body( fwidth, fheight, face, forehead_depth )
         {
             difference()
             {
+                // core shape
                 union()
                 {
                     shell_outer( fwidth, fheight, face );
                     body_front_outer();
                 }
+                // carve out back of viewer
                 face( face, forehead_depth, depth );
                 nose_slice( thick );
             }
+            // add straps
             translate([face/2+thick, 0, depth-7]) rotate([180,-90,0]) strap_mount();
             translate([-face/2-thick, 0, depth-7]) rotate([0,-90,0]) strap_mount();
         }
+        // These must be subtracted last to deal with any added parts that might
+        //  intrude on the middle volume.
         shell_inner( fwidth, fheight, face );
         body_front_inner();
     }
 }
 
+// Mount points for the strap.
+//   lying flat, must be rotated up to mount.
 module strap_mount()
 {
     length=30;
