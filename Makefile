@@ -20,6 +20,9 @@ viewer_body-A.stl: viewer_body.scad
 viewer_body-B.stl: viewer_body.scad
 	$(OPENSCAD) -D 'variant="B"' -o $@ $<
 
+test.stl: viewer_body.scad
+	$(OPENSCAD) -D 'variant="test"' -o $@ $<
+
 .PHONY: clean
 .SECONDARY:
 

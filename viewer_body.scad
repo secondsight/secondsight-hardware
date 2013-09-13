@@ -27,6 +27,14 @@ if( variant == "B" )
 {
     main_body( front_width, height, face_width, forehead_depth );
 }
+if( variant == "test" )
+{
+    intersection()
+    {
+        translate( [0,0,-depth/2] ) main_body( phone_height, phone_width, face_width, forehead_depth );
+        translate( [0,0,phone_height/2] ) cube( phone_height, center=true );
+    }
+}
 
 // Build the body from the pieces
 module main_body( fwidth, fheight, face, forehead_depth )
