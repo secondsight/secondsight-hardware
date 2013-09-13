@@ -8,22 +8,21 @@ phone_thickness=7.9;
 view_width=65;
 view_height=110;
 
-face_width=126;
+function radius_from_side(rad,sides) = rad/cos(180/sides);
+
+front_width=126;
+face_width=116;
 height=67;
 depth=65;
 forehead_depth=37.5;
 thick=3;
 
-union()
-{
-    main_body();
-    body_front();
-}
+main_body();
 
 module body_front_outer()
 {
     front_height=0.5*height;
-    front_width=sqrt(2)*phone_height;
+    front_width=radius_from_side( phone_height, 4 );
     scale( [1,phone_width/phone_height,1] ) translate( [0,0,front_height/2] ) rotate( [0,0,45] )
         cylinder( h=front_height, r1=front_width/2, r2=front_width/4, center=true, $fn=4 );
 }
@@ -31,7 +30,7 @@ module body_front_outer()
 module body_front_inner()
 {
     front_height=0.5*height;
-    front_width=sqrt(2)*phone_height;
+    front_width=radius_from_side( phone_height, 4 );
     scale( [1,phone_width/phone_height,1] ) translate( [0,0,front_height/2] ) rotate( [0,0,45] )
         cylinder( h=front_height+0.04, r1=front_width/2-3, r2=front_width/4-3, center=true, $fn=4 );
 }
@@ -55,19 +54,23 @@ module main_body()
 
 module shell_outer()
 {
-    scale( [1,height/face_width,1] ) translate( [0,0,depth/2] ) rotate( [0,0,45/2] )
-        cylinder( h=depth, r=face_width/2, center=true, $fn=8 );
+    front_rad=radius_from_side( front_width, 8 );
+    face_rad=radius_from_side( face_width, 8 );
+    scale( [1,height/front_rad,1] ) translate( [0,0,depth/2] ) rotate( [0,0,45/2] )
+        cylinder( h=depth, r1=front_rad/2, r2=face_rad/2, center=true, $fn=8 );
 }
 
 module shell_inner()
 {
-    scale( [1,height/face_width,1] ) translate( [0,0,depth/2] ) rotate( [0,0,45/2] )
-        cylinder( h=depth+0.04, r=face_width/2-thick, center=true, $fn=8 );
+    front_rad=radius_from_side( front_width, 8 );
+    face_rad=radius_from_side( face_width, 8 );
+    scale( [1,height/front_rad,1] ) translate( [0,0,depth/2] ) rotate( [0,0,45/2] )
+        cylinder( h=depth+0.04, r1=front_rad/2-thick, r2=face_rad/2-thick, center=true, $fn=8 );
 }
 
 module face()
 {
-    radius=1.35*face_width/2-3;
+    radius=0.75*face_width-3;
     translate([0,0,radius+forehead_depth]) rotate([90,0,0])
         cylinder( h=depth+10, r=radius, center=true, $fn=32 );
 }
