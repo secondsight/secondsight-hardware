@@ -20,5 +20,8 @@ viewer_body-A.stl: viewer_body.scad
 viewer_body-B.stl: viewer_body.scad
 	$(OPENSCAD) -D 'variant="B"' -o $@ $<
 
+.PHONY: clean
+.SECONDARY:
+
 clobber:
 	rm *.stl *.gcode
