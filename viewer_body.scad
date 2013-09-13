@@ -8,7 +8,8 @@ phone_thickness=7.9;
 view_width=65;
 view_height=110;
 
-function radius_from_side(rad,sides) = rad/cos(180/sides);
+// Convert polygon opposite face distance to radius
+function radius_from_side(dist,sides) = dist/cos(180/sides);
 
 front_width=126;
 face_width=116;
@@ -18,22 +19,6 @@ forehead_depth=37.5;
 thick=3;
 
 main_body();
-
-module body_front_outer()
-{
-    front_height=0.5*height;
-    front_width=radius_from_side( phone_height, 4 );
-    scale( [1,phone_width/phone_height,1] ) translate( [0,0,front_height/2] ) rotate( [0,0,45] )
-        cylinder( h=front_height, r1=front_width/2, r2=front_width/4, center=true, $fn=4 );
-}
-
-module body_front_inner()
-{
-    front_height=0.5*height;
-    front_width=radius_from_side( phone_height, 4 );
-    scale( [1,phone_width/phone_height,1] ) translate( [0,0,front_height/2] ) rotate( [0,0,45] )
-        cylinder( h=front_height+0.04, r1=front_width/2-3, r2=front_width/4-3, center=true, $fn=4 );
-}
 
 module main_body()
 {
@@ -52,20 +37,37 @@ module main_body()
     }
 }
 
+module body_front_outer()
+{
+    front_height=0.5*height;
+    front_rad=radius_from_side( phone_height, 4 );
+    scale( [1,phone_width/phone_height,1] )
+        polyprism( len=front_height, bottom=front_rad/2, top=front_rad/4, sides=4 );
+}
+
+module body_front_inner()
+{
+    front_height=0.5*height;
+    front_rad=radius_from_side( phone_height, 4 );
+    fudge=0.04;
+    scale( [1,phone_width/phone_height,1] ) translate( [0,0,-fudge/2] )
+        polyprism( len=front_height+fudge, bottom=front_rad/2-thick, top=front_rad/4-thick, sides=4 );
+}
+
 module shell_outer()
 {
     front_rad=radius_from_side( front_width, 8 );
     face_rad=radius_from_side( face_width, 8 );
-    scale( [1,height/front_rad,1] ) translate( [0,0,depth/2] ) rotate( [0,0,45/2] )
-        cylinder( h=depth, r1=front_rad/2, r2=face_rad/2, center=true, $fn=8 );
+    scale( [1,height/front_rad,1] )
+        polyprism( len=depth, bottom=front_rad/2, top=face_rad/2, sides=8 );
 }
 
 module shell_inner()
 {
     front_rad=radius_from_side( front_width, 8 );
     face_rad=radius_from_side( face_width, 8 );
-    scale( [1,height/front_rad,1] ) translate( [0,0,depth/2] ) rotate( [0,0,45/2] )
-        cylinder( h=depth+0.04, r1=front_rad/2-thick, r2=face_rad/2-thick, center=true, $fn=8 );
+    scale( [1,height/front_rad,1] )
+        polyprism( len=depth+0.04, bottom=front_rad/2-thick, top=face_rad/2-thick, sides=8 );
 }
 
 module face()
@@ -85,4 +87,17 @@ module nose_slice( thickness )
         translate([spread,0,0] ) rotate( [0,theta,0] ) cube( [slice, thickness*4, 1.2*depth], center=true );
         translate([-spread,0,0] ) rotate( [0,-theta,0] ) cube( [slice, thickness*4, 1.2*depth], center=true );
     }
+}
+
+
+//
+//  Polygonal prism centered in x-y, with sitting on z-origin.
+//  len - length of prism
+//  bottom - bottom radius
+//  top - top radius
+//  sides - number of sides of the polygon
+module polyprism( len, bottom, top, sides )
+{
+    translate( [0,0,len/2] ) rotate( [0,0,180/sides] )
+        cylinder( h=len, r1=bottom, r2=top, center=true, $fn=sides );
 }
