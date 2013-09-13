@@ -11,32 +11,35 @@ view_height=110;
 // Potentially user-specific data
 face_width=116;
 forehead_depth=37.5;
+variant="A";
 
-// Two variations of the design:
-//  In the first, the main body slopes all of the way to the edges.
-//  In the second, the body is slightly straighter, with a flare at the front.
-front_width=phone_height;
-height=phone_width;
-//front_width=126;
-//height=67;
+front_width=126;
+height=67;
 depth=65;
 thick=3;
 
-main_body();
+if( variant == "A" )
+{
+    main_body( phone_height, phone_width, face_width, forehead_depth );
+}
+else
+{
+    main_body( front_width, height, face_width, forehead_depth );
+}
 
 // Build the body from the pieces
-module main_body()
+module main_body( fwidth, fheight, face, forehead_depth )
 {
     difference()
     {
         union()
         {
-            shell_outer();
+            shell_outer( fwidth, fheight, face );
             body_front_outer();
         }
-        shell_inner();
+        shell_inner( fwidth, fheight, face );
         body_front_inner();
-        face();
+        face( face, forehead_depth, depth );
         nose_slice( thick );
     }
 }
@@ -55,24 +58,33 @@ module body_front_inner()
 }
 
 // Define the rear "squashed octagon" portion of the viewer
-module shell_outer()
+//  fwidth  - the width of the front of this part of the body
+//  fheight - the height of the front of this part of the body
+//  face    - width of the face
+module shell_outer( fwidth, fheight, face )
 {
-    scale( [1,height/front_width,1] )
-        polyprism( len=depth, bottom=front_width/2, top=face_width/2, sides=8 );
+    scale( [1,fheight/fwidth,1] )
+        polyprism( len=depth, bottom=fwidth/2, top=face/2, sides=8 );
 }
 
-module shell_inner()
+//  fwidth  - the width of the front of this part of the body
+//  fheight - the height of the front of this part of the body
+//  face    - width of the face
+module shell_inner( fwidth, fheight, face )
 {
-    scale( [1,height/front_width,1] )
-        polyprism_hole( len=depth, bottom=front_width/2, top=face_width/2, wall=thick, sides=8 );
+    scale( [1,fheight/fwidth,1] )
+        polyprism_hole( len=depth, bottom=fwidth/2, top=face/2, wall=thick, sides=8 );
 }
 
 // Define the portions to remove to fit a face.
-module face()
+// face_width - across forehead
+// depth      - distance from forehead touch to temples of viewer
+// height     - distance from front to back of viewer
+module face( face_width, depth, height )
 {
     radius=0.75*face_width;
-    translate([0,0,radius+forehead_depth]) rotate([90,0,0])
-        cylinder( h=1.25*depth, r=radius, center=true, $fn=32 );
+    translate([0,0,radius+depth]) rotate([90,0,0])
+        cylinder( h=1.25*height, r=radius, center=true, $fn=32 );
 }
 
 module nose_slice( thickness )
