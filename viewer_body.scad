@@ -11,7 +11,7 @@ view_height=110;
 // Potentially user-specific data
 face_width=116;
 forehead_depth=37.5;
-variant="test";
+variant="A";
 
 strap_width=40;
 front_width=126;
@@ -58,11 +58,38 @@ module main_body( fwidth, fheight, face, forehead_depth )
             // add straps
             translate([face/2+thick, 0, depth-7]) rotate([180,-85,0]) strap_mount();
             translate([-face/2-thick, 0, depth-7]) rotate([0,-95,0]) strap_mount();
+            phone_mount( fwidth, fheight );
         }
         // These must be subtracted last to deal with any added parts that might
         //  intrude on the middle volume.
         shell_inner( fwidth, fheight, face );
         body_front_inner();
+    }
+}
+
+// Simple phone mounting structure
+//  provides points for elastic bands to attach to.
+//  fwidth  - width of the front of the viewer
+//  fheight - height of the front of the viewer
+module phone_mount( fwidth, fheight )
+{
+    xoffset=fwidth/2-20;
+    yoffset=fheight/2-5;
+    zoffset=5;
+    theta=40;
+    for( dir = [ [1,1,-1], [-1,1,-1], [1,-1,1], [-1,-1,1] ] )
+    {
+        translate( [ dir[0]*xoffset,  dir[1]*yoffset, zoffset] )
+            rotate( [ dir[2]*theta,0,0] ) elastic_mount_point();
+    }
+}
+
+module elastic_mount_point()
+{
+    translate( [0,0,thick] ) union()
+    {
+        cylinder( h=2*thick, r=2.5, center=true );
+        translate( [0,0,thick] ) sphere( 2.5 );
     }
 }
 
