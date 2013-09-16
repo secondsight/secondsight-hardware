@@ -11,7 +11,7 @@ view_height=110;
 // Potentially user-specific data
 face_width=116;
 forehead_depth=37.5;
-variant="test";
+variant="B";
 
 strap_width=40;
 front_width=126;
@@ -19,15 +19,17 @@ height=67;
 depth=65;
 thick=3;
 
-include <visor_body.scad>
-include <visor_elastic_mount.scad>
+include <visor_body.scad>;
+include <visor_elastic_mount.scad>;
 
 if( variant == "A" )
 {
+    // The octagon slopes out to match the front
     main_body( phone_height, phone_width, face_width, forehead_depth );
 }
 if( variant == "B" )
 {
+    // The octagon stays mostly parallel
     main_body( front_width, height, face_width, forehead_depth );
 }
 if( variant == "test" )
