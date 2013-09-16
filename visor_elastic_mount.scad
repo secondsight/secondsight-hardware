@@ -4,7 +4,7 @@
 
 //  fwidth  - width of the front of the viewer
 //  fheight - height of the front of the viewer
-module phone_mount( fwidth, fheight )
+module phone_mount( fwidth, fheight, wall )
 {
     xoffset=fwidth/2-20;
     yoffset=fheight/2-5;
@@ -13,16 +13,16 @@ module phone_mount( fwidth, fheight )
     for( dir = [ [1,1,-1], [-1,1,-1], [1,-1,1], [-1,-1,1] ] )
     {
         translate( [ dir[0]*xoffset,  dir[1]*yoffset, zoffset] )
-            rotate( [ dir[2]*theta,0,0] ) elastic_mount_point();
+            rotate( [ dir[2]*theta,0,0] ) elastic_mount_point( wall );
     }
 }
 
-module elastic_mount_point()
+module elastic_mount_point( wall )
 {
-    translate( [0,0,thick] ) union()
+    translate( [0,0,1.5*wall] ) union()
     {
-        cylinder( h=2*thick, r=2.5, center=true );
-        translate( [0,0,thick] ) sphere( 2.5 );
+        cylinder( h=2*wall, r1=3, r2=2.5, center=true );
+        translate( [0,0,wall] ) sphere( 2.5 );
     }
 }
 

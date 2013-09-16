@@ -23,7 +23,7 @@ module main_body( fwidth, fheight, face, forehead_depth )
             // add straps
             translate([face/2+thick, 0, depth-7]) rotate([180,-85,0]) strap_mount();
             translate([-face/2-thick, 0, depth-7]) rotate([0,-95,0]) strap_mount();
-            phone_mount( fwidth, fheight );
+            phone_mount( fwidth, fheight, thick );
         }
         // These must be subtracted last to deal with any added parts that might
         //  intrude on the middle volume.
