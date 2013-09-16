@@ -1,8 +1,18 @@
-// Experiment with octogon shape
+// aetherAR visor - main body shape.
 
+// Depends on the following globals:
+//  phone_width  -  body_front_outer(), body_front_inner(),
+//  phone_height -  body_front_outer(), body_front_inner(),
+//  strap_width  -  strap_mount()
 
-// Build the body from the pieces
-module main_body( fwidth, fheight, face, forehead_depth )
+// Build the body from the pieces (too many parameters)
+//  fwidth         - the width of the front of this part of the body
+//  fheight        - the height of the front of this part of the body
+//  depth          - the measured from front of visor to the back
+//  wall           - thickness of the walls of the visor
+//  face           - width of the face
+//  forehead_depth - distance from forehead touch to temples of viewer
+module main_body( fwidth, fheight, depth, wall, face, forehead_depth )
 {
     difference()
     {
@@ -13,39 +23,40 @@ module main_body( fwidth, fheight, face, forehead_depth )
                 // core shape
                 union()
                 {
-                    shell_outer( fwidth, fheight, face );
+                    shell_outer( fwidth, fheight, depth, face );
                     body_front_outer();
                 }
                 // carve out back of viewer
                 face( face, forehead_depth, depth );
-                nose_slice( thick );
+                nose_slice( fheight, depth, wall );
             }
             // add straps
-            translate([face/2+thick, 0, depth-7]) rotate([180,-85,0]) strap_mount();
-            translate([-face/2-thick, 0, depth-7]) rotate([0,-95,0]) strap_mount();
-            phone_mount( fwidth, fheight, thick );
+            translate([ face/2+wall, 0, depth-7]) rotate([180,-85,0]) strap_mount( wall );
+            translate([-face/2-wall, 0, depth-7]) rotate([0,-95,0]) strap_mount( wall );
+            phone_mount( fwidth, fheight, wall );
         }
         // These must be subtracted last to deal with any added parts that might
         //  intrude on the middle volume.
-        shell_inner( fwidth, fheight, face );
-        body_front_inner();
+        shell_inner( fwidth, fheight, depth, wall, face );
+        body_front_inner( wall );
     }
 }
 
 // Mount points for the strap.
 //   lying flat, must be rotated up to mount.
-module strap_mount()
+//  wall    - thickness of the walls of the visor
+module strap_mount( wall )
 {
     length=30;
-    width=strap_width+2*thick;
-    thickness=2*thick;
+    width=strap_width+2*wall;
+    thickness=2*wall;
     difference()
     {
         cube( [length, width, thickness], center=true );
         // gap for strap
-        translate( [length/2-1.5*thick,0,0] ) cube( [thick, strap_width, 1.5*thickness], center=true );
+        translate( [length/2-1.5*wall,0,0] ) cube( [wall, strap_width, 1.5*thickness], center=true );
         // slope on face of mount
-        translate( [-length/2-thick,0,0] ) rotate([0,-20,0]) cube( [1.5*width,1.5*width,thickness], center=true );
+        translate( [-length/2-wall,0,0] ) rotate([0,-20,0]) cube( [1.5*width,1.5*width,thickness], center=true );
         // slopes on edges of mount
         for( dir = [1,-1] )
         {
@@ -61,17 +72,19 @@ module body_front_outer()
         polyprism( len=1.2*phone_width/2, bottom=phone_height/2, top=phone_height/4, sides=4 );
 }
 
-module body_front_inner()
+//  wall    - thickness of the walls of the visor
+module body_front_inner( wall )
 {
     scale( [1,phone_width/phone_height,1] )
-        polyprism_hole( len=1.2*phone_width/2, bottom=phone_height/2, top=phone_height/4, wall=thick, sides=4 );
+        polyprism_hole( len=1.2*phone_width/2, bottom=phone_height/2, top=phone_height/4, wall=wall, sides=4 );
 }
 
 // Define the rear "squashed octagon" portion of the viewer
 //  fwidth  - the width of the front of this part of the body
 //  fheight - the height of the front of this part of the body
+//  depth   - the measured from front of visor to the back
 //  face    - width of the face
-module shell_outer( fwidth, fheight, face )
+module shell_outer( fwidth, fheight, depth, face )
 {
     scale( [1,fheight/fwidth,1] )
         polyprism( len=depth, bottom=fwidth/2, top=face/2, sides=8 );
@@ -79,11 +92,13 @@ module shell_outer( fwidth, fheight, face )
 
 //  fwidth  - the width of the front of this part of the body
 //  fheight - the height of the front of this part of the body
+//  depth   - the measured from front of visor to the back
+//  wall    - thickness of the walls of the visor
 //  face    - width of the face
-module shell_inner( fwidth, fheight, face )
+module shell_inner( fwidth, fheight, depth, wall, face )
 {
     scale( [1,fheight/fwidth,1] )
-        polyprism_hole( len=depth, bottom=fwidth/2, top=face/2, wall=thick, sides=8 );
+        polyprism_hole( len=depth, bottom=fwidth/2, top=face/2, wall=wall, sides=8 );
 }
 
 // Define the portions to remove to fit a forehead.
@@ -98,22 +113,24 @@ module face( face_width, depth, height )
 }
 
 // Define the portion that is open around the nose.
-//  thickness  - wall thickness
-module nose_slice( thickness )
+//  height - nominal height of the front of the visor
+//  depth   - the measured from front of visor to the back
+//  wall   - wall thickness
+module nose_slice( height, depth, wall )
 {
     theta=10;
     spread=5.8;
     slice=35;
-    translate( [0,-height/2+0.75*thickness,depth/2] )
+    translate( [0,-height/2+0.75*wall,depth/2] )
     intersection()
     {
         union()
         {
-            translate([spread,0,0] ) rotate( [0,theta,0] ) cube( [slice, thickness*4, 1.2*depth], center=true );
-            translate([-spread,0,0] ) rotate( [0,-theta,0] ) cube( [slice, thickness*4, 1.2*depth], center=true );
+            translate([spread,0,0] ) rotate( [0,theta,0] ) cube( [slice, wall*4, 1.2*depth], center=true );
+            translate([-spread,0,0] ) rotate( [0,-theta,0] ) cube( [slice, wall*4, 1.2*depth], center=true );
         }
         // cut it off slightly above the base
-        translate([0,0,thickness]) cube( depth, center=true );
+        translate([0,0,wall]) cube( depth, center=true );
     }
 }
 
