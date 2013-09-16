@@ -1,40 +1,5 @@
 // Experiment with octogon shape
 
-// Use dimensions for Galaxy S4
-//    Dimensions are portrait mode.
-phone_width=69.8;
-phone_height=136.6;
-phone_thickness=7.9;
-view_width=65;
-view_height=110;
-
-// Potentially user-specific data
-face_width=116;
-forehead_depth=37.5;
-variant="A";
-
-strap_width=40;
-front_width=126;
-height=67;
-depth=65;
-thick=3;
-
-if( variant == "A" )
-{
-    main_body( phone_height, phone_width, face_width, forehead_depth );
-}
-if( variant == "B" )
-{
-    main_body( front_width, height, face_width, forehead_depth );
-}
-if( variant == "test" )
-{
-    intersection()
-    {
-        translate( [0,0,-0.55*depth] ) main_body( phone_height, phone_width, face_width, forehead_depth );
-        translate( [0,0,phone_height/2] ) cube( phone_height, center=true );
-    }
-}
 
 // Build the body from the pieces
 module main_body( fwidth, fheight, face, forehead_depth )
@@ -64,32 +29,6 @@ module main_body( fwidth, fheight, face, forehead_depth )
         //  intrude on the middle volume.
         shell_inner( fwidth, fheight, face );
         body_front_inner();
-    }
-}
-
-// Simple phone mounting structure
-//  provides points for elastic bands to attach to.
-//  fwidth  - width of the front of the viewer
-//  fheight - height of the front of the viewer
-module phone_mount( fwidth, fheight )
-{
-    xoffset=fwidth/2-20;
-    yoffset=fheight/2-5;
-    zoffset=5;
-    theta=40;
-    for( dir = [ [1,1,-1], [-1,1,-1], [1,-1,1], [-1,-1,1] ] )
-    {
-        translate( [ dir[0]*xoffset,  dir[1]*yoffset, zoffset] )
-            rotate( [ dir[2]*theta,0,0] ) elastic_mount_point();
-    }
-}
-
-module elastic_mount_point()
-{
-    translate( [0,0,thick] ) union()
-    {
-        cylinder( h=2*thick, r=2.5, center=true );
-        translate( [0,0,thick] ) sphere( 2.5 );
     }
 }
 

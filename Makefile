@@ -12,15 +12,15 @@ SLIC3R=~/3rdparty_sandbox/MM/Slic3r/bin/slic3r
 %.gcode: %.stl config.ini
 	$(SLIC3R) --load config.ini -o $@ $<
 
-viewer_body.stl: viewer_body.scad
+visor.stl: visor.scad visor_body.scad visor_elastic_mount.scad
 
-viewer_body-A.stl: viewer_body.scad
+visor-A.stl: visor.scad visor_body.scad visor_elastic_mount.scad
 	$(OPENSCAD) -D 'variant="A"' -o $@ $<
 
-viewer_body-B.stl: viewer_body.scad
+visor-B.stl: visor.scad visor_body.scad visor_elastic_mount.scad
 	$(OPENSCAD) -D 'variant="B"' -o $@ $<
 
-test.stl: viewer_body.scad
+test.stl: visor.scad visor_body.scad visor_elastic_mount.scad
 	$(OPENSCAD) -D 'variant="test"' -o $@ $<
 
 .PHONY: clean
