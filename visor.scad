@@ -11,7 +11,7 @@ view_height=110;
 // Potentially user-specific data
 face_width=116;
 forehead_depth=37.5;
-variant="A";
+variant="test";
 
 strap_width=40;
 front_width=126;
@@ -34,8 +34,8 @@ if( variant == "test" )
 {
     intersection()
     {
-        translate( [0,0,-0.55*depth] ) main_body( phone_height, phone_width, face_width, forehead_depth );
-        translate( [0,0,phone_height/2] ) cube( phone_height, center=true );
+        main_body( phone_height, phone_width, face_width, forehead_depth );
+        translate( [0,0,-phone_height/3-5] ) cube( phone_height, center=true );
     }
 }
 
