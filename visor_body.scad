@@ -75,7 +75,7 @@ module body_front_outer()
 //  wall    - thickness of the walls of the visor
 module body_front_inner( wall )
 {
-    scale( [1,phone_width/phone_height,1] )
+    scale( [1,(phone_width-wall)/(phone_height-wall),1] )
         polyprism_hole( len=1.2*phone_width/2, bottom=phone_height/2, top=phone_height/4, wall=wall, sides=4 );
 }
 
@@ -97,7 +97,7 @@ module shell_outer( fwidth, fheight, depth, face )
 //  face    - width of the face
 module shell_inner( fwidth, fheight, depth, wall, face )
 {
-    scale( [1,fheight/fwidth,1] )
+    scale( [1,(fheight-wall)/(fwidth-wall),1] )
         polyprism_hole( len=depth, bottom=fwidth/2, top=face/2, wall=wall, sides=8 );
 }
 
