@@ -11,7 +11,7 @@ view_height=110;
 // Potentially user-specific data
 face_width=116;
 forehead_depth=37.5;
-variant="test";
+variant="B";
 
 strap_width=40;
 front_width=126;

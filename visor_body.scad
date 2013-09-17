@@ -31,8 +31,8 @@ module main_body( fwidth, fheight, depth, wall, face, forehead_depth )
                 nose_slice( fheight, depth, wall );
             }
             // add straps
-            translate([ face/2+wall, 0, depth-7]) rotate([180,-85,0]) strap_mount( wall );
-            translate([-face/2-wall, 0, depth-7]) rotate([0,-95,0]) strap_mount( wall );
+            translate([ face/2+0.75*wall, 0, depth-9]) rotate([180,-85,0]) strap_mount( wall );
+            translate([-face/2-0.75*wall, 0, depth-9]) rotate([0,-95,0]) strap_mount( wall );
             phone_mount( fwidth, fheight, wall );
         }
         // These must be subtracted last to deal with any added parts that might
@@ -47,14 +47,16 @@ module main_body( fwidth, fheight, depth, wall, face, forehead_depth )
 //  wall    - thickness of the walls of the visor
 module strap_mount( wall )
 {
-    length=30;
+    length=35;
     width=strap_width+2*wall;
-    thickness=2*wall;
+    thickness=1.5*wall;
     difference()
     {
         cube( [length, width, thickness], center=true );
-        // gap for strap
-        translate( [length/2-1.5*wall,0,0] ) cube( [wall, strap_width, 1.5*thickness], center=true );
+        // top gap for strap
+        translate( [length/2-1.25*wall,0,0] ) cube( [wall, strap_width, 1.5*thickness], center=true );
+        // bottom gap for strap
+        translate( [length/2-3.25*wall,0,0] ) cube( [wall, strap_width, 1.5*thickness], center=true );
         // slope on face of mount
         translate( [-length/2-wall,0,0] ) rotate([0,-20,0]) cube( [1.5*width,1.5*width,thickness], center=true );
         // slopes on edges of mount
