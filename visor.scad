@@ -9,15 +9,24 @@ view_width=65;
 view_height=110;
 
 // Potentially user-specific data
+face_width=116;           // temple-to-temple distance
+forehead_depth=27.5;      // temple to front of forehead distance
+eye_forehead_offset=5;    // distance from forehead to eye
+
+variant="B";
 face_width=116;
 forehead_depth=37.5;
-variant="B";
 
 strap_width=40;
 front_width=126;
 height=67;
-depth=65;
 thick=3;
+
+include <visor_optics_mount.scad>;
+
+//depth=70;
+depth=nominal_eye_phone_distance()+forehead_depth;
+eyes=depth-forehead_depth+eye_forehead_offset; // eye to front distance
 
 include <visor_body.scad>;
 include <visor_elastic_mount.scad>;
@@ -25,12 +34,20 @@ include <visor_elastic_mount.scad>;
 if( variant == "A" )
 {
     // The octagon slopes out to match the front
-    main_body( phone_height, phone_width, depth, thick, face_width, forehead_depth );
+    difference()
+    {
+        main_body( phone_height, phone_width, depth, thick, face_width, forehead_depth );
+        optics_slots( front_width, eyes, thick );
+    }
 }
 if( variant == "B" )
 {
     // The octagon stays mostly parallel
-    main_body( front_width, height, depth, thick, face_width, forehead_depth );
+    difference()
+    {
+        main_body( front_width, height, depth, thick, face_width, forehead_depth );
+        optics_slots( front_width, eyes, thick );
+    }
 }
 if( variant == "test" )
 {
@@ -40,5 +57,4 @@ if( variant == "test" )
         translate( [0,0,-phone_height/3-5] ) cube( phone_height, center=true );
     }
 }
-
 

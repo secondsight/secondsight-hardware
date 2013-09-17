@@ -27,7 +27,7 @@ module main_body( fwidth, fheight, depth, wall, face, forehead_depth )
                     body_front_outer();
                 }
                 // carve out back of viewer
-                face( face, forehead_depth, depth );
+                face( face, depth-forehead_depth, depth );
                 nose_slice( fheight, depth, wall );
             }
             // add straps
@@ -114,7 +114,7 @@ module shell_inner( fwidth, fheight, depth, wall, face )
 
 // Define the portions to remove to fit a forehead.
 // face_width - across forehead
-// depth      - distance from forehead touch to temples of viewer
+// depth      - distance from forehead touch to front of visor
 // height     - distance from front to back of viewer
 module face( face_width, depth, height )
 {
