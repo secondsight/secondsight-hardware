@@ -1,3 +1,4 @@
-*.stl
+test.stl
 *.gcode
 .*.swp
+.swp
