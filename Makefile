@@ -1,8 +1,14 @@
 # Makefile for creating the aetherAR viewer
 
+STLS=\
+	 visor-A.stl\
+	 visor-B.stl
+
 # This is system-specific
 OPENSCAD=/usr/local/bin/openscad
 SLIC3R=~/3rdparty_sandbox/MM/Slic3r/bin/slic3r
+
+all: $(STLS)
 
 # Create STL files from OpenSCAD files
 %.stl: %.scad
