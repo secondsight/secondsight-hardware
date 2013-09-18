@@ -14,8 +14,6 @@ forehead_depth=27.5;      // temple to front of forehead distance
 eye_forehead_offset=5;    // distance from forehead to eye
 
 variant="B";
-face_width=116;
-forehead_depth=37.5;
 
 strap_width=40;
 front_width=126;
