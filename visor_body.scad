@@ -47,8 +47,9 @@ module main_body( fwidth, fheight, depth, wall, face, forehead_depth )
 //  wall    - thickness of the walls of the visor
 module strap_mount( wall )
 {
-    length=35;
-    width=strap_width+2*wall;
+    strap_fudge=1;
+    length=33;
+    width=strap_width+3*wall+strap_fudge;
     thickness=1.5*wall;
     difference()
     {
@@ -58,10 +59,12 @@ module strap_mount( wall )
             {
                 cube( [length, width, thickness], center=true );
                 // gap for strap
-                translate( [length/2 - 2*wall,0,0] ) cube( [3*wall,strap_width, 1.5*thickness], center=true );
+                translate( [length/2 - 2*wall,0,0] ) cube( [4*wall, strap_width+strap_fudge, 1.5*thickness], center=true );
             }
             // rod to support strap
-            translate( [length/2 - 2*wall,width/2,0] ) rotate( [90,0,0] )
+            translate( [length/2 - 2.25*wall,width/2,0] ) rotate( [90,0,0] )
+                polyprism( len=width, top=thickness/2, bottom=thickness/2, sides=8 );
+            translate( [length/2,width/2,0] ) rotate( [90,0,0] )
                 polyprism( len=width, top=thickness/2, bottom=thickness/2, sides=8 );
         }
         translate( [-length/2-wall,0,0] ) rotate([0,-20,0]) cube( [1.5*width,1.5*width,thickness], center=true );
