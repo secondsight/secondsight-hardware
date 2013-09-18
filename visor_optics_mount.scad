@@ -14,8 +14,24 @@ slide_gap=0.5;
 inner_height=slot_width-5;
 inner_width=4;
 
-translate( [ 12, 0, 0] ) slider_outside( 3 );
-translate( [-12, 0, 0] ) slider_inside( 3 );
+lens_holder( 70, lens_diameter );
+
+module lens_holder( half_width, lens )
+{
+    arm_len=half_width-lens;
+    rim=1.5;
+    rim_offset=1.25*rim;
+    translate( [0,0,inner_height/2] ) union()
+    {
+        difference()
+        {
+            translate( [rim_offset,0,0] ) cylinder( h=inner_height, r=lens/2+rim, center=true );
+            cylinder( h=inner_height+1, r=lens/2, center=true );
+        }
+        translate( [(arm_len+lens)/2, 0, 0 ] ) cube( [ arm_len, inner_width, inner_height ], center=true );
+        translate( [arm_len+lens/2, 0, 0 ] ) cylinder( h=inner_height, r=inner_width/2, center=true );
+    }
+}
 
 module slider_outside( wall )
 {
