@@ -13,7 +13,7 @@ face_width=116;           // temple-to-temple distance
 forehead_depth=27.5;      // temple to front of forehead distance
 eye_forehead_offset=5;    // distance from forehead to eye
 
-variant="B";
+variant="test";
 
 strap_width=40;
 front_width=126;
@@ -51,8 +51,12 @@ if( variant == "test" )
 {
     intersection()
     {
-        main_body( phone_height, phone_width, depth, thick, face_width, forehead_depth );
-        translate( [0,0,-phone_height/3-5] ) cube( phone_height, center=true );
+        difference()
+        {
+            main_body( phone_height, phone_width, depth, thick, face_width, forehead_depth );
+            optics_slots( front_width, eyes, thick );
+        }
+        translate( [0.95*front_width,0,-10] ) cube( phone_height, center=true );
     }
 }
 
