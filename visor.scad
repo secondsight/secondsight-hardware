@@ -29,11 +29,11 @@ eyes=depth-forehead_depth+eye_forehead_offset; // eye to front distance
 include <visor_body.scad>;
 include <visor_elastic_mount.scad>;
 
-function side_slope( width ) = atan2( (width-face_width)/2, depth )
+function side_slope( width ) = atan2( (width-face_width)/2, depth );
 
 if( variant == "A" )
 {
-    angle=side_slope( phone_height );
+    //angle=side_slope( phone_height );
     // The octagon slopes out to match the front
     difference()
     {
@@ -43,7 +43,7 @@ if( variant == "A" )
 }
 if( variant == "B" )
 {
-    angle=side_slope( front_width );
+    //angle=side_slope( front_width );
     // The octagon stays mostly parallel
     difference()
     {
@@ -53,7 +53,7 @@ if( variant == "B" )
 }
 if( variant == "test" )
 {
-    angle=side_slope( phone_height );
+    //angle=side_slope( phone_height );
     intersection()
     {
         difference()
