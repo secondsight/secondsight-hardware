@@ -47,7 +47,7 @@ module lens_holder( half_width, lens )
 module slider_outside( wall, angle )
 {
     b_thick=2;
-    inset=b_thick + 0.9*wall;
+    inset=b_thick + 0.6*wall;
     length=10;
     difference()
     {
@@ -68,7 +68,7 @@ module slider_outside( wall, angle )
 module slider_inside( wall,angle )
 {
     b_thick=2;
-    inset=2*b_thick + 0.9*wall;
+    inset=2*b_thick + 0.6*wall;
     length=10;
     difference()
     {
@@ -77,7 +77,7 @@ module slider_inside( wall,angle )
             translate( [0,0,b_thick/2] ) cube( [ length, slot_width+2*b_thick, b_thick ], center=true );
             rotate( [0,angle,0] ) translate( [-0.25,0,(inset+b_thick)/2] ) cube( [ inner_width+3-gap, inner_height+3-gap, inset ], center=true );
         }
-        rotate( [0,angle,0] ) translate( [-0.25,0,3.5] ) cube( [ inner_width, inner_height, inset+2 ], center=true );
+        rotate( [0,angle,0] ) translate( [-0.25,0,3.5] ) cube( [ inner_width+gap, inner_height+gap, inset+2 ], center=true );
     }
 }
 
