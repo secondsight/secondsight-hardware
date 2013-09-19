@@ -1,3 +1,5 @@
+//  Optics-mounting parts for aetherAR visor
+
 slot_width=10;
 min_bfl=25;
 max_bfl=45;
@@ -6,7 +8,7 @@ max_bfl=45;
 lens_phone_distance=40;
 eye_lens_distance=12;
 lens_thickness=5;
-lens_diameter=25;
+//lens_diameter=25;
 
 // Other
 gap=0.25;
@@ -15,12 +17,6 @@ inner_width=4;
 
 // Calculate the nominal distance between the wearer's eye and the phone
 function nominal_eye_phone_distance() = lens_phone_distance+eye_lens_distance+lens_thickness;
-
-//lens_holder( 70, lens_diameter );
-// angle calculated from visor.scad parameters.
-angle=6.9497;
-translate( [0, 20, 0] ) slider_inside( 3, angle );
-translate( [0,-20, 0] ) slider_outside( 3, angle );
 
 // Crescent with a stick to hold the lens
 // half_width  - Approximately half of the width of the visor
