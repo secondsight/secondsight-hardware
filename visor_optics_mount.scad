@@ -19,8 +19,8 @@ function nominal_eye_phone_distance() = lens_phone_distance+eye_lens_distance+le
 //lens_holder( 70, lens_diameter );
 // angle calculated from visor.scad parameters.
 angle=6.9497;
-translate( [-15, 20, 0] ) slider_inside( 3, angle );
-translate( [-15,-20, 0] ) slider_outside( 3, angle );
+translate( [0, 20, 0] ) slider_inside( 3, angle );
+translate( [0,-20, 0] ) slider_outside( 3, angle );
 
 // Crescent with a stick to hold the lens
 // half_width  - Approximately half of the width of the visor
@@ -58,9 +58,9 @@ module slider_outside( wall, angle )
         union()
         {
             translate( [0,0,b_thick/2] ) cube( [ length, slot_width+2*b_thick, b_thick ], center=true );
-            rotate( [angle,0,0] ) translate( [0,0,(inset+b_thick)/2] ) cube( [ length, slot_width-gap/2, inset ], center=true );
+            rotate( [0,angle,0] ) translate( [-0.25,0,(inset+b_thick)/2] ) cube( [ length, slot_width-gap/2, inset ], center=true );
         }
-        rotate( [angle,0,0] ) translate( [0,0,2.5] ) cube( [ inner_width+3, inner_height+3, inset+2 ], center=true );
+        rotate( [0,angle,0] ) translate( [-0.25,0,2.5] ) cube( [ inner_width+3, inner_height+3, inset+2 ], center=true );
     }
 }
 
@@ -79,9 +79,9 @@ module slider_inside( wall,angle )
         union()
         {
             translate( [0,0,b_thick/2] ) cube( [ length, slot_width+2*b_thick, b_thick ], center=true );
-            rotate( [angle,0,0] ) translate( [0,0,(inset+b_thick)/2] ) cube( [ inner_width+3-gap, inner_height+3-gap, inset ], center=true );
+            rotate( [0,angle,0] ) translate( [-0.25,0,(inset+b_thick)/2] ) cube( [ inner_width+3-gap, inner_height+3-gap, inset ], center=true );
         }
-        rotate( [angle,0,0] ) translate( [0,0,3.5] ) cube( [ inner_width, inner_height, inset+2 ], center=true );
+        rotate( [0,angle,0] ) translate( [-0.25,0,3.5] ) cube( [ inner_width, inner_height, inset+2 ], center=true );
     }
 }
 
