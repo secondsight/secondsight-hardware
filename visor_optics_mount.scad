@@ -10,26 +10,27 @@ lens_diameter=25;
 
 // Other
 gap=0.5;
-slide_gap=0.5;
 inner_height=slot_width-5;
 inner_width=4;
 
 lens_holder( 70, lens_diameter );
+//translate( [-15, 20, 0] ) slider_inside( 3 );
+//translate( [-15,-20, 0] ) slider_outside( 3 );
 
 module lens_holder( half_width, lens )
 {
     arm_len=half_width-lens;
     rim=1.5;
     rim_offset=1.25*rim;
-    translate( [0,0,inner_height/2] ) union()
+    translate( [0,0,inner_width/2] ) union()
     {
         difference()
         {
-            translate( [rim_offset,0,0] ) cylinder( h=inner_height, r=lens/2+rim, center=true );
-            cylinder( h=inner_height+1, r=lens/2, center=true );
+            translate( [rim_offset,0,0] ) cylinder( h=inner_width, r=lens/2+rim, center=true );
+            cylinder( h=inner_width+1, r=lens/2, center=true );
         }
-        translate( [(arm_len+lens)/2, 0, 0 ] ) cube( [ arm_len, inner_width, inner_height ], center=true );
-        translate( [arm_len+lens/2, 0, 0 ] ) cylinder( h=inner_height, r=inner_width/2, center=true );
+        translate( [(arm_len+lens)/2, 0, -gap/2 ] ) cube( [ arm_len, inner_height-gap, inner_width-gap ], center=true );
+        translate( [arm_len+lens/2, 0, -gap/2 ] ) cylinder( h=inner_width-gap, r=(inner_height-gap)/2, center=true, $fn=8 );
     }
 }
 
@@ -43,27 +44,27 @@ module slider_outside( wall )
         union()
         {
             translate( [0,0,thick/2] ) cube( [ length, slot_width+2*thick, thick ], center=true );
-            translate( [0,0,inset/2] ) cube( [ length, slot_width-gap, inset ], center=true );
+            translate( [0,0,inset/2] ) cube( [ length, slot_width-gap/2, inset ], center=true );
             translate( [-length/2,0,0] ) tab( wall, thick );
             translate( [ length/2,0,0] ) tab( wall, thick );
         }
-        translate( [0,0,2.5] ) cube( [ 7, slot_width-2, 6 ], center=true );
+        translate( [0,0,2.5] ) cube( [ inner_width+3, inner_height+3, inset+2 ], center=true );
     }
 }
 
 module slider_inside( wall )
 {
     thick=2;
-    inset=thick + 0.9*wall;
+    inset=2*thick + 0.9*wall;
     length=10;
     difference()
     {
         union()
         {
             translate( [0,0,thick/2] ) cube( [ length, slot_width+2*thick, thick ], center=true );
-            translate( [0,0,inset/2] ) cube( [ inner_width+3-gap, slot_width-2-gap, inset ], center=true );
+            translate( [0,0,inset/2] ) cube( [ inner_width+3-gap, inner_height+3-gap, inset ], center=true );
         }
-        translate( [0,0,2.5] ) cube( [ inner_width, inner_height, 6 ], center=true );
+        translate( [0,0,2.5] ) cube( [ inner_width, inner_height, inset+2 ], center=true );
         translate( [-length/2,0,-1] ) slot( wall, thick );
         translate( [ length/2,0,-1] ) slot( wall, thick );
     }
