@@ -13,6 +13,8 @@ face_width=116;           // temple-to-temple distance
 forehead_depth=27.5;      // temple to front of forehead distance
 eye_forehead_offset=5;    // distance from forehead to eye
 
+function side_slope( width ) = atan2( (width-face_width)/2, depth )
+
 variant="test";
 
 strap_width=40;

@@ -9,13 +9,17 @@ lens_thickness=5;
 lens_diameter=25;
 
 // Other
-gap=0.5;
-inner_height=slot_width-5;
+gap=0.25;
+inner_height=5;
 inner_width=4;
 
-lens_holder( 70, lens_diameter );
-//translate( [-15, 20, 0] ) slider_inside( 3 );
-//translate( [-15,-20, 0] ) slider_outside( 3 );
+function nominal_eye_phone_distance() = lens_phone_distance+eye_lens_distance+lens_thickness;
+
+//lens_holder( 70, lens_diameter );
+// angle calculated from visor.scad parameters.
+angle=6.9497;
+translate( [-15, 20, 0] ) slider_inside( 3, angle );
+translate( [-15,-20, 0] ) slider_outside( 3, angle );
 
 module lens_holder( half_width, lens )
 {
@@ -35,55 +39,37 @@ module lens_holder( half_width, lens )
     }
 }
 
-module slider_outside( wall )
+module slider_outside( wall, angle )
 {
-    thick=2;
-    inset=thick + 0.9*wall;
+    b_thick=2;
+    inset=b_thick + 0.9*wall;
     length=10;
     difference()
     {
         union()
         {
-            translate( [0,0,thick/2] ) cube( [ length, slot_width+2*thick, thick ], center=true );
-            translate( [0,0,inset/2] ) cube( [ length, slot_width-gap/2, inset ], center=true );
-            translate( [-length/2,0,0] ) tab( wall, thick );
-            translate( [ length/2,0,0] ) tab( wall, thick );
+            translate( [0,0,b_thick/2] ) cube( [ length, slot_width+2*b_thick, b_thick ], center=true );
+            rotate( [angle,0,0] ) translate( [0,0,(inset+b_thick)/2] ) cube( [ length, slot_width-gap/2, inset ], center=true );
         }
-        translate( [0,0,2.5] ) cube( [ inner_width+3, inner_height+3, inset+2 ], center=true );
+        rotate( [angle,0,0] ) translate( [0,0,2.5] ) cube( [ inner_width+3, inner_height+3, inset+2 ], center=true );
     }
 }
 
-module slider_inside( wall )
+module slider_inside( wall,angle )
 {
-    thick=2;
-    inset=2*thick + 0.9*wall;
+    b_thick=2;
+    inset=2*b_thick + 0.9*wall;
     length=10;
     difference()
     {
         union()
         {
-            translate( [0,0,thick/2] ) cube( [ length, slot_width+2*thick, thick ], center=true );
-            translate( [0,0,inset/2] ) cube( [ inner_width+3-gap, inner_height+3-gap, inset ], center=true );
+            translate( [0,0,b_thick/2] ) cube( [ length, slot_width+2*b_thick, b_thick ], center=true );
+            rotate( [angle,0,0] ) translate( [0,0,(inset+b_thick)/2] ) cube( [ inner_width+3-gap, inner_height+3-gap, inset ], center=true );
         }
-        translate( [0,0,2.5] ) cube( [ inner_width, inner_height, inset+2 ], center=true );
-        translate( [-length/2,0,-1] ) slot( wall, thick );
-        translate( [ length/2,0,-1] ) slot( wall, thick );
+        rotate( [angle,0,0] ) translate( [0,0,3.5] ) cube( [ inner_width, inner_height, inset+2 ], center=true );
     }
 }
-
-module tab( wall, thick )
-{
-    pin_ht=wall+thick+2;
-    translate( [ 0,0,pin_ht/2] ) cube( [ 1, 2, pin_ht ], center=true );
-}
-
-module slot( wall, thick )
-{
-    pin_ht=wall+thick+1;
-    translate( [ 0,0,pin_ht/2] ) cube( [ 1.25, 2.25, pin_ht ], center=true );
-}
-
-function nominal_eye_phone_distance() = lens_phone_distance+eye_lens_distance+lens_thickness;
 
 module optics_slots( fwidth, z_eyes, wall )
 {
