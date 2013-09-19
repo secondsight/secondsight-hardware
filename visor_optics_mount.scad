@@ -13,6 +13,7 @@ gap=0.25;
 inner_height=5;
 inner_width=4;
 
+// Calculate the nominal distance between the wearer's eye and the phone
 function nominal_eye_phone_distance() = lens_phone_distance+eye_lens_distance+lens_thickness;
 
 //lens_holder( 70, lens_diameter );
@@ -21,6 +22,9 @@ angle=6.9497;
 translate( [-15, 20, 0] ) slider_inside( 3, angle );
 translate( [-15,-20, 0] ) slider_outside( 3, angle );
 
+// Crescent with a stick to hold the lens
+// half_width  - Approximately half of the width of the visor
+// lens        - lens diameter
 module lens_holder( half_width, lens )
 {
     arm_len=half_width-lens;
@@ -39,6 +43,11 @@ module lens_holder( half_width, lens )
     }
 }
 
+// The part of the slider that sits outside the visor, connects with the inside
+//  part to support the lens holder.
+//   wall - thickness of the wall of the visor
+//   angle - the angle that the side of the visor makes with the perpendicular
+//           of the phone
 module slider_outside( wall, angle )
 {
     b_thick=2;
@@ -55,6 +64,11 @@ module slider_outside( wall, angle )
     }
 }
 
+// The part of the slider that sits inside the visor, connects with the outside
+//  part to support the lens holder.
+//   wall - thickness of the wall of the visor
+//   angle - the angle that the side of the visor makes with the perpendicular
+//           of the phone
 module slider_inside( wall,angle )
 {
     b_thick=2;
@@ -71,6 +85,10 @@ module slider_inside( wall,angle )
     }
 }
 
+// Definition of the slots in the sides of the visor that support the optics.
+//  fwidth - the front width of the visor
+//  z_eyes - distance from the front of the visor to the user's eyes
+//  wall   - thickness of the visor wall
 module optics_slots( fwidth, z_eyes, wall )
 {
     translate( [ fwidth/2-wall, 0, 0] ) single_optics_mount_slot( z_eyes, wall );
@@ -78,6 +96,8 @@ module optics_slots( fwidth, z_eyes, wall )
 }
 
 // Define one slot
+//  z_eyes - distance from the front of the visor to the user's eyes
+//  wall   - thickness of the visor wall
 module single_optics_mount_slot( z_eyes, wall )
 {
     hull()
