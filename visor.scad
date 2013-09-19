@@ -13,8 +13,6 @@ face_width=116;           // temple-to-temple distance
 forehead_depth=27.5;      // temple to front of forehead distance
 eye_forehead_offset=5;    // distance from forehead to eye
 
-function side_slope( width ) = atan2( (width-face_width)/2, depth )
-
 variant="test";
 
 strap_width=40;
@@ -31,8 +29,11 @@ eyes=depth-forehead_depth+eye_forehead_offset; // eye to front distance
 include <visor_body.scad>;
 include <visor_elastic_mount.scad>;
 
+function side_slope( width ) = atan2( (width-face_width)/2, depth )
+
 if( variant == "A" )
 {
+    angle=side_slope( phone_height );
     // The octagon slopes out to match the front
     difference()
     {
@@ -42,6 +43,7 @@ if( variant == "A" )
 }
 if( variant == "B" )
 {
+    angle=side_slope( front_width );
     // The octagon stays mostly parallel
     difference()
     {
@@ -51,6 +53,7 @@ if( variant == "B" )
 }
 if( variant == "test" )
 {
+    angle=side_slope( phone_height );
     intersection()
     {
         difference()
