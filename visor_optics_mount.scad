@@ -28,6 +28,7 @@ module lens_holder( half_width, lens )
         {
             translate( [rim_offset,0,0] ) cylinder( h=inner_width, r=lens/2+rim, center=true );
             cylinder( h=inner_width+1, r=lens/2, center=true );
+            translate( [-0.4*lens,0,0] ) cylinder( h=inner_width+1, r=lens/2, center=true );
         }
         translate( [(arm_len+lens)/2, 0, -gap/2 ] ) cube( [ arm_len, inner_height-gap, inner_width-gap ], center=true );
         translate( [arm_len+lens/2, 0, -gap/2 ] ) cylinder( h=inner_width-gap, r=(inner_height-gap)/2, center=true, $fn=8 );
