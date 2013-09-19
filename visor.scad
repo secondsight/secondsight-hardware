@@ -13,7 +13,7 @@ face_width=116;           // temple-to-temple distance
 forehead_depth=27.5;      // temple to front of forehead distance
 eye_forehead_offset=5;    // distance from forehead to eye
 
-variant="test";
+variant="A";
 
 strap_width=40;
 front_width=126;
@@ -33,23 +33,33 @@ function side_slope( width ) = atan2( (width-face_width)/2, depth );
 
 if( variant == "A" )
 {
-    //angle=side_slope( phone_height );
     // The octagon slopes out to match the front
     difference()
     {
         main_body( phone_height, phone_width, depth, thick, face_width, forehead_depth );
         optics_slots( front_width, eyes, thick );
     }
+    translate( [ 10,  20, 0] )  slider_inside( thick, side_slope( phone_height ) );
+    translate( [-10,  20, 0] )  slider_inside( thick, side_slope( phone_height ) );
+    translate( [ 10, -20, 0] ) slider_outside( thick, side_slope( phone_height ) );
+    translate( [-10, -20, 0] ) slider_outside( thick, side_slope( phone_height ) );
+    translate( [-50,  5, 0] ) lens_holder( (phone_height+5)/2, 25 );
+    translate( [ 50, -5, 0] ) rotate( [0, 0, 180] ) lens_holder( (phone_height+5)/2, 25 );
 }
 if( variant == "B" )
 {
-    //angle=side_slope( front_width );
     // The octagon stays mostly parallel
     difference()
     {
         main_body( front_width, height, depth, thick, face_width, forehead_depth );
         optics_slots( front_width, eyes, thick );
     }
+    translate( [ 10,  20, 0] )  slider_inside( thick, side_slope( front_width ) );
+    translate( [-10,  20, 0] )  slider_inside( thick, side_slope( front_width ) );
+    translate( [ 10, -20, 0] ) slider_outside( thick, side_slope( front_width ) );
+    translate( [-10, -20, 0] ) slider_outside( thick, side_slope( front_width ) );
+    translate( [-50,  5, 0] ) lens_holder( (phone_height+5)/2, 25 );
+    translate( [ 50, -5, 0] ) rotate( [0, 0, 180] ) lens_holder( (phone_height+5)/2, 25 );
 }
 if( variant == "test" )
 {
