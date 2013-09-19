@@ -13,7 +13,7 @@ face_width=116;           // temple-to-temple distance
 forehead_depth=27.5;      // temple to front of forehead distance
 eye_forehead_offset=5;    // distance from forehead to eye
 
-variant="A";
+variant="test";
 part="both";
 
 strap_width=40;
@@ -46,14 +46,20 @@ if( variant == "B" )
 if( variant == "test" )
 {
     //angle=side_slope( phone_height );
-    intersection()
+//    intersection()
+//    {
+//        difference()
+//        {
+//            main_body( phone_height, phone_width, depth, thick, face_width, forehead_depth );
+//            optics_slots( front_width, eyes, thick );
+//        }
+//        translate( [0.95*front_width,0,-10] ) cube( phone_height, center=true );
+//    }
+    assign( angle=side_slope( phone_height ) )
     {
-        difference()
-        {
-            main_body( phone_height, phone_width, depth, thick, face_width, forehead_depth );
-            optics_slots( front_width, eyes, thick );
-        }
-        translate( [0.95*front_width,0,-10] ) cube( phone_height, center=true );
+        translate( [-10,  20, 0] ) slider_inside( thick, angle );
+        translate( [-10, -20, 0] ) slider_outside( thick, angle );
+//        translate( [-50,  5, 0] ) lens_holder( (phone_height+5)/2, 25 );
     }
 }
 
