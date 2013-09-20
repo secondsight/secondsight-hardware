@@ -49,7 +49,7 @@ module slider_outside( wall, angle )
     b_thick=2;
     inset=b_thick + wall;
     length=10;
-    height=b_thick+1.15*wall;
+    height=b_thick+1.1*wall;
     width=slot_width+2*b_thick;
     intersection()
     {
@@ -76,16 +76,24 @@ module slider_outside( wall, angle )
 module slider_inside( wall,angle )
 {
     b_thick=2;
-    inset=2*b_thick + 0.6*wall;
+    inset=2*b_thick + wall;
     length=10;
-    difference()
+    height=2*b_thick+1.08*wall;
+    width=slot_width+2*b_thick;
+    intersection()
     {
-        union()
+        difference()
         {
-            translate( [0,0,b_thick/2] ) cube( [ length, slot_width+2*b_thick, b_thick ], center=true );
-            rotate( [0,angle,0] ) translate( [-0.25,0,(inset+b_thick)/2] ) cube( [ inner_width+3-gap, inner_height+3-gap, inset ], center=true );
+            union()
+            {
+                translate( [0,0,b_thick/2] ) cube( [ length, slot_width+2*b_thick, b_thick ], center=true );
+                rotate( [0,angle,0] ) translate( [-0.25,0,(inset+b_thick)/2] ) cube( [ inner_width+3-gap, inner_height+3-gap, inset ], center=true );
+            }
+            rotate( [0,angle,0] ) translate( [-0.25,0,3.5] ) cube( [ inner_width+gap, inner_height+gap, inset+2 ], center=true );
+            // mark top
+            translate( [-length/2+1, width/2-1, b_thick] ) cylinder( h=1, r=0.5, center=true, $fn=8 );
         }
-        rotate( [0,angle,0] ) translate( [-0.25,0,3.5] ) cube( [ inner_width+gap, inner_height+gap, inset+2 ], center=true );
+        translate([0,0,height/2]) cube( [length, width, height], center=true );
     }
 }
 
