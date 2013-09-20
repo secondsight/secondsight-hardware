@@ -3,8 +3,7 @@ aetherAR-hardware
 
 3D Printable Head Mount Display for aetherAR &amp; associated peripherals
 
-STL Files
----------
+## STL Files
 
 Each of these two files contains the complete visor. You only need to print
 one to get a useable aetherAR visor.
@@ -12,15 +11,21 @@ one to get a useable aetherAR visor.
 ### visor-A.stl
 
 This variant of the visor has a smooth slope of body from the face all the way
-to the edges of the phone. 
+to the edges of the phone. The optics mounting hardware is printed inside the
+visor.
 
 ### visor-B.stl
 
 In this variant, the main body slopes less. This results in a slight flaring
-at the front of the visor.
+at the front of the visor. The optics mounting hardware is printed inside the
+visor.
 
-Source Files
-------------
+### visor-assembled.stl
+
+This is an STL that is not meant to be printed. This STL only serves as
+documentation of how the parts of the visor should fit together.
+
+## Source Files
 
 Most of the source code for the hardware consists of OpenSCAD files.
 
@@ -32,9 +37,25 @@ visor.  It has a number of parameters that control the final visor look.
 #### Variants
 
 Currently, we have two variants of the main structure of the visor: **A** and
-**B**. The variant is chosen by setting the value of the *variant* variable to
-one of those strings. In the Makefile, this is used to automatically generate
-*visor-A.stl* or *visor-B.stl*.
+**B**. In addition, you may want to print either the whole visor or just parts
+of it. There are a pair of variables that allow you to choose what variations
+you want to print.
+
+   * variant - Choose the variant to print by setting this variable to the
+     appropriate string
+      - "A": See *visor-A.stl* above for a description. Used by the Makefile to
+        generate *visor-A.stl*.
+      - "B": See *visor-B.stl* above for a description. Used by the Makefile to
+        generate *visor-B.stl*.
+   * plate - Choose the subset of the visor to print.
+      - "body": Print the main body of the visor.
+      - "optics": Print the lens support hardware.
+      - "assembled": Show the assembled visor. Not printable!
+      - "both": Print all parts of the visor.
+
+You can either change these parameters in the *visor.scad* file or supply them
+on the openscad command line if you want to automatically generate the STLs.
+See the Makefile for examples of the use of these parameters.
 
 #### User-Specific Parameters
 
@@ -69,8 +90,7 @@ This file defines the elastic band mounting system for the phone. Although not
 the *coolest* design, this is functional and allows testing of the hardware.
 It's main advantage is that it is simple and works with all phones.
 
-Non-Source Files
-----------------
+## Non-Source Files
 
 ### Makefile
 
@@ -89,4 +109,3 @@ Makefile contains targets to help.
 
 This is a *slic3r* configuration that has been used to create gcode files for
 the visor STLs.
-
