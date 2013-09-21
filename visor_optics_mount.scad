@@ -60,7 +60,7 @@ module slider_outside( wall, angle )
                 translate( [0,0,b_thick/2] ) cube( [ length, width, b_thick ], center=true );
                 rotate( [0,angle,0] ) translate( [-0.25,0,(inset+b_thick)/2] ) cube( [ length, slot_width-gap/2, inset ], center=true );
             }
-  #         rotate( [0,angle,0] ) translate( [-0.25,0,2.5] ) cube( [ inner_width+3, inner_height+3, inset+6 ], center=true );
+            rotate( [0,angle,0] ) translate( [-0.25,0,2.5] ) cube( [ inner_width+3, inner_height+3, inset+6 ], center=true );
             // mark top
             translate( [length/2, 0, 1.5*b_thick] ) rotate( [0,90,0] ) cylinder( h=1, r=0.5, center=true, $fn=8 );
         }
