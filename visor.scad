@@ -36,12 +36,12 @@ function is_print_optics( p ) = p == "optics" || p == "both";
 if( variant == "A" )
 {
     // The octagon slopes out to match the front
-    visor( phone_height, phone_width, plate );
+    visor( phone_height, phone_width, plate, 25 );
 }
 if( variant == "B" )
 {
     // The octagon stays mostly parallel
-    visor( front_width, height, plate );
+    visor( front_width, height, plate, 25 );
 }
 if( variant == "test" )
 {
@@ -63,7 +63,7 @@ if( variant == "test" )
     }
 }
 
-module visor( width, height, plate )
+module visor( width, height, plate, lens )
 {
     if( is_print_body( plate ) )
     {
@@ -75,26 +75,26 @@ module visor( width, height, plate )
     }
     if( is_print_optics( plate ) )
     {
-        optics_plate( front_width );
+        optics_plate( front_width, lens );
     }
     if( plate == "assembled" )
     {
-        optics_assembled( front_width );
+        optics_assembled( front_width, lens );
     }
 }
 
-module optics_plate( width )
+module optics_plate( width, lens )
 {
     angle=side_slope( width );
     translate( [ 10,  20, 0] ) slider_inside( thick, angle );
     translate( [-10,  20, 0] ) slider_inside( thick, angle );
     translate( [ 10, -20, 0] ) slider_outside( thick, angle );
     translate( [-10, -20, 0] ) slider_outside( thick, angle );
-    translate( [-50,  5, 0] ) lens_holder( (phone_height+5)/2, 25 );
-    translate( [ 50, -5, 0] ) rotate( [0, 0, 180] ) lens_holder( (phone_height+5)/2, 25 );
+    translate( [-50,  5, 0] ) lens_holder( (phone_height+5)/2, lens );
+    translate( [ 50, -5, 0] ) rotate( [0, 0, 180] ) lens_holder( (phone_height+5)/2, lens );
 }
 
-module optics_assembled( width )
+module optics_assembled( width, lens )
 {
     angle=side_slope( width );
     theta=90-2*angle;
@@ -102,7 +102,7 @@ module optics_assembled( width )
     translate( [-width/2-3,  0, 36.5] ) rotate( [180,-theta,0] ) slider_inside( thick, angle );
     translate( [ width/2-4, 0, 35.75] ) rotate( [180,180-theta,180] ) slider_outside( thick, angle );
     translate( [-width/2+4, 0, 35.75] ) rotate( [0,-theta,0] ) slider_outside( thick, angle );
-    translate( [ width/2-35, 0, 34] ) lens_holder( (phone_height+5)/2, 25 );
-    translate( [-width/2+35, 0, 34] ) rotate( [0, 0, 180] ) lens_holder( (phone_height+5)/2, 25 );
+    translate( [ width/2-35, 0, 34] ) lens_holder( (phone_height+5)/2, lens );
+    translate( [-width/2+35, 0, 34] ) rotate( [0, 0, 180] ) lens_holder( (phone_height+5)/2, lens );
 }
 
