@@ -5,10 +5,9 @@ min_bfl=25;
 max_bfl=45;
 
 // Optics
-lens_phone_distance=40;
+lens_phone_distance=38;
 eye_lens_distance=12;
 lens_thickness=5;
-//lens_diameter=25;
 
 // Other
 gap=0.25;
