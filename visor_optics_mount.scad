@@ -22,14 +22,17 @@ function nominal_eye_phone_distance() = lens_phone_distance+eye_lens_distance+le
 module lens_holder( half_width, lens )
 {
     arm_len=half_width-lens;
+    // difference in diameter between lens and outer circle of holder
     rim=1.5;
+    // offset of rim from center of lens
     rim_offset=1.25*rim;
     translate( [0,0,inner_width/2] ) union()
     {
         difference()
         {
             translate( [rim_offset,0,0] ) cylinder( h=inner_width, r=lens/2+rim, center=true );
-            cylinder( h=inner_width+1, r=lens/2, center=true );
+            cylinder( h=inner_width+1, r=lens/2-0.1, center=true );
+            cylinder( h=1, r=lens/2+0.1, center=true );
             translate( [-0.4*lens,0,0] ) cylinder( h=inner_width+1, r=lens/2, center=true );
         }
         translate( [(arm_len+lens)/2, 0, -gap/2 ] ) cube( [ arm_len, inner_height-gap, inner_width-gap ], center=true );

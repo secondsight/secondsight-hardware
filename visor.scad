@@ -16,7 +16,7 @@ IPD_min=52;
 IPD_max=78;
 IPD_avg=63;
 
-variant="A";
+variant="test";
 plate="both";
 
 strap_width=40;
@@ -51,9 +51,9 @@ if( variant == "test" )
 {
     assign( angle=side_slope( phone_height ) )
     {
-        translate( [-10,  20, 0] ) slider_inside( thick, angle );
-        translate( [-10, -20, 0] ) slider_outside( thick, angle );
-//        translate( [-50,  5, 0] ) lens_holder( (phone_height+5)/2, lens_diameter );
+//        translate( [-10,  20, 0] ) slider_inside( thick, angle );
+//        translate( [-10, -20, 0] ) slider_outside( thick, angle );
+        lens_holder( (phone_height+5)/2, lens_diameter );
     }
 }
 
