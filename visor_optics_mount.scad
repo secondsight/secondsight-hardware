@@ -25,7 +25,7 @@ module lens_holder( half_width, lens )
     rad_lens=lens_diam( lens )/2;
     arm_len=half_width-lens_diam(lens);
     // difference in diameter between dlens and outer circle of holder
-    rim=1.5;
+    rim=0.01*lens_diam(lens) + 1.25;
     // offset of rim from center of dlens
     rim_offset=1.25*rim;
     translate( [0,0,inner_width/2] ) union()
@@ -34,8 +34,8 @@ module lens_holder( half_width, lens )
         {
             translate( [rim_offset,0,0] ) cylinder( h=inner_width, r=rad_lens+rim, center=true );
             cylinder( h=inner_width+1, r=rad_lens-0.1, center=true );
-            cylinder( h=lens_rim_thickness(lens), r=rad_lens+0.1, center=true );
-            translate( [-0.8*rad_lens,0,0] ) cylinder( h=inner_width+1, r=rad_lens, center=true );
+            cylinder( h=lens_rim_thickness(lens), r=rad_lens+0.25, center=true );
+            translate( [-rad_lens,0,0] ) cylinder( h=inner_width+1, r=rad_lens, center=true );
         }
         translate( [arm_len/2+rad_lens, 0, -gap/2 ] ) cube( [ arm_len, inner_height-gap, inner_width-gap ], center=true );
         translate( [arm_len+rad_lens, 0, -gap/2 ] ) cylinder( h=inner_width-gap, r=(inner_height-gap)/2, center=true, $fn=8 );

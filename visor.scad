@@ -53,11 +53,12 @@ if( variant == "B" )
 }
 if( variant == "test" )
 {
-    assign( angle=side_slope( phone_height ) )
+    rotate( [0,0,90] ) assign( angle=side_slope( phone_height ) )
     {
 //        translate( [-10,  20, 0] ) slider_inside( thick, angle );
 //        translate( [-10, -20, 0] ) slider_outside( thick, angle );
-        lens_holder( (phone_height+5)/2, lens );
+        translate( [ 15, 0, 0 ] ) lens_holder( (phone_height+5)/2, lens_descriptor( "ebay 50x50" ) );
+        translate( [ -15, 0, 0 ] ) rotate( [0,0,180] ) lens_holder( (phone_height+5)/2, lens_descriptor( "edmund 25x50" ) );
     }
 }
 
