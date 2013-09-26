@@ -1,12 +1,12 @@
 //  Optics-mounting parts for aetherAR visor
 
+include <lenses.scad>;
+
 slot_width=10;
 min_bfl=20;
 
 // Optics
-lens_phone_distance=38;
 eye_lens_distance=12;
-lens_thickness=5;
 
 // Other
 gap=0.25;
@@ -14,29 +14,31 @@ inner_height=5;
 inner_width=4;
 
 // Calculate the nominal distance between the wearer's eye and the phone
-function nominal_eye_phone_distance() = lens_phone_distance+eye_lens_distance+lens_thickness;
+//   given a description of the lens.
+function nominal_eye_phone_distance(lens) = lens_phone_offset(lens)+eye_lens_distance+lens_thickness(lens);
 
 // Crescent with a stick to hold the lens
 // half_width  - Approximately half of the width of the visor
-// lens        - lens diameter
+// lens        - lens descriptor
 module lens_holder( half_width, lens )
 {
-    arm_len=half_width-lens;
-    // difference in diameter between lens and outer circle of holder
+    rad_lens=lens_diam( lens )/2;
+    arm_len=half_width-lens_diam(lens);
+    // difference in diameter between dlens and outer circle of holder
     rim=1.5;
-    // offset of rim from center of lens
+    // offset of rim from center of dlens
     rim_offset=1.25*rim;
     translate( [0,0,inner_width/2] ) union()
     {
         difference()
         {
-            translate( [rim_offset,0,0] ) cylinder( h=inner_width, r=lens/2+rim, center=true );
-            cylinder( h=inner_width+1, r=lens/2-0.1, center=true );
-            cylinder( h=1, r=lens/2+0.1, center=true );
-            translate( [-0.4*lens,0,0] ) cylinder( h=inner_width+1, r=lens/2, center=true );
+            translate( [rim_offset,0,0] ) cylinder( h=inner_width, r=rad_lens+rim, center=true );
+            cylinder( h=inner_width+1, r=rad_lens-0.1, center=true );
+            cylinder( h=lens_rim_thickness(lens), r=rad_lens+0.1, center=true );
+            translate( [-0.8*rad_lens,0,0] ) cylinder( h=inner_width+1, r=rad_lens, center=true );
         }
-        translate( [(arm_len+lens)/2, 0, -gap/2 ] ) cube( [ arm_len, inner_height-gap, inner_width-gap ], center=true );
-        translate( [arm_len+lens/2, 0, -gap/2 ] ) cylinder( h=inner_width-gap, r=(inner_height-gap)/2, center=true, $fn=8 );
+        translate( [arm_len/2+rad_lens, 0, -gap/2 ] ) cube( [ arm_len, inner_height-gap, inner_width-gap ], center=true );
+        translate( [arm_len+rad_lens, 0, -gap/2 ] ) cylinder( h=inner_width-gap, r=(inner_height-gap)/2, center=true, $fn=8 );
     }
 }
 
