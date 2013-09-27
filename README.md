@@ -90,6 +90,35 @@ This file defines the elastic band mounting system for the phone. Although not
 the *coolest* design, this is functional and allows testing of the hardware.
 It's main advantage is that it is simple and works with all phones.
 
+### lenses.scad
+
+This file contains functions to define and use descriptions of particular
+lenses. We want designs to be able to depend on both the physical and optical
+characteristics of a lens, without having a bunch of random constants to deal
+with (and pass around). This file defines a vector structure and accessors to
+keep those parameters in check.
+
+#### lens\_descriptor(name)
+
+This function returns the vector that describes a lens we already know. You
+can think of it as a factory object for known lenses. It currently has values
+for the lenses we used in prototyping.
+
+#### Accessor methods
+
+Each accessor takes the lens description as a parameter and returns the
+requested data from the vector. This is a lot more readable than just dealing
+with random vector indices. All lengths are in mm.
+
+   * lens\_diam(lens) - lens diameter
+   * lens\_focal\_length(lens) - focal length
+   * lens\_phone\_offset(lens) - measured nominal distance from lens to phone
+   * lens\_fov(lens) - measured minimum field of view at the phone\_offset
+   * lens\_rim\_thickness(lens) - thickness of the rim of the lens
+   * lens\_front\_height(lens) - distance from rim to the front of the lens
+   * lens\_thickness(lens) - overall thickness of the lens
+   * lens\_back\_height(lens) - distance from the rim to the back of the lens
+
 ## Non-Source Files
 
 ### Makefile
