@@ -129,19 +129,18 @@ module face( face_width, depth, height )
 //  wall   - wall thickness
 module nose_slice( height, depth, wall )
 {
-    theta=10;
-    spread=5.8;
-    slice=35;
-    translate( [0,-height/2+0.75*wall,depth/2] )
+    theta=8;
+    slice=32;
+    translate( [0,-height/2+0.75*wall,0] )
     intersection()
     {
         union()
         {
-            translate([spread,0,0] ) rotate( [0,theta,0] ) cube( [slice, wall*4, 1.2*depth], center=true );
-            translate([-spread,0,0] ) rotate( [0,-theta,0] ) cube( [slice, wall*4, 1.2*depth], center=true );
+            rotate( [0,theta,0] ) translate( [0,0,depth/2] ) cube( [slice, wall*4, 1.2*depth], center=true );
+            rotate( [0,-theta,0] ) translate( [0,0,depth/2] ) cube( [slice, wall*4, 1.2*depth], center=true );
         }
         // cut it off slightly above the base
-        translate([0,0,wall]) cube( depth, center=true );
+        translate([0,0,wall+depth/2]) cube( depth, center=true );
     }
 }
 

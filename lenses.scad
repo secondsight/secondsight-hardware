@@ -5,6 +5,7 @@
 function lens_descriptor(name) = (name == "ebay 50x50") ? [ 50, 50, 42, 75, 2, 7.35, 12.45 ]
     : name == "edmund 25x50" ? [ 25, 50, 44, 50, 1.25, 3, 4.25 ]
     : name == "edmund 25x25" ? [ 25, 25, 23, 30, 1.25, 6.15, 7.4 ]
+    : name == "b&l 35 5x"    ? [ 35, 50, 44, 60, 1.25, 3, 4.25 ] // guesses
     : [];
 
 function lens_diam( lens ) = lens[0];
