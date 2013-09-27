@@ -8,23 +8,25 @@ phone_thickness=7.9;
 view_width=65;
 view_height=110;
 
-// Potentially user-specific data
-face_width=116;           // temple-to-temple distance
-forehead_depth=27.5;      // temple to front of forehead distance
-eye_forehead_offset=5;    // distance from forehead to eye
 IPD_min=52;
 IPD_max=78;
 IPD_avg=63;
 
-variant="test";
-plate="both";
+// Potentially user-specific data
+user_face_width=116;           // temple-to-temple distance
+forehead_depth=27.5;      // temple to front of forehead distance
+eye_forehead_offset=5;    // distance from forehead to eye
+ipd=IPD_avg;
+
+variant="A";
+plate="assembled";
 
 strap_width=40;
 front_width=126;
 height=67;
 thick=3;
-//lens_name="edmund 25x50";
-lens_name="ebay 50x50";
+lens_name="edmund 25x50";
+//lens_name="b&l 35 5x";
 
 include <lenses.scad>;
 lens=lens_descriptor( lens_name );
@@ -37,7 +39,9 @@ depth=eyes-eye_forehead_offset+forehead_depth;
 include <visor_body.scad>;
 include <visor_elastic_mount.scad>;
 
-function side_slope( width ) = atan2( (width-face_width)/2, depth );
+function calc_face_width( lens ) = lens_diam(lens)+IPD_max+2*thick+12; // 12 is for optics mount hardware.
+function face_width( lens ) = (user_face_width > calc_face_width( lens )) ? user_face_width : calc_face_width( lens );
+function side_slope( width, lens ) = atan2( (width-face_width(lens))/2, depth );
 function is_print_body( p ) = p == "body" || p == "both" || p == "assembled";
 function is_print_optics( p ) = p == "optics" || p == "both";
 
@@ -53,7 +57,7 @@ if( variant == "B" )
 }
 if( variant == "test" )
 {
-    rotate( [0,0,90] ) assign( angle=side_slope( phone_height ) )
+    rotate( [0,0,90] ) assign( angle=side_slope( phone_height, lens ) )
     {
 //        translate( [-10,  20, 0] ) slider_inside( thick, angle );
 //        translate( [-10, -20, 0] ) slider_outside( thick, angle );
@@ -73,7 +77,7 @@ module visor( width, height, plate, lens )
     {
         difference()
         {
-            main_body( width, height, depth, thick, face_width, forehead_depth );
+            main_body( width, height, depth, thick, face_width(lens), forehead_depth );
             optics_slots( width, eyes, thick );
         }
     }
@@ -92,7 +96,7 @@ module visor( width, height, plate, lens )
 //  lens  -    descriptor for the lenses to use
 module optics_plate( width, lens )
 {
-    angle=side_slope( width );
+    angle=side_slope( width, lens );
     xoff=lens_diam( lens ) < 40 ? 50 : 45;
     translate( [ 10,  20, 0] ) slider_inside( thick, angle );
     translate( [-10,  20, 0] ) slider_inside( thick, angle );
@@ -108,17 +112,22 @@ module optics_plate( width, lens )
 module optics_assembled( width, lens )
 {
     dlens=lens_diam( lens );
-    angle=side_slope( width );
-    theta=90-2*angle;
-    xoff=IPD_min/2;
+    angle=side_slope( width, lens );
+    theta=90-angle;
+    xoff=IPD_avg/2;
     lens_z=38;
-    translate( [ width/2+2,  0, lens_z+0.5] ) rotate( [180,-theta,180] ) slider_inside( thick, angle );
-    translate( [-width/2-2,  0, lens_z+0.5] ) rotate( [180,-theta,0] ) slider_inside( thick, angle );
-    translate( [ width/2-4.5, 0, lens_z-0.25] ) rotate( [180,180-theta,180] ) slider_outside( thick, angle );
-    translate( [-width/2+4.5, 0, lens_z-0.25] ) rotate( [0,-theta,0] ) slider_outside( thick, angle );
-    translate( [ xoff, 0, lens_z-2] ) lens_holder( (phone_height+5)/2, lens );
+    mount_x=width/2-lens_z*sin(angle);
+    // Left side assembly
+    translate( [-mount_x+2,  0, lens_z] ) rotate( [0, theta,180] ) slider_inside( thick, angle );
+    translate( [-mount_x-5, 0, lens_z] ) rotate( [0,180+theta,180] ) slider_outside( thick, angle );
     translate( [-xoff, 0, lens_z-2] ) rotate( [0, 0, 180] ) lens_holder( (phone_height+5)/2, lens );
-%   translate( [ xoff, 0, lens_z] ) cylinder( h=1, r=dlens/2, center=true );
+    // right side assembly
+    translate( [ mount_x-2,  0, lens_z] ) rotate( [0, theta,0] ) slider_inside( thick, angle );
+    translate( [ mount_x+5, 0, lens_z] ) rotate( [0,180+theta,0] ) slider_outside( thick, angle );
+    translate( [ xoff, 0, lens_z-2] ) lens_holder( (phone_height+5)/2, lens );
+
+    // lenses
 %   translate( [-xoff, 0, lens_z] ) cylinder( h=1, r=dlens/2, center=true );
+%   translate( [ xoff, 0, lens_z] ) cylinder( h=1, r=dlens/2, center=true );
 }
 
