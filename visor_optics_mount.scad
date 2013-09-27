@@ -32,9 +32,13 @@ module lens_holder( half_width, lens )
     {
         difference()
         {
+            // outer part of lens holder
             translate( [rim_offset,0,0] ) cylinder( h=inner_width, r=rad_lens+rim, center=true );
+            // inner opening around the lens.
             cylinder( h=inner_width+1, r=rad_lens-0.1, center=true );
+            // indention for the lens rim.
             cylinder( h=lens_rim_thickness(lens), r=rad_lens+0.25, center=true );
+            // opening
             translate( [-rad_lens,0,0] ) cylinder( h=inner_width+1, r=rad_lens, center=true );
         }
         translate( [arm_len/2+rad_lens, 0, -gap/2 ] ) cube( [ arm_len, inner_height-gap, inner_width-gap ], center=true );
@@ -76,7 +80,7 @@ module slider_outside( wall, angle )
 //   wall - thickness of the wall of the visor
 //   angle - the angle that the side of the visor makes with the perpendicular
 //           of the phone
-module slider_inside( wall,angle )
+module slider_inside( wall, angle )
 {
     b_thick=2;
     inset=2*b_thick + wall;
