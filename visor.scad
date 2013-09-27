@@ -27,6 +27,7 @@ height=67;
 thick=3;
 lens_name="edmund 25x50";
 //lens_name="b&l 35 5x";
+//lens_name="ebay 50x50";
 
 include <lenses.scad>;
 lens=lens_descriptor( lens_name );
@@ -87,7 +88,7 @@ module visor( width, height, plate, lens )
     }
     if( plate == "assembled" )
     {
-        optics_assembled( front_width, lens );
+        optics_assembled( width, lens );
     }
 }
 
@@ -118,12 +119,12 @@ module optics_assembled( width, lens )
     lens_z=38;
     mount_x=width/2-lens_z*sin(angle);
     // Left side assembly
-    translate( [-mount_x+2,  0, lens_z] ) rotate( [0, theta,180] ) slider_inside( thick, angle );
-    translate( [-mount_x-5, 0, lens_z] ) rotate( [0,180+theta,180] ) slider_outside( thick, angle );
+    translate( [-mount_x+5,  0, lens_z] ) rotate( [0, theta,180] ) slider_inside( thick, angle );
+    translate( [-mount_x-2, 0, lens_z] ) rotate( [0,180+theta,180] ) slider_outside( thick, angle );
     translate( [-xoff, 0, lens_z-2] ) rotate( [0, 0, 180] ) lens_holder( (phone_height+5)/2, lens );
     // right side assembly
-    translate( [ mount_x-2,  0, lens_z] ) rotate( [0, theta,0] ) slider_inside( thick, angle );
-    translate( [ mount_x+5, 0, lens_z] ) rotate( [0,180+theta,0] ) slider_outside( thick, angle );
+    translate( [ mount_x-5,  0, lens_z] ) rotate( [0, theta,0] ) slider_inside( thick, angle );
+    translate( [ mount_x+2, 0, lens_z] ) rotate( [0,180+theta,0] ) slider_outside( thick, angle );
     translate( [ xoff, 0, lens_z-2] ) lens_holder( (phone_height+5)/2, lens );
 
     // lenses
