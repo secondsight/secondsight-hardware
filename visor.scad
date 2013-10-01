@@ -113,14 +113,15 @@ module optics_plate( width, lens )
 //  lens  -    descriptor for the lenses to use
 module optics_assembled( width, lens )
 {
+    // tweakable
+    xoff=IPD_avg/2;
+    lens_z=lens_phone_offset( lens );
+
+    // non-tweakable
     dlens=lens_diam( lens );
     angle=side_slope( width, lens );
     theta=90-angle;
     mount_x=width/2-lens_z*sin(angle);
-
-    // tweakable
-    xoff=IPD_avg/2;
-    lens_z=lens_phone_offset( lens );
 
     // Left side assembly
     translate( [-mount_x+5,  0, lens_z] ) rotate( [0, theta,180] ) slider_inside( thick, angle );
