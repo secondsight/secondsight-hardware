@@ -25,9 +25,8 @@ strap_width=40;
 front_width=126;
 height=67;
 thick=3;
-lens_name="edmund 25x50";
-//lens_name="b&l 35 5x";
-//lens_name="ebay 50x50";
+lens_name="b&l 35 5x";
+//lens_name="edmund 25x50";
 
 include <lenses.scad>;
 lens=lens_descriptor( lens_name );
@@ -62,8 +61,9 @@ if( variant == "test" )
     {
 //        translate( [-10,  20, 0] ) slider_inside( thick, angle );
 //        translate( [-10, -20, 0] ) slider_outside( thick, angle );
-        translate( [ 15, 0, 0 ] ) lens_holder( (phone_height+5)/2, lens_descriptor( "ebay 50x50" ) );
-        translate( [ -15, 0, 0 ] ) rotate( [0,0,180] ) lens_holder( (phone_height+5)/2, lens_descriptor( "edmund 25x50" ) );
+//        translate( [ 15, 0, 0 ] ) lens_holder( (phone_height+5)/2, lens_descriptor( "ebay 50x50" ) );
+//        translate( [ -15, 0, 0 ] ) rotate( [0,0,180] ) lens_holder( (phone_height+5)/2, lens_descriptor( "edmund 25x50" ) );
+        lens_holder( (phone_height+5)/2, lens_descriptor( "b&l 35 5x" ) );
     }
 }
 
