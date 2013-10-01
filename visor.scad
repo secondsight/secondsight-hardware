@@ -10,13 +10,14 @@ view_height=110;
 
 IPD_min=52;
 IPD_max=78;
+IPD_avg_male=64.7;
+IPD_avg_female=62.3;
 IPD_avg=63;
 
 // Potentially user-specific data
-user_face_width=116;           // temple-to-temple distance
+user_face_width=116;      // temple-to-temple distance
 forehead_depth=27.5;      // temple to front of forehead distance
 eye_forehead_offset=5;    // distance from forehead to eye
-ipd=IPD_avg;
 
 variant="A";
 plate="assembled";
@@ -115,9 +116,12 @@ module optics_assembled( width, lens )
     dlens=lens_diam( lens );
     angle=side_slope( width, lens );
     theta=90-angle;
-    xoff=IPD_avg/2;
-    lens_z=38;
     mount_x=width/2-lens_z*sin(angle);
+
+    // tweakable
+    xoff=IPD_avg/2;
+    lens_z=lens_phone_offset( lens );
+
     // Left side assembly
     translate( [-mount_x+5,  0, lens_z] ) rotate( [0, theta,180] ) slider_inside( thick, angle );
     translate( [-mount_x-2, 0, lens_z] ) rotate( [0,180+theta,180] ) slider_outside( thick, angle );

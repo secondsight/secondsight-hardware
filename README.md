@@ -57,6 +57,30 @@ You can either change these parameters in the *visor.scad* file or supply them
 on the openscad command line if you want to automatically generate the STLs.
 See the Makefile for examples of the use of these parameters.
 
+#### Experimenting with Assembled View
+
+There are a few parameters that you can change in the *assembled* view to get
+an idea of how the visor will work in reality. Supplying a different value for
+*lens* gives an idea of how the visor would look with that lens. Obviously,
+this is easy for one of the defined lenses, and harder if you just want to try
+out a lens. See the file *lenses.scad* to define a new lens to try.
+
+Inside the optics\_assembled module, there are two potentially tweakable
+parameters. The *xoff* value is half the IPD (Inter-Pupilary Distance). You can
+either supply this directly or use one of the constants defined at the top of
+*visor.scad*.
+
+   * IPD\_min - minumum value for adults
+   * IPD\_max - maximum value for adults
+   * IPD\_avg - average value for adults
+   * IPD\_avg\_male - average value for adult males
+   * IPD\_avg\_female - average value for adult females
+
+The other tweakable parameter is *lens_z*, which specifies the distance between
+the phone and the lens. Normally, we use the defined value for the lens, but
+you can change this value to see how the visor would look with the lens closer
+to the phone or farther away.
+
 #### User-Specific Parameters
 
 Although we don't expect these to change, a particular user might be able to
