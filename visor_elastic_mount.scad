@@ -1,14 +1,35 @@
 // Simple phone mounting structure
 //  provides points for elastic bands to attach to.
 
+// Add elastic mounts for the A and B variants with the triangular
+// corner pieces.
+//
+//  fwidth  - width of the front of the viewer
+//  fheight - height of the front of the viewer
+//  wall    - thickness of walls
+module phone_mount_narrow( fwidth, fheight, wall )
+{
+    phone_mount( fwidth, fheight, wall, 5, 3 );
+}
+
+// Add elastic mounts for the C variant which is slopes more smoothly
+// from face to phone.
+//
+//  fwidth  - width of the front of the viewer
+//  fheight - height of the front of the viewer
+//  wall    - thickness of walls
+module phone_mount_wide( fwidth, fheight, wall )
+{
+    phone_mount( fwidth, fheight, wall, 2.5, 5 );
+}
 
 //  fwidth  - width of the front of the viewer
 //  fheight - height of the front of the viewer
-module phone_mount( fwidth, fheight, wall, variant )
+//  wall    - thickness of walls
+module phone_mount( fwidth, fheight, wall, y_delta, zoffset )
 {
     xoffset=fwidth/2-20;
-    yoffset=variant == "C" ? fheight/2-2.5 : fheight/2-5;
-    zoffset=variant == "C" ? 5 : 3;
+    yoffset=fheight/2-y_delta;
     theta=40;
     for( dir = [ [1,1,-1], [-1,1,-1], [1,-1,1], [-1,-1,1] ] )
     {

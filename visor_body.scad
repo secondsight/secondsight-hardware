@@ -53,7 +53,14 @@ module main_body( fwidth, fheight, depth, wall, face, forehead_depth, variant )
             // add straps
             translate([ face/2+0.75*wall, 0, depth-8]) rotate([180,-85,0]) strap_mount( wall );
             translate([-face/2-0.75*wall, 0, depth-8]) rotate([0,-95,0]) strap_mount( wall );
-            phone_mount( fwidth, fheight, wall, variant );
+            if( variant == "C" )
+            {
+                phone_mount_wide( fwidth, fheight, wall );
+            }
+            else
+            {
+                phone_mount_narrow( fwidth, fheight, wall );
+            }
         }
         // These must be subtracted last to deal with any added parts that might
         //  intrude on the middle volume.
