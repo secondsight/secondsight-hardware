@@ -84,7 +84,14 @@ module visor( width, height, plate, lens, variant )
     {
         difference()
         {
-            main_body( width, height, depth, thick, face_width(lens), forehead_depth, variant );
+            if( variant == "C" )
+            {
+                smooth_body( width, height, depth, thick, face_width(lens), forehead_depth );
+            }
+            else
+            {
+                flared_body( width, height, depth, thick, face_width(lens), forehead_depth );
+            }
             optics_slots( width, eyes, thick );
         }
     }

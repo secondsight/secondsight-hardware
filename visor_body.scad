@@ -9,7 +9,7 @@ function _vert_side( desc )=desc[3];
 // Depends on the following globals:
 //  phone_width  -  body_front_outer(), body_front_inner(),
 //  phone_height -  body_front_outer(), body_front_inner(),
-//  height       -  main_body()
+//  height       -  smooth_body()
 //  strap_width  -  strap_mount()
 
 // Build the body from the pieces (too many parameters)
@@ -19,7 +19,7 @@ function _vert_side( desc )=desc[3];
 //  wall           - thickness of the walls of the visor
 //  face           - width of the face
 //  forehead_depth - distance from forehead touch to temples of viewer
-module main_body( fwidth, fheight, depth, wall, face, forehead_depth, variant )
+module flared_body( fwidth, fheight, depth, wall, face, forehead_depth )
 {
     protrude=0.1;
     difference()
@@ -29,56 +29,78 @@ module main_body( fwidth, fheight, depth, wall, face, forehead_depth, variant )
             difference()
             {
                 // core shape
-                if( variant == "C" )
+                union()
                 {
-                    solid_body(
-                        [ fwidth, fheight, 116, 55.8 ],
-                        [ face, height, 63, 35 ],
-                        depth,
-                        wall
-                    );
-                }
-                else
-                {
-                    union()
-                    {
-                        shell_outer( fwidth, fheight, depth, face );
-                        body_front_outer();
-                    }
+                    shell_outer( fwidth, fheight, depth, face );
+                    body_front_outer();
                 }
                 // carve out back of viewer
                 face( face, depth-forehead_depth, depth );
                 nose_slice( fheight, depth, wall );
             }
-            // add straps
-            translate([ face/2+0.75*wall, 0, depth-8]) rotate([180,-85,0]) strap_mount( wall );
-            translate([-face/2-0.75*wall, 0, depth-8]) rotate([0,-95,0]) strap_mount( wall );
-            if( variant == "C" )
-            {
-                phone_mount_wide( fwidth, fheight, wall );
-            }
-            else
-            {
-                phone_mount_narrow( fwidth, fheight, wall );
-            }
+            both_strap_mounts( face, depth, wall );
+            phone_mount_narrow( fwidth, fheight, wall );
         }
         // These must be subtracted last to deal with any added parts that might
         //  intrude on the middle volume.
-        if( variant == "C" )
-        {
-            translate( [0,0,-protrude] ) solid_body(
-                [ fwidth-2*wall, fheight-2*wall, 116-wall, 55.8-wall ],
-                [ face-2*wall, height-2*wall, 63-wall, 35-wall ],
-                depth+2*protrude,
-                wall
-            );
-        }
-        else
-        {
-            shell_inner( fwidth, fheight, depth, wall, face );
-            body_front_inner( wall );
-        }
+        shell_inner( fwidth, fheight, depth, wall, face );
+        body_front_inner( wall );
     }
+}
+
+// Build the body from the pieces (too many parameters)
+//  fwidth         - the width of the front of this part of the body
+//  fheight        - the height of the front of this part of the body
+//  depth          - the measured from front of visor to the back
+//  wall           - thickness of the walls of the visor
+//  face           - width of the face
+//  forehead_depth - distance from forehead touch to temples of viewer
+module smooth_body( fwidth, fheight, depth, wall, face, forehead_depth )
+{
+    protrude=0.1;
+    phone_top=116;   // TODO: should depend on fwidth
+    phone_side=55.8; // TODO: should depend on fheight
+    face_top=63;     // TODO: should depend on face
+    face_side=35;    // TODO: should depend on height
+    difference()
+    {
+        union()
+        {
+            difference()
+            {
+                // core shape
+                solid_body(
+                    [ fwidth, fheight, phone_top, phone_side ],
+                    [ face, height, face_top, face_side ],
+                    depth,
+                    wall
+                );
+                // carve out back of viewer
+                face( face, depth-forehead_depth, depth );
+                nose_slice( fheight, depth, wall );
+            }
+            // add straps
+            both_strap_mounts( face, depth, wall );
+            phone_mount_wide( fwidth, fheight, wall );
+        }
+        // These must be subtracted last to deal with any added parts that might
+        //  intrude on the middle volume.
+        translate( [0,0,-protrude] ) solid_body(
+            [ fwidth-2*wall, fheight-2*wall, phone_top-wall, phone_side-wall ],
+            [ face-2*wall, height-2*wall, face_top-wall, face_side-wall ],
+            depth+2*protrude,
+            wall
+        );
+    }
+}
+
+module both_strap_mounts( face, depth, wall )
+{
+    d_angle=5;
+    z_offset=depth-8;
+    x_offset=face/2+0.75*wall;
+    translate([ x_offset, 0, z_offset]) rotate([180,-90+d_angle,0]) strap_mount( wall );
+    translate([-x_offset, 0, z_offset]) rotate([0,-90-d_angle,0]) strap_mount( wall );
 }
 
 // Mount points for the strap.
@@ -218,6 +240,18 @@ module polyprism_hole( len, bottom, top, wall, sides )
         );
 }
 
+// Ten-sided polyhedron making the visor body.
+//
+// phone - a vector containing parameters for the phone side of the body
+// face  - a vector containing parameters for the face side of the body
+// depth - the depth of the body, front to back
+// wall  - the thickness of the walls
+//
+// The vectors for phone and face contain 4 parameters.
+//   - width      : the full width of the object on this side
+//   - height     : the full height of the object on this side
+//   - horiz_side : the width of the center side of the horizontal
+//   - vert_side  : the height of the center side of the vertical
 module solid_body( phone, face, depth, wall )
 {
     polyhedron(
