@@ -20,7 +20,7 @@ forehead_depth=27.5;      // temple to front of forehead distance
 eye_forehead_offset=5;    // distance from forehead to eye
 
 variant="C";
-plate="both";
+plate="assembled";
 
 strap_width=40;
 front_width=126;
@@ -49,17 +49,17 @@ function is_print_optics( p ) = p == "optics" || p == "both";
 if( variant == "A" )
 {
     // The octagon slopes out to match the front
-    visor( phone_height, phone_width, plate, lens, variant );
+    visor_flared( phone_height, phone_width, plate, lens );
 }
 if( variant == "B" )
 {
     // The octagon stays mostly parallel
-    visor( front_width, height, plate, lens, variant );
+    visor_flared( front_width, height, plate, lens );
 }
 if( variant == "C" )
 {
     // Single smooth body
-    visor( phone_height, phone_width, plate, lens, variant );
+    visor_smooth( phone_height, phone_width, plate, lens );
 }
 if( variant == "test" )
 {
@@ -78,20 +78,38 @@ if( variant == "test" )
 //  height -  height of the visor
 //  plate -   indicator of which set of components to print
 //  lens  -   lens descriptor
-module visor( width, height, plate, lens, variant )
+module visor_flared( width, height, plate, lens )
 {
     if( is_print_body( plate ) )
     {
         difference()
         {
-            if( variant == "C" )
-            {
-                smooth_body( width, height, depth, thick, face_width(lens), forehead_depth );
-            }
-            else
-            {
-                flared_body( width, height, depth, thick, face_width(lens), forehead_depth );
-            }
+            flared_body( width, height, depth, thick, face_width(lens), forehead_depth );
+            optics_slots( width, eyes, thick );
+        }
+    }
+    if( is_print_optics( plate ) )
+    {
+        optics_plate( front_width, lens );
+    }
+    if( plate == "assembled" )
+    {
+        optics_assembled( width, lens );
+    }
+}
+
+// Everything to be printed for the visor
+//  width -   front width of the visor
+//  height -  height of the visor
+//  plate -   indicator of which set of components to print
+//  lens  -   lens descriptor
+module visor_smooth( width, height, plate, lens )
+{
+    if( is_print_body( plate ) )
+    {
+        difference()
+        {
+            smooth_body( width, height, depth, thick, face_width(lens), forehead_depth );
             optics_slots( width, eyes, thick );
         }
     }
