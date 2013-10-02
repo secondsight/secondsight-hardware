@@ -3,13 +3,15 @@
 STLS=\
 	 visor-A.stl\
 	 visor-B.stl\
+	 visor-C.stl\
 	 visor-assembled.stl
 
 SOURCES=\
 	visor.scad\
 	visor_body.scad\
 	visor_elastic_mount.scad\
-	visor_optics_mount.scad
+	visor_optics_mount.scad \
+	lenses.scad
 
 # This is system-specific
 OPENSCAD=/usr/local/bin/openscad
@@ -32,6 +34,9 @@ visor-A.stl: $(SOURCES) Makefile
 
 visor-B.stl: $(SOURCES) Makefile
 	$(OPENSCAD) -D 'variant="B"' -D 'part="both"' -o $@ $<
+
+visor-C.stl: $(SOURCES) Makefile
+	$(OPENSCAD) -D 'variant="C"' -D 'part="both"' -o $@ $<
 
 visor-assembled.stl: $(SOURCES) Makefile
 	$(OPENSCAD) -D 'variant="A"' -D 'part="assembled"' -o $@ $<

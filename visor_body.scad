@@ -1,8 +1,15 @@
 // aetherAR visor - main body shape.
 
+// Handle parameters for body shape.
+function _width( desc )=desc[0];
+function _height( desc )=desc[1];
+function _horiz_side( desc )=desc[2];
+function _vert_side( desc )=desc[3];
+
 // Depends on the following globals:
 //  phone_width  -  body_front_outer(), body_front_inner(),
 //  phone_height -  body_front_outer(), body_front_inner(),
+//  height       -  main_body()
 //  strap_width  -  strap_mount()
 
 // Build the body from the pieces (too many parameters)
@@ -12,8 +19,9 @@
 //  wall           - thickness of the walls of the visor
 //  face           - width of the face
 //  forehead_depth - distance from forehead touch to temples of viewer
-module main_body( fwidth, fheight, depth, wall, face, forehead_depth )
+module main_body( fwidth, fheight, depth, wall, face, forehead_depth, variant )
 {
+    protrude=0.1;
     difference()
     {
         union()
@@ -21,10 +29,22 @@ module main_body( fwidth, fheight, depth, wall, face, forehead_depth )
             difference()
             {
                 // core shape
-                union()
+                if( variant == "C" )
                 {
-                    shell_outer( fwidth, fheight, depth, face );
-                    body_front_outer();
+                    solid_body(
+                        [ fwidth, fheight, 116, 55.8 ],
+                        [ face, height, 63, 35 ],
+                        depth,
+                        wall
+                    );
+                }
+                else
+                {
+                    union()
+                    {
+                        shell_outer( fwidth, fheight, depth, face );
+                        body_front_outer();
+                    }
                 }
                 // carve out back of viewer
                 face( face, depth-forehead_depth, depth );
@@ -33,12 +53,24 @@ module main_body( fwidth, fheight, depth, wall, face, forehead_depth )
             // add straps
             translate([ face/2+0.75*wall, 0, depth-8]) rotate([180,-85,0]) strap_mount( wall );
             translate([-face/2-0.75*wall, 0, depth-8]) rotate([0,-95,0]) strap_mount( wall );
-            phone_mount( fwidth, fheight, wall );
+            phone_mount( fwidth, fheight, wall, variant );
         }
         // These must be subtracted last to deal with any added parts that might
         //  intrude on the middle volume.
-        shell_inner( fwidth, fheight, depth, wall, face );
-        body_front_inner( wall );
+        if( variant == "C" )
+        {
+            translate( [0,0,-protrude] ) solid_body(
+                [ fwidth-2*wall, fheight-2*wall, 116-wall, 55.8-wall ],
+                [ face-2*wall, height-2*wall, 63-wall, 35-wall ],
+                depth+2*protrude,
+                wall
+            );
+        }
+        else
+        {
+            shell_inner( fwidth, fheight, depth, wall, face );
+            body_front_inner( wall );
+        }
     }
 }
 
@@ -177,4 +209,28 @@ module polyprism_hole( len, bottom, top, wall, sides )
                   r1=radius_from_side( bottom, sides )-wall, r2=radius_from_side( top, sides )-wall,
                   center=true, $fn=sides
         );
+}
+
+module solid_body( phone, face, depth, wall )
+{
+    polyhedron(
+        points=[
+            [-_horiz_side(phone)/2, _height(phone)/2, 0 ], [-_width(phone)/2, _vert_side(phone)/2, 0 ],     // p-tl  (0,1)
+            [-_width(phone)/2,-_vert_side(phone)/2, 0 ], [-_horiz_side(phone)/2, -_height(phone)/2, 0 ],    // p-bl  (2,3)
+            [ _horiz_side(phone)/2,-_height(phone)/2, 0 ], [ _width(phone)/2,-_vert_side(phone)/2, 0 ],     // p-br  (4,5)
+            [ _width(phone)/2, _vert_side(phone)/2, 0 ], [ _horiz_side(phone)/2, _height(phone)/2, 0 ],     // p-tr  (6,7)
+            [ _horiz_side(face)/2, _height(face)/2, depth ], [ _width(face)/2, _vert_side(face)/2, depth ], // f-tr  (8,9)
+            [ _width(face)/2,-_vert_side(face)/2, depth ], [ _horiz_side(face)/2, -_height(face)/2, depth ],// f-br  (10,11)
+            [-_horiz_side(face)/2,-_height(face)/2, depth ], [-_width(face)/2,-_vert_side(face)/2, depth ], // f-bl  (12,13)
+            [-_width(face)/2, _vert_side(face)/2, depth ], [-_horiz_side(face)/2, _height(face)/2, depth ], // f-tl  (14,15)
+        ],
+        triangles=[
+            [1,2,3], [3,0,1], [0,3,4], [4,7,0], [7,4,5], [5,6,7],              // phone
+            [0,15,14], [14,1,0], [7,8,15], [15,0,7], [6,9,8], [8,7,6],         // top
+            [5,10,9], [9,6,5],                                                 // right
+            [4,11,10], [10,5,4], [3,12,11], [11,4,3], [2,13,12], [12,3,2],     // bottom
+            [2,1,14], [14,13,2],                                               // left
+            [8,14,15], [8,9,14], [9,13,14], [9,10,13], [10,12,13], [10,11,12]  // face
+        ]
+    );
 }

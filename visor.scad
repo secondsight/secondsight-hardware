@@ -19,8 +19,8 @@ user_face_width=116;      // temple-to-temple distance
 forehead_depth=27.5;      // temple to front of forehead distance
 eye_forehead_offset=5;    // distance from forehead to eye
 
-variant="A";
-plate="assembled";
+variant="C";
+plate="both";
 
 strap_width=40;
 front_width=126;
@@ -49,12 +49,17 @@ function is_print_optics( p ) = p == "optics" || p == "both";
 if( variant == "A" )
 {
     // The octagon slopes out to match the front
-    visor( phone_height, phone_width, plate, lens );
+    visor( phone_height, phone_width, plate, lens, variant );
 }
 if( variant == "B" )
 {
     // The octagon stays mostly parallel
-    visor( front_width, height, plate, lens );
+    visor( front_width, height, plate, lens, variant );
+}
+if( variant == "C" )
+{
+    // Single smooth body
+    visor( phone_height, phone_width, plate, lens, variant );
 }
 if( variant == "test" )
 {
@@ -73,13 +78,13 @@ if( variant == "test" )
 //  height -  height of the visor
 //  plate -   indicator of which set of components to print
 //  lens  -   lens descriptor
-module visor( width, height, plate, lens )
+module visor( width, height, plate, lens, variant )
 {
     if( is_print_body( plate ) )
     {
         difference()
         {
-            main_body( width, height, depth, thick, face_width(lens), forehead_depth );
+            main_body( width, height, depth, thick, face_width(lens), forehead_depth, variant );
             optics_slots( width, eyes, thick );
         }
     }
