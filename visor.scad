@@ -20,7 +20,7 @@ forehead_depth=27.5;      // temple to front of forehead distance
 eye_forehead_offset=5;    // distance from forehead to eye
 
 variant="C";
-plate="assembled";
+plate="both";
 
 strap_width=40;
 front_width=126;
@@ -129,7 +129,7 @@ module visor_smooth( width, height, plate, lens )
 module optics_plate( width, lens )
 {
     angle=side_slope( width, lens );
-    xoff=lens_diam( lens ) < 40 ? 50 : 45;
+    xoff=lens_diam( lens ) < 40 ? 42 : 38;
     translate( [ 10,  20, 0] ) slider_inside( thick, angle );
     translate( [-10,  20, 0] ) slider_inside( thick, angle );
     translate( [ 10, -20, 0] ) slider_outside( thick, angle );
