@@ -80,7 +80,7 @@ module smooth_body( fwidth, fheight, depth, wall, face, forehead_depth )
                 nose_slice( fheight, depth, wall );
             }
             // add straps
-            both_strap_mounts( face, depth, wall );
+            translate( [0,0,2] ) both_strap_mounts( face, depth, wall );
             phone_mount_wide( fwidth, fheight, wall );
         }
         // These must be subtracted last to deal with any added parts that might
