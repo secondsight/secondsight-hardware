@@ -20,6 +20,11 @@ In this variant, the main body slopes less. This results in a slight flaring
 at the front of the visor. The optics mounting hardware is printed inside the
 visor.
 
+### visor-C.stl
+
+In this variant, the body slopes smoothly from the face to the phone with no
+flaring at all. The optics mounting hardware is printed inside the visor.
+
 ### visor-assembled.stl
 
 This is an STL that is not meant to be printed. This STL only serves as
@@ -36,8 +41,8 @@ visor.  It has a number of parameters that control the final visor look.
 
 #### Variants
 
-Currently, we have two variants of the main structure of the visor: **A** and
-**B**. In addition, you may want to print either the whole visor or just parts
+Currently, we have three variants of the main structure of the visor: **A**,
+**B**, and **C**. In addition, you may want to print either the whole visor or just parts
 of it. There are a pair of variables that allow you to choose what variations
 you want to print.
 
@@ -47,11 +52,13 @@ you want to print.
         generate *visor-A.stl*.
       - "B": See *visor-B.stl* above for a description. Used by the Makefile to
         generate *visor-B.stl*.
+      - "C": See *visor-C.stl* above for a description. Used by the Makefile to
+        generate *visor-C.stl*.
    * plate - Choose the subset of the visor to print.
       - "body": Print the main body of the visor.
       - "optics": Print the lens support hardware.
-      - "assembled": Show the assembled visor. Not printable!
       - "both": Print all parts of the visor.
+      - "assembled": Show the assembled visor. Not printable!
 
 You can either change these parameters in the *visor.scad* file or supply them
 on the openscad command line if you want to automatically generate the STLs.
