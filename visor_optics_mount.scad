@@ -39,8 +39,8 @@ module lens_holder( half_width, lens )
             cylinder( h=lens_rim_thickness(lens), r=rad_lens+indent, center=true );
             translate( [ 0, 0, lens_rim_thickness(lens)-0.01 ] ) intersection()
             {
-                cylinder( h=lens_rim_thickness(lens), r=rad_lens+indent, center=true );
-                translate( [0.7*rad_lens,0,0] ) rotate([0,0,45]) cube( rad_lens, center=true );
+                cylinder( h=lens_rim_thickness(lens), r=rad_lens+indent/2, center=true );
+                cube( rad_lens*1.8, center=true );
             }
         }
         translate( [arm_len/2+rad_lens+indent, 0, -gap/2 ] ) cube( [ arm_len, inner_height-gap, inner_width-gap ], center=true );
