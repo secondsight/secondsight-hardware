@@ -61,7 +61,7 @@ module smooth_body( fwidth, fheight, depth, wall, face, forehead_depth )
     phone_top=116;   // TODO: should depend on fwidth
     phone_side=55.8; // TODO: should depend on fheight
     face_top=63;     // TODO: should depend on face
-    face_side=35;    // TODO: should depend on height
+    face_side=50;    // TODO: should depend on height, but not smaller than 50
     difference()
     {
         union()
@@ -98,7 +98,7 @@ module both_strap_mounts( face, depth, wall )
 {
     d_angle=5;
     z_offset=depth-8;
-    x_offset=face/2+0.75*wall;
+    x_offset=face/2-0.25*wall;
     translate([ x_offset, 0, z_offset]) rotate([180,-90+d_angle,0]) strap_mount( wall );
     translate([-x_offset, 0, z_offset]) rotate([0,-90-d_angle,0]) strap_mount( wall );
 }
@@ -129,11 +129,6 @@ module strap_mount( wall )
                 polyprism( len=width, top=thickness/2, bottom=thickness/2, sides=8 );
         }
         translate( [-length/2-wall,0,0] ) rotate([0,-20,0]) cube( [1.5*width,1.5*width,thickness], center=true );
-        // slopes on edges of mount
-        for( dir = [1,-1] )
-        {
-            translate( [-0.4*width,dir*0.82*width,0] ) rotate( [0,0,dir*20] ) cube( width, center=true );
-        }
     }
 }
 
