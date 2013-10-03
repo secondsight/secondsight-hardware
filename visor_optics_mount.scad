@@ -26,8 +26,7 @@ module lens_holder( half_width, lens )
     arm_len=half_width-lens_diam(lens);
     // difference in diameter between dlens and outer circle of holder
     rim=2;
-    // offset of rim from center of dlens
-    rim_offset=1.25*rim;
+    indent=0.25;
     translate( [0,0,inner_width/2] ) union()
     {
         difference()
@@ -37,10 +36,15 @@ module lens_holder( half_width, lens )
             // inner opening around the lens.
             cylinder( h=inner_width+1, r=rad_lens-0.1, center=true );
             // indention for the lens rim.
-            cylinder( h=lens_rim_thickness(lens), r=rad_lens+0.25, center=true );
+            cylinder( h=lens_rim_thickness(lens), r=rad_lens+indent, center=true );
+            translate( [ 0, 0, lens_rim_thickness(lens)-0.01 ] ) intersection()
+            {
+                cylinder( h=lens_rim_thickness(lens), r=rad_lens+indent, center=true );
+                translate( [0.7*rad_lens,0,0] ) rotate([0,0,45]) cube( rad_lens, center=true );
+            }
         }
-        translate( [arm_len/2+rad_lens, 0, -gap/2 ] ) cube( [ arm_len, inner_height-gap, inner_width-gap ], center=true );
-        translate( [arm_len+rad_lens, 0, -gap/2 ] ) cylinder( h=inner_width-gap, r=(inner_height-gap)/2, center=true, $fn=8 );
+        translate( [arm_len/2+rad_lens+indent, 0, -gap/2 ] ) cube( [ arm_len, inner_height-gap, inner_width-gap ], center=true );
+        translate( [arm_len+rad_lens+indent, 0, -gap/2 ] ) cylinder( h=inner_width-gap, r=(inner_height-gap)/2, center=true, $fn=8 );
     }
 }
 
