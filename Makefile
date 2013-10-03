@@ -30,16 +30,16 @@ all: $(STLS)
 visor.stl: $(SOURCES) Makefile
 
 visor-A.stl: $(SOURCES) Makefile
-	$(OPENSCAD) -D 'variant="A"' -D 'part="both"' -o $@ $<
+	$(OPENSCAD) -D 'variant="A"' -D 'plate="both"' -o $@ $<
 
 visor-B.stl: $(SOURCES) Makefile
-	$(OPENSCAD) -D 'variant="B"' -D 'part="both"' -o $@ $<
+	$(OPENSCAD) -D 'variant="B"' -D 'plate="both"' -o $@ $<
 
 visor-C.stl: $(SOURCES) Makefile
-	$(OPENSCAD) -D 'variant="C"' -D 'part="both"' -o $@ $<
+	$(OPENSCAD) -D 'variant="C"' -D 'plate="both"' -o $@ $<
 
 visor-assembled.stl: $(SOURCES) Makefile
-	$(OPENSCAD) -D 'variant="A"' -D 'part="assembled"' -o $@ $<
+	$(OPENSCAD) -D 'variant="A"' -D 'plate="assembled"' -o $@ $<
 
 test.stl: $(SOURCES) Makefile
 	$(OPENSCAD) -D 'variant="test"' -o $@ $<
