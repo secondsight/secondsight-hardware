@@ -128,9 +128,8 @@ module strap_mount( wall )
             translate( [length/2,width/2,0] ) rotate( [90,0,0] )
                 polyprism( len=width, top=thickness/2, bottom=thickness/2, sides=8 );
             // support
-            translate( [ 2.2*thickness, 0, 0] ) cube( [ 2.5*thickness+0.2, 0.5, thickness ], center=true );
-            translate( [ 2.2*thickness, strap_width/4, 0] ) cube( [ 2.5*thickness+0.2, 0.5, thickness ], center=true );
-            translate( [ 2.2*thickness, -strap_width/4, 0] ) cube( [ 2.5*thickness+0.2, 0.5, thickness ], center=true );
+            translate( [ 2.2*thickness, strap_width/6, 0] ) cube( [ 2.5*thickness+0.2, 0.5, thickness ], center=true );
+            translate( [ 2.2*thickness, -strap_width/6, 0] ) cube( [ 2.5*thickness+0.2, 0.5, thickness ], center=true );
         }
         translate( [-length/2-wall,0,0] ) rotate([0,-20,0]) cube( [1.5*width,1.5*width,thickness], center=true );
     }
