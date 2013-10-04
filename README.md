@@ -25,10 +25,16 @@ visor.
 In this variant, the body slopes smoothly from the face to the phone with no
 flaring at all. The optics mounting hardware is printed inside the visor.
 
-### visor-assembled.stl
+## Example Assemblies
 
-This is an STL that is not meant to be printed. This STL only serves as
-documentation of how the parts of the visor should fit together.
+Some of the STLs are not meant to be printed. They are just documentation to
+show how that variant fits together. The names are the same as the variant file
+with *-assembled* inserted before the extension.
+
+The parts that are fitted into the main body have also been colored to make
+telling what is part of which part a bit easier. The colors were chosen mostly
+to not be too dark/bright and to contrast well enough for you to see what is
+inserted where.
 
 ## Source Files
 
