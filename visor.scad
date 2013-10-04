@@ -19,8 +19,8 @@ user_face_width=116;      // temple-to-temple distance
 forehead_depth=27.5;      // temple to front of forehead distance
 eye_forehead_offset=5;    // distance from forehead to eye
 
-variant="C";
-plate="assembled";
+variant="test";
+plate="both";
 
 strap_width=40;
 front_width=126;
@@ -69,7 +69,12 @@ if( variant == "test" )
 //        translate( [-10, -20, 0] ) slider_outside( thick, angle );
 //        translate( [ 15, 0, 0 ] ) lens_holder( (phone_height+5)/2, lens_descriptor( "ebay 50x50" ) );
 //        translate( [ -15, 0, 0 ] ) rotate( [0,0,180] ) lens_holder( (phone_height+5)/2, lens_descriptor( "edmund 25x50" ) );
-        lens_holder( (phone_height+5)/2, lens_descriptor( "b&l 35 5x" ) );
+//        lens_holder( (phone_height+5)/2, lens_descriptor( "b&l 35 5x" ) );
+        intersection()
+        {
+            translate( [0,0,-0.65*depth] ) visor_smooth( phone_height, phone_width, plate, lens );
+            translate( [0,0,phone_height/2] ) cube( phone_height, center=true );
+        }
     }
 }
 
