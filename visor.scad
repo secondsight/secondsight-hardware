@@ -20,7 +20,7 @@ forehead_depth=27.5;      // temple to front of forehead distance
 eye_forehead_offset=5;    // distance from forehead to eye
 
 variant="A";
-plate="both";
+plate="assembled";
 
 strap_width=40;
 front_width=126;
@@ -67,7 +67,7 @@ if( variant == "test" )
 //    {
 //        lens_holder( (phone_height+5)/2, lens_descriptor( "b&l 35 5x" ) );
 //    }
-    phone_shelf( thick, 52, 32, 3 );
+    phone_support_ridge( thick, 52, 32, 3 );
 }
 
 // Everything to be printed for the visor
@@ -92,11 +92,11 @@ module visor_flared( width, height, plate, lens )
     }
     if( is_print_optics( plate ) )
     {
-        optics_plate( front_width, lens );
+        optics_plate( front_width, height, lens );
     }
     if( plate == "assembled" )
     {
-        optics_assembled( width, lens );
+        optics_assembled( width, height, lens );
     }
 }
 
@@ -117,18 +117,19 @@ module visor_smooth( width, height, plate, lens )
     }
     if( is_print_optics( plate ) )
     {
-        optics_plate( front_width, lens );
+        optics_plate( front_width, height, lens );
     }
     if( plate == "assembled" )
     {
-        optics_assembled( width, lens );
+        optics_assembled( width, height, lens );
     }
 }
 
 // Plate for printing the lenses
-//  width -    front width of visor
-//  lens  -    descriptor for the lenses to use
-module optics_plate( width, lens )
+//  width  -   front width of visor
+//  height -   front height of visor
+//  lens   -   descriptor for the lenses to use
+module optics_plate( width, height, lens )
 {
     angle=side_slope( width, lens );
     xoff=lens_diam( lens ) < 40 ? 42 : 38;
@@ -138,12 +139,14 @@ module optics_plate( width, lens )
     translate( [-10, -20, 0] ) slider_outside( thick, angle );
     translate( [-xoff,  5, 0] ) lens_holder( (phone_height+5)/2, lens );
     translate( [ xoff, -5, 0] ) rotate( [0, 0, 180] ) lens_holder( (phone_height+5)/2, lens );
+
+    translate( [ 0, -height/2-10, 0] ) phone_support_ridge( thick, 52, 32, 3 );
 }
 
 // Display the optics in it's assembled form
 //  width -    front width of visor
 //  lens  -    descriptor for the lenses to use
-module optics_assembled( width, lens )
+module optics_assembled( width, height, lens )
 {
     // tweakable
     xoff=IPD_avg/2;
@@ -163,6 +166,8 @@ module optics_assembled( width, lens )
     translate( [ mount_x-5,  0, lens_z] ) rotate( [0, theta,0] ) slider_inside( thick, angle );
     translate( [ mount_x+2, 0, lens_z] ) rotate( [0,180+theta,0] ) slider_outside( thick, angle );
     translate( [ xoff, 0, lens_z-2] ) lens_holder( (phone_height+5)/2, lens );
+
+    translate( [ 0, -height/2+1, 5] ) rotate( [ 180, 0, 0 ] ) phone_support_ridge( thick, 52, 32, 3 );
 
     // lenses
 %   translate( [-xoff, 0, lens_z] ) cylinder( h=1, r=dlens/2, center=true );

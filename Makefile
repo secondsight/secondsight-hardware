@@ -4,7 +4,9 @@ STLS=\
 	 visor-A.stl\
 	 visor-B.stl\
 	 visor-C.stl\
-	 visor-assembled.stl
+	 visor-A-assembled.stl\
+	 visor-B-assembled.stl\
+	 visor-C-assembled.stl
 
 SOURCES=\
 	visor.scad\
@@ -38,8 +40,14 @@ visor-B.stl: $(SOURCES) Makefile
 visor-C.stl: $(SOURCES) Makefile
 	$(OPENSCAD) -D 'variant="C"' -D 'plate="both"' -o $@ $<
 
-visor-assembled.stl: $(SOURCES) Makefile
+visor-A-assembled.stl: $(SOURCES) Makefile
 	$(OPENSCAD) -D 'variant="A"' -D 'plate="assembled"' -o $@ $<
+
+visor-B-assembled.stl: $(SOURCES) Makefile
+	$(OPENSCAD) -D 'variant="B"' -D 'plate="assembled"' -o $@ $<
+
+visor-C-assembled.stl: $(SOURCES) Makefile
+	$(OPENSCAD) -D 'variant="C"' -D 'plate="assembled"' -o $@ $<
 
 test.stl: $(SOURCES) Makefile
 	$(OPENSCAD) -D 'variant="test"' -o $@ $<
