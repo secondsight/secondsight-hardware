@@ -19,7 +19,7 @@ user_face_width=116;      // temple-to-temple distance
 forehead_depth=27.5;      // temple to front of forehead distance
 eye_forehead_offset=5;    // distance from forehead to eye
 
-variant="test";
+variant="A";
 plate="both";
 
 strap_width=40;
@@ -82,6 +82,11 @@ module visor_flared( width, height, plate, lens )
         {
             flared_body( width, height, depth, thick, face_width(lens), forehead_depth );
             optics_slots( width, eyes, thick );
+            if( plate == "assembled" )
+            {
+                // remove strap mount supports if assembled
+                both_strap_mounts( face_width(lens), depth, thick ) remove_strap_support( thick );
+            }
         }
     }
     if( is_print_optics( plate ) )

@@ -38,7 +38,7 @@ module flared_body( fwidth, fheight, depth, wall, face, forehead_depth )
                 face( face, depth-forehead_depth, depth );
                 nose_slice( fheight, depth, wall );
             }
-            both_strap_mounts( face, depth, wall );
+            both_strap_mounts( face, depth, wall ) sloped_strap_mount( wall );
             phone_mount_narrow( fwidth, fheight, wall );
         }
         // These must be subtracted last to deal with any added parts that might
@@ -61,7 +61,7 @@ module smooth_body( fwidth, fheight, depth, wall, face, forehead_depth )
     phone_top=116;   // TODO: should depend on fwidth
     phone_side=55.8; // TODO: should depend on fheight
     face_top=63;     // TODO: should depend on face
-    face_side=35;    // TODO: should depend on height
+    face_side=50;    // TODO: should depend on height, but not smaller than 50
     difference()
     {
         union()
@@ -80,7 +80,7 @@ module smooth_body( fwidth, fheight, depth, wall, face, forehead_depth )
                 nose_slice( fheight, depth, wall );
             }
             // add straps
-            translate( [0,0,2] ) both_strap_mounts( face, depth, wall );
+            both_strap_mounts( face, depth, wall ) strap_mount( wall );
             phone_mount_wide( fwidth, fheight, wall );
         }
         // These must be subtracted last to deal with any added parts that might
@@ -94,16 +94,22 @@ module smooth_body( fwidth, fheight, depth, wall, face, forehead_depth )
     }
 }
 
+// Take a strap mount as a child and translate/rotate/duplicate as needed to
+//  attach to both sides of the visor.
+//
+//  face  - face width temple-to-temple
+//  depth - the measured from front of visor to the back
+//  wall  - thickness of the walls of the visor
 module both_strap_mounts( face, depth, wall )
 {
     d_angle=5;
-    z_offset=depth-8;
-    x_offset=face/2+0.75*wall;
-    translate([ x_offset, 0, z_offset]) rotate([180,-90+d_angle,0]) strap_mount( wall );
-    translate([-x_offset, 0, z_offset]) rotate([0,-90-d_angle,0]) strap_mount( wall );
+    z_offset=depth-6;
+    x_offset=face/2-0.25*wall;
+    translate([ x_offset, 0, z_offset]) rotate([180,-90+d_angle,0]) child( 0 );
+    translate([-x_offset, 0, z_offset]) rotate([0,-90-d_angle,0]) child( 0 );
 }
 
-// Mount points for the strap.
+// Mount point for the strap.
 //   lying flat, must be rotated up to mount.
 //  wall    - thickness of the walls of the visor
 module strap_mount( wall )
@@ -112,6 +118,7 @@ module strap_mount( wall )
     length=33;
     width=strap_width+3*wall+strap_fudge;
     thickness=1.5*wall;
+    support_length=2.5*thickness+0.2;
     difference()
     {
         union()
@@ -127,13 +134,58 @@ module strap_mount( wall )
                 polyprism( len=width, top=thickness/2, bottom=thickness/2, sides=8 );
             translate( [length/2,width/2,0] ) rotate( [90,0,0] )
                 polyprism( len=width, top=thickness/2, bottom=thickness/2, sides=8 );
+            // support
+            translate( [ 2.2*thickness, strap_width/6, 0] ) strap_support( thickness );
+            translate( [ 2.2*thickness, -strap_width/6, 0] ) strap_support( thickness );
         }
         translate( [-length/2-wall,0,0] ) rotate([0,-20,0]) cube( [1.5*width,1.5*width,thickness], center=true );
-        // slopes on edges of mount
-        for( dir = [1,-1] )
+    }
+}
+
+// Define the thin walls used for supports in the gaps in the strap mount.
+//
+//  thickness - the thickness of the mount hardware.
+module strap_support( thickness )
+{
+    support_length=2.5*thickness+0.2;
+    cube( [ support_length, 0.5, thickness ], center=true );
+}
+
+// Define a model that can be differenced from the visor body in the right
+// places to remove the supports. Used in the assembled display model.
+//
+//   wall - thickness of the side wall of the visor
+module remove_strap_support( wall )
+{
+    strap_fudge=1;
+    length=33;
+    width=strap_width+3*wall+strap_fudge;
+    thickness=1.5*wall;
+    difference()
+    {
+        union()
         {
-            translate( [-0.4*width,dir*0.82*width,0] ) rotate( [0,0,dir*20] ) cube( width, center=true );
+            translate( [ 2.2*thickness+0.33, strap_width/6, 0] ) scale( [1,2,1.1] ) strap_support( thickness );
+            translate( [ 2.2*thickness+0.33, -strap_width/6, 0] ) scale( [1,2,1.1] ) strap_support( thickness );
         }
+        translate( [length/2 - 2.25*wall,width/2,0] ) rotate( [90,0,0] )
+            polyprism( len=width, top=thickness/2, bottom=thickness/2, sides=8 );
+        translate( [length/2,width/2,0] ) rotate( [90,0,0] )
+            polyprism( len=width, top=thickness/2, bottom=thickness/2, sides=8 );
+    }
+}
+
+// Mount point for the strap, with a slope at the bottom. For connecting with
+//  the narrower variants.
+//   lying flat, must be rotated up to mount.
+//  wall    - thickness of the walls of the visor
+module sloped_strap_mount( wall )
+{
+    intersection()
+    {
+        strap_mount( wall );
+        translate( [16,0,0] ) scale( [1.25,1,1] ) rotate( [0, 0, 45] )
+            cube( strap_width+3*wall+1, center=true );
     }
 }
 

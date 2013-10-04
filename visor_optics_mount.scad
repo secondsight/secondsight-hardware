@@ -120,7 +120,7 @@ module single_optics_mount_slot( z_eyes, wall )
 {
     hull()
     {
-        for( z = [ min_bfl, z_eyes-eye_lens_distance] )
+        for( z = [ min_bfl, z_eyes-eye_lens_distance/2] )
         {
             translate( [0, 0, z] ) rotate( [0,90,0] ) scale( [0.5,1,1] ) cylinder( h=wall*6, r=slot_width/2, center=true );
         }
