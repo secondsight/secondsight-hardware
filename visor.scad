@@ -63,10 +63,11 @@ if( variant == "C" )
 }
 if( variant == "test" )
 {
-    rotate( [0,0,90] ) assign( angle=side_slope( phone_height, lens ) )
-    {
-        lens_holder( (phone_height+5)/2, lens_descriptor( "b&l 35 5x" ) );
-    }
+//    rotate( [0,0,90] ) assign( angle=side_slope( phone_height, lens ) )
+//    {
+//        lens_holder( (phone_height+5)/2, lens_descriptor( "b&l 35 5x" ) );
+//    }
+    phone_shelf( thick, 52, 32, 3 );
 }
 
 // Everything to be printed for the visor
