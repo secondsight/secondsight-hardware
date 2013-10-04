@@ -38,7 +38,7 @@ module flared_body( fwidth, fheight, depth, wall, face, forehead_depth )
                 face( face, depth-forehead_depth, depth );
                 nose_slice( fheight, depth, wall );
             }
-            both_strap_mounts( face, depth, wall );
+            sloped_strap_mounts( face, depth, wall );
             phone_mount_narrow( fwidth, fheight, wall );
         }
         // These must be subtracted last to deal with any added parts that might
@@ -80,7 +80,7 @@ module smooth_body( fwidth, fheight, depth, wall, face, forehead_depth )
                 nose_slice( fheight, depth, wall );
             }
             // add straps
-            translate( [0,0,2] ) both_strap_mounts( face, depth, wall );
+            both_strap_mounts( face, depth, wall );
             phone_mount_wide( fwidth, fheight, wall );
         }
         // These must be subtracted last to deal with any added parts that might
@@ -97,13 +97,22 @@ module smooth_body( fwidth, fheight, depth, wall, face, forehead_depth )
 module both_strap_mounts( face, depth, wall )
 {
     d_angle=5;
-    z_offset=depth-8;
+    z_offset=depth-6;
     x_offset=face/2-0.25*wall;
     translate([ x_offset, 0, z_offset]) rotate([180,-90+d_angle,0]) strap_mount( wall );
     translate([-x_offset, 0, z_offset]) rotate([0,-90-d_angle,0]) strap_mount( wall );
 }
 
-// Mount points for the strap.
+module sloped_strap_mounts( face, depth, wall )
+{
+    d_angle=5;
+    z_offset=depth-6;
+    x_offset=face/2-0.25*wall;
+    translate([ x_offset, 0, z_offset]) rotate([180,-90+d_angle,0]) sloped_strap_mount( wall );
+    translate([-x_offset, 0, z_offset]) rotate([0,-90-d_angle,0]) sloped_strap_mount( wall );
+}
+
+// Mount point for the strap.
 //   lying flat, must be rotated up to mount.
 //  wall    - thickness of the walls of the visor
 module strap_mount( wall )
@@ -132,6 +141,15 @@ module strap_mount( wall )
             translate( [ 2.2*thickness, -strap_width/6, 0] ) cube( [ 2.5*thickness+0.2, 0.5, thickness ], center=true );
         }
         translate( [-length/2-wall,0,0] ) rotate([0,-20,0]) cube( [1.5*width,1.5*width,thickness], center=true );
+    }
+}
+
+module sloped_strap_mount( wall )
+{
+    intersection()
+    {
+        strap_mount( wall );
+        translate( [16,0,0] ) scale( [1.25,1,1] ) rotate( [0, 0, 45] ) cube( strap_width+3*wall+1, center=true );
     }
 }
 
