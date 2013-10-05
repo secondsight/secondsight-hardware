@@ -353,22 +353,8 @@ module polyprism_hole( len, bottom, top, wall, sides )
         );
 }
 
-// Ten-sided polyhedron making the visor body.
-//
-// phone - a vector containing parameters for the phone side of the body
-// face  - a vector containing parameters for the face side of the body
-// depth - the depth of the body, front to back
-// wall  - the thickness of the walls
-//
-// The vectors for phone and face contain 4 parameters.
-//   - width      : the full width of the object on this side
-//   - height     : the full height of the object on this side
-//   - horiz_side : the width of the center side of the horizontal
-//   - vert_side  : the height of the center side of the vertical
-module solid_body( phone, face, depth, wall )
-{
-    polyhedron(
-        points=[
+// Define the point for the corners of the body polyhedrons
+function solid_body_points( phone, face, depth )=[
             [-_horiz_side(phone)/2, _height(phone)/2, 0 ], [-_width(phone)/2, _vert_side(phone)/2, 0 ],     // p-tl  (0,1)
             [-_width(phone)/2,-_vert_side(phone)/2, 0 ], [-_horiz_side(phone)/2, -_height(phone)/2, 0 ],    // p-bl  (2,3)
             [ _horiz_side(phone)/2,-_height(phone)/2, 0 ], [ _width(phone)/2,-_vert_side(phone)/2, 0 ],     // p-br  (4,5)
@@ -377,7 +363,23 @@ module solid_body( phone, face, depth, wall )
             [ _width(face)/2,-_vert_side(face)/2, depth ], [ _horiz_side(face)/2, -_height(face)/2, depth ],// f-br  (10,11)
             [-_horiz_side(face)/2,-_height(face)/2, depth ], [-_width(face)/2,-_vert_side(face)/2, depth ], // f-bl  (12,13)
             [-_width(face)/2, _vert_side(face)/2, depth ], [-_horiz_side(face)/2, _height(face)/2, depth ], // f-tl  (14,15)
-        ],
+        ];
+
+// Ten-sided polyhedron making the visor body.
+//
+// phone - a vector containing parameters for the phone side of the body
+// face  - a vector containing parameters for the face side of the body
+// depth - the depth of the body, front to back
+//
+// The vectors for phone and face contain 4 parameters.
+//   - width      : the full width of the object on this side
+//   - height     : the full height of the object on this side
+//   - horiz_side : the width of the center side of the horizontal
+//   - vert_side  : the height of the center side of the vertical
+module solid_body( phone, face, depth )
+{
+    polyhedron(
+        points=solid_body_points( phone, face, depth ),
         triangles=[
             [1,2,3], [3,0,1], [0,3,4], [4,7,0], [7,4,5], [5,6,7],              // phone
             [0,15,14], [14,1,0], [7,8,15], [15,0,7], [8,7,9], [9,7,6],         // top
@@ -393,26 +395,16 @@ module solid_body( phone, face, depth, wall )
 // phone - a vector containing parameters for the phone side of the body
 // face  - a vector containing parameters for the face side of the body
 // depth - the depth of the body, front to back
-// wall  - the thickness of the walls
 //
 // The vectors for phone and face contain 4 parameters.
 //   - width      : the full width of the object on this side
 //   - height     : the full height of the object on this side
 //   - horiz_side : the width of the center side of the horizontal
 //   - vert_side  : the height of the center side of the vertical
-module solid_body_concave( phone, face, depth, wall )
+module solid_body_concave( phone, face, depth )
 {
     polyhedron(
-        points=[
-            [-_horiz_side(phone)/2, _height(phone)/2, 0 ], [-_width(phone)/2, _vert_side(phone)/2, 0 ],     // p-tl  (0,1)
-            [-_width(phone)/2,-_vert_side(phone)/2, 0 ], [-_horiz_side(phone)/2, -_height(phone)/2, 0 ],    // p-bl  (2,3)
-            [ _horiz_side(phone)/2,-_height(phone)/2, 0 ], [ _width(phone)/2,-_vert_side(phone)/2, 0 ],     // p-br  (4,5)
-            [ _width(phone)/2, _vert_side(phone)/2, 0 ], [ _horiz_side(phone)/2, _height(phone)/2, 0 ],     // p-tr  (6,7)
-            [ _horiz_side(face)/2, _height(face)/2, depth ], [ _width(face)/2, _vert_side(face)/2, depth ], // f-tr  (8,9)
-            [ _width(face)/2,-_vert_side(face)/2, depth ], [ _horiz_side(face)/2, -_height(face)/2, depth ],// f-br  (10,11)
-            [-_horiz_side(face)/2,-_height(face)/2, depth ], [-_width(face)/2,-_vert_side(face)/2, depth ], // f-bl  (12,13)
-            [-_width(face)/2, _vert_side(face)/2, depth ], [-_horiz_side(face)/2, _height(face)/2, depth ], // f-tl  (14,15)
-        ],
+        points=solid_body_points( phone, face, depth ),
         triangles=[
             [1,2,3], [3,0,1], [0,3,4], [4,7,0], [7,4,5], [5,6,7],              // phone
             [0,15,1], [1,15,14], [7,8,15], [15,0,7], [6,8,7], [6,9,8],         // top
