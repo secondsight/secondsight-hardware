@@ -25,6 +25,12 @@ visor.
 In this variant, the body slopes smoothly from the face to the phone with no
 flaring at all. The optics mounting hardware is printed inside the visor.
 
+### visor-D.stl
+
+In this variant, the body slopes smoothly from the face to the phone with no
+flaring at all. The corners are slightly grooved to give less of a round feel.
+The optics mounting hardware is printed inside the visor.
+
 ## Example Assemblies
 
 Some of the STLs are not meant to be printed. They are just documentation to
@@ -42,10 +48,10 @@ visor.  It has a number of parameters that control the final visor look.
 
 #### Variants
 
-Currently, we have three variants of the main structure of the visor: **A**,
-**B**, and **C**. In addition, you may want to print either the whole visor or just parts
-of it. There are a pair of variables that allow you to choose what variations
-you want to print.
+Currently, we have four variants of the main structure of the visor: **A**,
+**B**, **C**, and **D**. In addition, you may want to print either the whole
+visor or just parts of it. There are a pair of variables that allow you to
+choose what variations you want to print.
 
    * variant - Choose the variant to print by setting this variable to the
      appropriate string
@@ -55,6 +61,8 @@ you want to print.
         generate *visor-B.stl*.
       - "C": See *visor-C.stl* above for a description. Used by the Makefile to
         generate *visor-C.stl*.
+      - "D": See *visor-D.stl* above for a description. Used by the Makefile to
+        generate *visor-D.stl*.
    * plate - Choose the subset of the visor to print.
       - "body": Print the main body of the visor.
       - "optics": Print the lens support hardware.

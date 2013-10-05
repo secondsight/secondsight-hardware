@@ -19,7 +19,7 @@ user_face_width=116;      // temple-to-temple distance
 forehead_depth=27.5;      // temple to front of forehead distance
 eye_forehead_offset=5;    // distance from forehead to eye
 
-variant="A";
+variant="D";
 plate="assembled";
 
 strap_width=40;
@@ -49,17 +49,26 @@ function is_print_optics( p ) = p == "optics" || p == "both";
 if( variant == "A" )
 {
     // The octagon slopes out to match the front
-    visor_flared( phone_height, phone_width, plate, lens );
+    visor_plate( phone_height, phone_width, plate, lens )
+        flared_body( phone_height, phone_width, depth, thick, face_width(lens), forehead_depth );
 }
 if( variant == "B" )
 {
     // The octagon stays mostly parallel
-    visor_flared( front_width, height, plate, lens );
+    visor_plate( front_width, height, plate, lens )
+        flared_body( front_width, height, depth, thick, face_width(lens), forehead_depth );
 }
 if( variant == "C" )
 {
     // Single smooth body
-    visor_smooth( phone_height, phone_width, plate, lens );
+    visor_plate( phone_height, phone_width, plate, lens )
+        smooth_body( phone_height, phone_width, depth, thick, face_width(lens), forehead_depth );
+}
+if( variant == "D" )
+{
+    // Single smooth body, with corner grooves
+    visor_plate( phone_height, phone_width, plate, lens )
+        grooved_body( phone_height, phone_width, depth, thick, face_width(lens), forehead_depth );
 }
 if( variant == "test" )
 {
@@ -70,49 +79,26 @@ if( variant == "test" )
     phone_support_ridge( thick, 52, 32, 3 );
 }
 
-// Everything to be printed for the visor
-//  width -   front width of the visor
-//  height -  height of the visor
-//  plate -   indicator of which set of components to print
-//  lens  -   lens descriptor
-module visor_flared( width, height, plate, lens )
-{
-    if( is_print_body( plate ) )
-    {
-        difference()
-        {
-            flared_body( width, height, depth, thick, face_width(lens), forehead_depth );
-            optics_slots( width, eyes, thick );
-            if( plate == "assembled" )
-            {
-                // remove strap mount supports if assembled
-                both_strap_mounts( face_width(lens), depth, thick ) remove_strap_support( thick );
-            }
-        }
-    }
-    if( is_print_optics( plate ) )
-    {
-        optics_plate( front_width, height, lens );
-    }
-    if( plate == "assembled" )
-    {
-        optics_assembled( width, height, lens );
-    }
-}
 
 // Everything to be printed for the visor
 //  width -   front width of the visor
 //  height -  height of the visor
 //  plate -   indicator of which set of components to print
 //  lens  -   lens descriptor
-module visor_smooth( width, height, plate, lens )
+//  child(0) is the definition of the body
+module visor_plate( width, height, plate, lens )
 {
     if( is_print_body( plate ) )
     {
         difference()
         {
-            smooth_body( width, height, depth, thick, face_width(lens), forehead_depth );
+            child(0);
             optics_slots( width, eyes, thick );
+            if( plate == "assembled" )
+            {
+                // remove strap mount supports if assembled
+                both_strap_mounts( face_width(lens), depth, thick ) remove_strap_support( thick );
+            }
         }
     }
     if( is_print_optics( plate ) )
