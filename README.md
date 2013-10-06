@@ -6,7 +6,7 @@ aetherAR-hardware
 ## STL Files
 
 Each of these two files contains the complete visor. You only need to print
-one to get a useable aetherAR visor.
+one to get a usable aetherAR visor.
 
 ### visor-A.stl
 
@@ -70,7 +70,7 @@ choose what variations you want to print.
       - "assembled": Show the assembled visor. Not printable!
 
 You can either change these parameters in the *visor.scad* file or supply them
-on the openscad command line if you want to automatically generate the STLs.
+on the OpenSCAD command line if you want to automatically generate the STLs.
 See the Makefile for examples of the use of these parameters.
 
 #### Experimenting with Assembled View
@@ -168,7 +168,7 @@ also includes a *Makefile*. You can use most variants of the *make* development
 tool to generate the STLs from the command line. The Makefile contains two
 variables that probably require changing to use in your environment.
 
-   * *OPENSCAD* - full path to the openscad program on your system
+   * *OPENSCAD* - full path to the OpenSCAD program on your system
    * *SLIC3R* - (optional) full path to the slic3r program on your system
 
 You do not need to use slic3r to generate your gcode files. If you do, the
@@ -178,3 +178,90 @@ Makefile contains targets to help.
 
 This is a *slic3r* configuration that has been used to create gcode files for
 the visor STLs.
+
+## Preparing to Build a Headset
+
+There a few pre-requisites that you need to build the aetherAR headset from
+this project.
+
+   1. Lenses
+   2. Head strap
+   3. 3D printer
+   4. Android phone
+   5. Open cell foam or neoprene
+
+### Lenses
+
+We have had reasonable luck with lenses in the 25mm to 37mm diameter range,
+with a focal length of 50mm. The field of view is directly related to the
+diameter of the lens. A 35-37mm diameter lens seems to give a view that covers
+the whole phone at this focal length. A 25mm lens doesn't quite cover the whole
+phone.
+
+We have tried as high as 50mm diameter. That lens had a field of view larger
+than the phone and required a larger visor design.
+
+### Head strap
+
+While you could use the headset by holding it to your face with your hands,
+this would get old really quick. The headset is designed to use a 40mm wide
+elastic strap to hold the headset. This gives good support without requiring an
+extremely tight fit to avoid slipping.
+
+### 3D Printer
+
+You should be able to use any 3D printer with a large enough build volume. The
+visor has been successfully printed in both ABS and PLA.
+
+### Android Phone
+
+The current visor design is optimized for the Galaxy S4 phone. The design does
+not require exactly that phone, but it the front of the visor was designed around
+the dimensions of the S4. It has been used with different phones that are close
+to the same dimensions (e.g. Galaxy Nexus).
+
+### Open Cell Foam or Neoprene
+
+The hard plastic is mildly uncomfortable fitting directly against your face.
+It's not painful, but it is hard plastic supporting a phone. A small amount of
+foam applied to the back side of the visor makes the fit much more comfortable.
+
+A cheap source of reasonable material is a cheap mousepad. You can easily cut
+pieces to fit the visor.
+
+## Building the Headset
+
+Choose the STL file for the variant you want to print. The base STLs contain
+all of the parts that make up a particular variant of the visor. If you want
+to modify the design in any way, the OpenSCAD files are the sources you can use
+to make new STLs.
+
+Use your favorite 3D printer to print the STL chosen above.
+
+When the printing is finished, there should be very little post-processing
+needed. Part of the design goal was to reduce needed post-processing. But, some
+is still necessary. The one part of design that needs cleanup is the supports
+in the strap mounts. The 40mm bridge can prove difficult to print without
+sagging. The design incorporates a pair of small vertical pieces intended to
+reduce sagging. These pieces can be easily remove from the top and bottom holes
+on each side with a sharp knife (like an xacto).
+
+The assembly is not overly difficult. This is where the assembled views become
+most useful. Compare the assembled view for your variant to the pieces that
+were printed and snap things together.
+
+The sliders snap together inside each of the slots on the sides of the visor.
+Each piece has a tiny mark on the side that should be on top.  The lens
+supports slide into the rectangular hole in the middle. This should be a
+relatively tight fit. If you find that the fit is too tight, you can use
+sandpaper to gently sand the straight part of the arms until they fit.
+
+The lenses should be easy to pop into the lens holders.
+
+The little phone support should be pushed onto the lower portion of the visor
+such that the little shelf protrudes under the bottom of the visor. If you put
+the little shelf inside the visor, it will hold the phone too high.
+
+When mounting the strap, putting the ends of the straps on the inside (against
+the head) makes adjusting a bit more difficult, but it keeps the strap from
+loosening while you are wearing it.
