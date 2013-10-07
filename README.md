@@ -265,3 +265,10 @@ the little shelf inside the visor, it will hold the phone too high.
 When mounting the strap, putting the ends of the straps on the inside (against
 the head) makes adjusting a bit more difficult, but it keeps the strap from
 loosening while you are wearing it.
+
+## Logo
+
+The font used in the logo uses the OpenSans Regular font, which has been ported
+for use with OpenSCAD by the Brad Pitcher. His implementation is available at
+http://www.thingiverse.com/thing:13677 and is released under a CC by-sa
+license.
