@@ -99,6 +99,7 @@ module visor_plate( width, height, plate, lens )
                 // remove strap mount supports if assembled
                 both_strap_mounts( face_width(lens), depth, thick ) remove_strap_support( thick );
             }
+            translate( [0, height/2, 10] ) rotate( [ 90, 0, 180 ] ) translate( [-25,0,0] ) scale([0.6,0.6,1]) logo();
         }
     }
     if( is_print_optics( plate ) )
@@ -158,5 +159,10 @@ module optics_assembled( width, height, lens )
     // lenses
 %   translate( [-xoff, 0, lens_z] ) cylinder( h=1, r=dlens/2, center=true );
 %   translate( [ xoff, 0, lens_z] ) cylinder( h=1, r=dlens/2, center=true );
+}
+
+module logo()
+{
+    import("secondsight_logo.stl");
 }
 
