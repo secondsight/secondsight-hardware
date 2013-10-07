@@ -76,7 +76,12 @@ if( variant == "test" )
 //    {
 //        lens_holder( (phone_height+5)/2, lens_descriptor( "b&l 35 5x" ) );
 //    }
-    phone_support_ridge( thick, 52, 32, 3 );
+    intersection()
+    {
+        visor_plate( phone_height, phone_width, "body", lens )
+            grooved_body( phone_height, phone_width, depth, thick, face_width(lens), forehead_depth );
+        translate( [ 0, 0, -phone_height/2+18 ] ) cube( phone_height, center=true );
+    }
 }
 
 
