@@ -18,7 +18,7 @@ IPD_avg=63;
 include <user_params.scad>;
 
 variant="C";
-plate="assembled";
+plate="both"; // options are optics, body, both, assembled
 
 strap_width=40;
 front_width=126;
