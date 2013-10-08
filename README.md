@@ -144,7 +144,7 @@ with random vector indices. All lengths are in mm.
    * lens\_thickness(lens) - overall thickness of the lens
    * lens\_back\_height(lens) - distance from the rim to the back of the lens
 
-### user\_params.acad
+### user\_params.scad
 
 This file contains only constants that describe some user-specific sizes.
 
