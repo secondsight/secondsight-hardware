@@ -170,17 +170,21 @@ module both_strap_mounts( face, depth, wall )
     translate([-x_offset, 0, z_offset]) rotate([0,-90-d_angle,0]) child( 0 );
 }
 
+strap_fudge=1;
+mount_length=35;
+overlap=0.2;
+function mount_width(wall,strap)=strap+3.5*wall+strap_fudge;
+function mount_thickness(wall)=2*wall;
+function support_length(thick)=2.5*thick+overlap;
+
 // Mount point for the strap.
 //   lying flat, must be rotated up to mount.
 //  wall    - thickness of the walls of the visor
 module strap_mount( wall )
 {
-    strap_fudge=1;
-    length=35;
-    width=strap_width+3.5*wall+strap_fudge;
-    thickness=2*wall;
-    overlap=0.2;
-    support_length=2.5*thickness+overlap;
+    length=mount_length;
+    width=mount_width( wall, strap_width );
+    thickness=mount_thickness( wall );
     difference()
     {
         union()
@@ -226,8 +230,7 @@ module strap_mount( wall )
 //  thickness - the thickness of the mount hardware.
 module strap_support( thickness )
 {
-    support_length=2.5*thickness+0.2;
-    cube( [ support_length, 0.5, thickness ], center=true );
+    cube( [ support_length( thickness ), 0.5, thickness ], center=true );
 }
 
 // Define a model that can be differenced from the visor body in the right
@@ -236,18 +239,17 @@ module strap_support( thickness )
 //   wall - thickness of the side wall of the visor
 module remove_strap_support( wall )
 {
-    strap_fudge=1;
-    length=33;
-    width=strap_width+3*wall+strap_fudge;
-    thickness=1.5*wall;
+    length=mount_length;
+    width=mount_width( wall, strap_width );
+    thickness=mount_thickness( wall );
     difference()
     {
         union()
         {
-            translate( [ 2*thickness+0.33, strap_width/6, 0] ) scale( [1,2,1.1] ) strap_support( thickness );
-            translate( [ 2*thickness+0.33, -strap_width/6, 0] ) scale( [1,2,1.1] ) strap_support( thickness );
+            translate( [ 1.8*thickness+0.75, strap_width/6, 0] ) scale( [1,2,1.1] ) strap_support( thickness );
+            translate( [ 1.8*thickness+0.75, -strap_width/6, 0] ) scale( [1,2,1.1] ) strap_support( thickness );
         }
-        translate( [length/2 - 2.25*wall,width/2,0] ) rotate( [90,0,0] )
+        translate( [length/2 - 2.55*wall,width/2,0] ) rotate( [90,0,0] )
             polyprism( len=width, top=thickness/2, bottom=thickness/2, sides=8 );
         translate( [length/2,width/2,0] ) rotate( [90,0,0] )
             polyprism( len=width, top=thickness/2, bottom=thickness/2, sides=8 );
