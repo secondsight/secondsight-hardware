@@ -197,12 +197,10 @@ module strap_mount( wall )
                 translate( [x,width/2,0] ) rotate( [90,0,0] ) difference()
                 {
                     polyprism( len=width, top=thickness/2, bottom=thickness/2, sides=8 );
-                    for( pos=[  [0,0], [0.3, 0], [-0.3, 0], [0, 0.3], [0,-0.3],  // 5 (6.7)
-                                [-0.25, -0.25], [-0.25,0.25], [0.25,-0.25], [0.25,0.25] // 9 (6.7)
-                               // [-0.2, -0.2], [-0.2,0.2], [0.2,-0.2], [0.2,0.2]  // 4  (6.6)
-                             ] )
+                    // holes to increase horizontal rod strength
+                    for( pos=[ [-0.2, -0.2], [-0.2,0.2], [0.2,-0.2], [0.2,0.2] ] )
                     {
-                        translate( [ pos[0]*thickness, pos[1]*thickness, width/2 ] ) cylinder( h=width+0.2, r=0.2, center=true );
+                        translate( [ pos[0]*thickness, pos[1]*thickness, width/2 ] ) cylinder( h=width+overlap, r=0.2, center=true );
                     }
                 }
             }
@@ -211,6 +209,15 @@ module strap_mount( wall )
             translate( [ 2.2*thickness, -strap_width/6, 0] ) strap_support( thickness );
         }
         translate( [-length/2-wall,0,0] ) rotate([0,-20,0]) cube( [1.5*width,1.5*width,thickness], center=true );
+        // holes to increase vertical support strength
+        for( pos=[  [0,0], [-0.25, -0.25], [-0.25,0.25], [0.25,-0.25], [0.25,0.25] ] )
+        {
+            for( y=[ width/2-thickness/2, -width/2+thickness/2 ] )
+            {
+                translate( [ 0, y, 0 ] ) rotate( [ 0, 90, 0 ] ) translate( [ pos[0]*thickness, pos[1]*thickness, length/4 ] )
+                    cylinder( h=length+overlap, r=0.2, center=true );
+            }
+        }
     }
 }
 
