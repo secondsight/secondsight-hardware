@@ -98,7 +98,7 @@ module smooth_body( fwidth, fheight, depth, wall, face, forehead_depth )
     phone_top=116;   // TODO: should depend on fwidth
     phone_side=55.8; // TODO: should depend on fheight
     face_top=63;     // TODO: should depend on face
-    face_side=50;    // TODO: should depend on height, but not smaller than 50
+    face_side=52;    // TODO: should depend on height, but not smaller than 50
     
     make_body( fwidth, fheight, depth, wall, face, forehead_depth )
     {
@@ -133,7 +133,7 @@ module grooved_body( fwidth, fheight, depth, wall, face, forehead_depth )
     phone_top=116;   // TODO: should depend on fwidth
     phone_side=55.8; // TODO: should depend on fheight
     face_top=63;     // TODO: should depend on face
-    face_side=50;    // TODO: should depend on height, but not smaller than 50
+    face_side=52;    // TODO: should depend on height, but not smaller than 50
     
     make_body( fwidth, fheight, depth, wall, face, forehead_depth )
     {
@@ -177,8 +177,8 @@ module strap_mount( wall )
 {
     strap_fudge=1;
     length=33;
-    width=strap_width+3*wall+strap_fudge;
-    thickness=1.5*wall;
+    width=strap_width+3.5*wall+strap_fudge;
+    thickness=1.7*wall;
     overlap=0.2;
     support_length=2.5*thickness+overlap;
     difference()
@@ -205,8 +205,8 @@ module strap_mount( wall )
                 }
             }
             // support
-            translate( [ 2.2*thickness, strap_width/6, 0] ) strap_support( thickness );
-            translate( [ 2.2*thickness, -strap_width/6, 0] ) strap_support( thickness );
+            translate( [ 2.1*thickness, strap_width/6, 0] ) strap_support( thickness );
+            translate( [ 2.1*thickness, -strap_width/6, 0] ) strap_support( thickness );
         }
         translate( [-length/2-wall,0,0] ) rotate([0,-20,0]) cube( [1.5*width,1.5*width,thickness], center=true );
         // holes to increase vertical support strength
@@ -244,8 +244,8 @@ module remove_strap_support( wall )
     {
         union()
         {
-            translate( [ 2.2*thickness+0.33, strap_width/6, 0] ) scale( [1,2,1.1] ) strap_support( thickness );
-            translate( [ 2.2*thickness+0.33, -strap_width/6, 0] ) scale( [1,2,1.1] ) strap_support( thickness );
+            translate( [ 2.1*thickness+0.33, strap_width/6, 0] ) scale( [1,2,1.1] ) strap_support( thickness );
+            translate( [ 2.1*thickness+0.33, -strap_width/6, 0] ) scale( [1,2,1.1] ) strap_support( thickness );
         }
         translate( [length/2 - 2.25*wall,width/2,0] ) rotate( [90,0,0] )
             polyprism( len=width, top=thickness/2, bottom=thickness/2, sides=8 );
