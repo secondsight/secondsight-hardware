@@ -71,7 +71,7 @@ parameters. The *xoff* value is half the IPD (Inter-Pupilary Distance). You can
 either supply this directly or use one of the constants defined at the top of
 *visor.scad*.
 
-   * IPD\_min - minumum value for adults
+   * IPD\_min - minimum value for adults
    * IPD\_max - maximum value for adults
    * IPD\_avg - average value for adults
    * IPD\_avg\_male - average value for adult males
@@ -84,15 +84,12 @@ to the phone or farther away.
 
 #### User-Specific Parameters
 
-Although we don't expect these to change, a particular user might be able to
-get a better fit by changing the user-specific parameters.
+The visor is currently configured to fit most adults relatively well. However,
+there is a possibility that the visor could be more comfortable for a given
+user by changing the fit slightly. The file *user_params.scad* contains a set
+of user-specific changes for this purpose.
 
-   * *face_width* - distance from temple to temple in mm.
-   * *forehead_depth* - distance from temple to front of forehead in mm.
-   * *eye_forehead_offset* - inset distance of eyes from forehead
-
-We will try to get these parameters reasonable for most adults, but tweaking
-them may generate a more comfortable fit.
+See the documentation below for a description of these parameters.
 
 #### Phone-Specific Parameters
 
@@ -148,11 +145,17 @@ with random vector indices. All lengths are in mm.
 
 This file contains only constants that describe some user-specific sizes.
 
-   * user\_temple\_distance - temple-to-temple distance on the user
-   * forehead\_depth        - temple to front of forehead distance
-   * eye\_forehead\_offset  - distance from forehead to eye
+Although we don't expect these to change, a particular user might be able to
+get a better fit by changing the user-specific parameters.
 
-The only one that is likely to change much would be *user_template_distance*.
+   * *user_temple_distance* - distance from temple to temple in mm.
+   * *forehead_depth* - distance from temple to front of forehead in mm.
+   * *eye_forehead_offset* - inset distance of eyes from forehead
+
+We will try to get these parameters reasonable for most adults, but tweaking
+them may generate a more comfortable fit.
+
+The only one that is likely to change much would be *user_temple_distance*.
 People with wider or narrower faces may want to change this parameter.
 
 ## Non-Source Files
