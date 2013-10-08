@@ -19,8 +19,8 @@ user_face_width=116;      // temple-to-temple distance
 forehead_depth=27.5;      // temple to front of forehead distance
 eye_forehead_offset=5;    // distance from forehead to eye
 
-variant="test";
-plate="both";
+variant="C";
+plate="assembled";
 
 strap_width=40;
 front_width=126;

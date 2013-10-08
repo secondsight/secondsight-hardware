@@ -164,7 +164,7 @@ module grooved_body( fwidth, fheight, depth, wall, face, forehead_depth )
 module both_strap_mounts( face, depth, wall )
 {
     d_angle=5;
-    z_offset=depth-6;
+    z_offset=depth-5;
     x_offset=face/2-0.25*wall;
     translate([ x_offset, 0, z_offset]) rotate([180,-90+d_angle,0]) child( 0 );
     translate([-x_offset, 0, z_offset]) rotate([0,-90-d_angle,0]) child( 0 );
@@ -176,9 +176,9 @@ module both_strap_mounts( face, depth, wall )
 module strap_mount( wall )
 {
     strap_fudge=1;
-    length=33;
+    length=35;
     width=strap_width+3.5*wall+strap_fudge;
-    thickness=1.7*wall;
+    thickness=2*wall;
     overlap=0.2;
     support_length=2.5*thickness+overlap;
     difference()
@@ -189,10 +189,10 @@ module strap_mount( wall )
             {
                 cube( [length, width, thickness], center=true );
                 // gap for strap
-                translate( [length/2 - 2*wall,0,0] ) cube( [4*wall, strap_width+strap_fudge, 1.5*thickness], center=true );
+                translate( [length/2 - 2.5*wall,0,0] ) cube( [4*wall, strap_width+strap_fudge, 1.5*thickness], center=true );
             }
             // rod to support strap
-            for( x=[length/2 - 2.25*wall, length/2] )
+            for( x=[length/2 - 2.55*wall, length/2] )
             {
                 translate( [x,width/2,0] ) rotate( [90,0,0] ) difference()
                 {
@@ -205,8 +205,8 @@ module strap_mount( wall )
                 }
             }
             // support
-            translate( [ 2.1*thickness, strap_width/6, 0] ) strap_support( thickness );
-            translate( [ 2.1*thickness, -strap_width/6, 0] ) strap_support( thickness );
+            translate( [ 1.8*thickness, strap_width/6, 0] ) strap_support( thickness );
+            translate( [ 1.8*thickness, -strap_width/6, 0] ) strap_support( thickness );
         }
         translate( [-length/2-wall,0,0] ) rotate([0,-20,0]) cube( [1.5*width,1.5*width,thickness], center=true );
         // holes to increase vertical support strength
@@ -244,8 +244,8 @@ module remove_strap_support( wall )
     {
         union()
         {
-            translate( [ 2.1*thickness+0.33, strap_width/6, 0] ) scale( [1,2,1.1] ) strap_support( thickness );
-            translate( [ 2.1*thickness+0.33, -strap_width/6, 0] ) scale( [1,2,1.1] ) strap_support( thickness );
+            translate( [ 2*thickness+0.33, strap_width/6, 0] ) scale( [1,2,1.1] ) strap_support( thickness );
+            translate( [ 2*thickness+0.33, -strap_width/6, 0] ) scale( [1,2,1.1] ) strap_support( thickness );
         }
         translate( [length/2 - 2.25*wall,width/2,0] ) rotate( [90,0,0] )
             polyprism( len=width, top=thickness/2, bottom=thickness/2, sides=8 );
