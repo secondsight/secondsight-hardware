@@ -15,9 +15,7 @@ IPD_avg_female=62.3;
 IPD_avg=63;
 
 // Potentially user-specific data
-user_face_width=116;      // temple-to-temple distance
-forehead_depth=27.5;      // temple to front of forehead distance
-eye_forehead_offset=5;    // distance from forehead to eye
+include <user_params.scad>;
 
 variant="D";
 plate="both";
@@ -40,9 +38,9 @@ depth=eyes-eye_forehead_offset+forehead_depth;
 include <visor_body.scad>;
 include <visor_elastic_mount.scad>;
 
-function calc_face_width( lens ) = lens_diam(lens)+IPD_max+2*thick+12; // 12 is for optics mount hardware.
-function face_width( lens ) = (user_face_width > calc_face_width( lens )) ? user_face_width : calc_face_width( lens );
-function side_slope( width, lens ) = atan2( (width-face_width(lens))/2, depth );
+function calc_temple_distance( lens ) = lens_diam(lens)+IPD_max+2*thick+12; // 12 is for optics mount hardware.
+function temple_distance( lens ) = max(user_temple_distance,calc_temple_distance( lens ));
+function side_slope( width, lens ) = atan2( (width-temple_distance(lens))/2, depth );
 function is_print_body( p ) = p == "body" || p == "both" || p == "assembled";
 function is_print_optics( p ) = p == "optics" || p == "both";
 
@@ -50,25 +48,25 @@ if( variant == "A" )
 {
     // The octagon slopes out to match the front
     visor_plate( phone_height, phone_width, plate, lens )
-        flared_body( phone_height, phone_width, depth, thick, face_width(lens), forehead_depth );
+        flared_body( phone_height, phone_width, depth, thick, temple_distance(lens), forehead_depth );
 }
 if( variant == "B" )
 {
     // The octagon stays mostly parallel
     visor_plate( front_width, height, plate, lens )
-        flared_body( front_width, height, depth, thick, face_width(lens), forehead_depth );
+        flared_body( front_width, height, depth, thick, temple_distance(lens), forehead_depth );
 }
 if( variant == "C" )
 {
     // Single smooth body
     visor_plate( phone_height, phone_width, plate, lens )
-        smooth_body( phone_height, phone_width, depth, thick, face_width(lens), forehead_depth );
+        smooth_body( phone_height, phone_width, depth, thick, temple_distance(lens), forehead_depth );
 }
 if( variant == "D" )
 {
     // Single smooth body, with corner grooves
     visor_plate( phone_height, phone_width, plate, lens )
-        grooved_body( phone_height, phone_width, depth, thick, face_width(lens), forehead_depth );
+        grooved_body( phone_height, phone_width, depth, thick, temple_distance(lens), forehead_depth );
 }
 if( variant == "test" )
 {
@@ -79,7 +77,7 @@ if( variant == "test" )
     intersection()
     {
         visor_plate( phone_height, phone_width, "body", lens )
-            grooved_body( phone_height, phone_width, depth, thick, face_width(lens), forehead_depth );
+            grooved_body( phone_height, phone_width, depth, thick, temple_distance(lens), forehead_depth );
         translate( [ 0, 0, -phone_height/2+18 ] ) cube( phone_height, center=true );
     }
 }
@@ -102,7 +100,7 @@ module visor_plate( width, height, plate, lens )
             if( plate == "assembled" )
             {
                 // remove strap mount supports if assembled
-                both_strap_mounts( face_width(lens), depth, thick ) remove_strap_support( thick );
+                both_strap_mounts( temple_distance(lens), depth, thick ) remove_strap_support( thick );
             }
             translate( [0, height/2, 10] ) rotate( [ 90, 0, 180 ] ) logo();
         }
