@@ -144,6 +144,17 @@ with random vector indices. All lengths are in mm.
    * lens\_thickness(lens) - overall thickness of the lens
    * lens\_back\_height(lens) - distance from the rim to the back of the lens
 
+### user\_params.acad
+
+This file contains only constants that describe some user-specific sizes.
+
+   * user\_temple\_distance - temple-to-temple distance on the user
+   * forehead\_depth        - temple to front of forehead distance
+   * eye\_forehead\_offset  - distance from forehead to eye
+
+The only one that is likely to change much would be *user_template_distance*.
+People with wider or narrower faces may want to change this parameter.
+
 ## Non-Source Files
 
 ### Makefile
