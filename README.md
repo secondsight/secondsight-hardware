@@ -8,18 +8,6 @@ aetherAR-hardware
 Each of these two files contains the complete visor. You only need to print
 one to get a usable aetherAR visor.
 
-### visor-A.stl
-
-This variant of the visor has a smooth slope of body from the face all the way
-to the edges of the phone. The optics mounting hardware is printed inside the
-visor.
-
-### visor-B.stl
-
-In this variant, the main body slopes less. This results in a slight flaring
-at the front of the visor. The optics mounting hardware is printed inside the
-visor.
-
 ### visor-C.stl
 
 In this variant, the body slopes smoothly from the face to the phone with no
@@ -48,17 +36,14 @@ visor.  It has a number of parameters that control the final visor look.
 
 #### Variants
 
-Currently, we have four variants of the main structure of the visor: **A**,
-**B**, **C**, and **D**. In addition, you may want to print either the whole
+Currently, we have two variants of the main structure of the visor: **C**
+and **D**. Earlier prototypes were listed as variants A and B, but they are
+no longer supported. In addition, you may want to print either the whole
 visor or just parts of it. There are a pair of variables that allow you to
 choose what variations you want to print.
 
    * variant - Choose the variant to print by setting this variable to the
      appropriate string
-      - "A": See *visor-A.stl* above for a description. Used by the Makefile to
-        generate *visor-A.stl*.
-      - "B": See *visor-B.stl* above for a description. Used by the Makefile to
-        generate *visor-B.stl*.
       - "C": See *visor-C.stl* above for a description. Used by the Makefile to
         generate *visor-C.stl*.
       - "D": See *visor-D.stl* above for a description. Used by the Makefile to
