@@ -179,7 +179,8 @@ module strap_mount( wall )
     length=33;
     width=strap_width+3*wall+strap_fudge;
     thickness=1.5*wall;
-    support_length=2.5*thickness+0.2;
+    overlap=0.2;
+    support_length=2.5*thickness+overlap;
     difference()
     {
         union()
@@ -191,10 +192,20 @@ module strap_mount( wall )
                 translate( [length/2 - 2*wall,0,0] ) cube( [4*wall, strap_width+strap_fudge, 1.5*thickness], center=true );
             }
             // rod to support strap
-            translate( [length/2 - 2.25*wall,width/2,0] ) rotate( [90,0,0] )
-                polyprism( len=width, top=thickness/2, bottom=thickness/2, sides=8 );
-            translate( [length/2,width/2,0] ) rotate( [90,0,0] )
-                polyprism( len=width, top=thickness/2, bottom=thickness/2, sides=8 );
+            for( x=[length/2 - 2.25*wall, length/2] )
+            {
+                translate( [x,width/2,0] ) rotate( [90,0,0] ) difference()
+                {
+                    polyprism( len=width, top=thickness/2, bottom=thickness/2, sides=8 );
+                    for( pos=[  [0,0], [0.3, 0], [-0.3, 0], [0, 0.3], [0,-0.3],  // 5 (6.7)
+                                [-0.25, -0.25], [-0.25,0.25], [0.25,-0.25], [0.25,0.25] // 9 (6.7)
+                               // [-0.2, -0.2], [-0.2,0.2], [0.2,-0.2], [0.2,0.2]  // 4  (6.6)
+                             ] )
+                    {
+                        translate( [ pos[0]*thickness, pos[1]*thickness, width/2 ] ) cylinder( h=width+0.2, r=0.2, center=true );
+                    }
+                }
+            }
             // support
             translate( [ 2.2*thickness, strap_width/6, 0] ) strap_support( thickness );
             translate( [ 2.2*thickness, -strap_width/6, 0] ) strap_support( thickness );
