@@ -1,12 +1,8 @@
 # Makefile for creating the aetherAR viewer
 
 STLS=\
-	 visor-A.stl\
-	 visor-B.stl\
 	 visor-C.stl\
 	 visor-D.stl\
-	 visor-A-assembled.stl\
-	 visor-B-assembled.stl\
 	 visor-C-assembled.stl\
 	 visor-D-assembled.stl
 
@@ -27,29 +23,17 @@ all: $(STLS)
 %.stl: %.scad
 	$(OPENSCAD) -o $@ $<
 
-# Create STL files from OpenSCAD files
+# Create gcode files from STL files
 %.gcode: %.stl config.ini
 	$(SLIC3R) --load config.ini -o $@ $<
 
 visor.stl: $(SOURCES) Makefile
-
-visor-A.stl: $(SOURCES) Makefile
-	$(OPENSCAD) -D 'variant="A"' -D 'plate="both"' -o $@ $<
-
-visor-B.stl: $(SOURCES) Makefile
-	$(OPENSCAD) -D 'variant="B"' -D 'plate="both"' -o $@ $<
 
 visor-C.stl: $(SOURCES) Makefile
 	$(OPENSCAD) -D 'variant="C"' -D 'plate="both"' -o $@ $<
 
 visor-D.stl: $(SOURCES) Makefile
 	$(OPENSCAD) -D 'variant="D"' -D 'plate="both"' -o $@ $<
-
-visor-A-assembled.stl: $(SOURCES) Makefile
-	$(OPENSCAD) -D 'variant="A"' -D 'plate="assembled"' -o $@ $<
-
-visor-B-assembled.stl: $(SOURCES) Makefile
-	$(OPENSCAD) -D 'variant="B"' -D 'plate="assembled"' -o $@ $<
 
 visor-C-assembled.stl: $(SOURCES) Makefile
 	$(OPENSCAD) -D 'variant="C"' -D 'plate="assembled"' -o $@ $<
@@ -60,7 +44,7 @@ visor-D-assembled.stl: $(SOURCES) Makefile
 test.stl: $(SOURCES) Makefile
 	$(OPENSCAD) -D 'variant="test"' -o $@ $<
 
-.PHONY: clean
+.PHONY: clobber
 .SECONDARY:
 
 clobber:
