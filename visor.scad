@@ -1,4 +1,4 @@
-// Definition of the aetherAR visor
+// Definition of the aetherAR secondsight visor
 
 // Use dimensions for Galaxy S4
 //    Dimensions are portrait mode.
@@ -44,18 +44,6 @@ function side_slope( width, lens ) = atan2( (width-temple_distance(lens))/2, dep
 function is_print_body( p ) = p == "body" || p == "both" || p == "assembled";
 function is_print_optics( p ) = p == "optics" || p == "both";
 
-if( variant == "A" )
-{
-    // The octagon slopes out to match the front
-    visor_plate( phone_height, phone_width, plate, lens )
-        flared_body( phone_height, phone_width, depth, thick, temple_distance(lens), forehead_depth );
-}
-if( variant == "B" )
-{
-    // The octagon stays mostly parallel
-    visor_plate( front_width, height, plate, lens )
-        flared_body( front_width, height, depth, thick, temple_distance(lens), forehead_depth );
-}
 if( variant == "C" )
 {
     // Single smooth body
