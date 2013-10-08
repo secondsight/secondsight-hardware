@@ -6,48 +6,6 @@ function _height( desc )=desc[1];
 function _horiz_side( desc )=desc[2];
 function _vert_side( desc )=desc[3];
 
-// Depends on the following globals:
-//  phone_width  -  body_front_outer(), body_front_inner(),
-//  phone_height -  body_front_outer(), body_front_inner(),
-//  height       -  smooth_body()
-//  strap_width  -  strap_mount()
-
-// Build the body from the pieces (too many parameters)
-//  fwidth         - the width of the front of this part of the body
-//  fheight        - the height of the front of this part of the body
-//  depth          - the measured from front of visor to the back
-//  wall           - thickness of the walls of the visor
-//  face           - width of the face
-//  forehead_depth - distance from forehead touch to temples of viewer
-module flared_body( fwidth, fheight, depth, wall, face, forehead_depth )
-{
-    protrude=0.1;
-    difference()
-    {
-        union()
-        {
-            difference()
-            {
-                // core shape
-                union()
-                {
-                    shell_outer( fwidth, fheight, depth, face );
-                    body_front_outer();
-                }
-                // carve out back of viewer
-                face( face, depth-forehead_depth, depth );
-                nose_slice( fheight, depth, wall );
-            }
-            both_strap_mounts( face, depth, wall ) sloped_strap_mount( wall );
-            phone_mount_narrow( fwidth, fheight, wall );
-        }
-        // These must be subtracted last to deal with any added parts that might
-        //  intrude on the middle volume.
-        shell_inner( fwidth, fheight, depth, wall, face );
-        body_front_inner( wall );
-    }
-}
-
 // Factor out all of the logic that makes the adds everything except the
 // core body shape. In addition to the supplied parameters, this module expects
 // two children:
@@ -234,56 +192,6 @@ module remove_strap_support( wall )
         translate( [length/2,width/2,0] ) rotate( [90,0,0] )
             polyprism( len=width, top=thickness/2, bottom=thickness/2, sides=8 );
     }
-}
-
-// Mount point for the strap, with a slope at the bottom. For connecting with
-//  the narrower variants.
-//   lying flat, must be rotated up to mount.
-//  wall    - thickness of the walls of the visor
-module sloped_strap_mount( wall )
-{
-    intersection()
-    {
-        strap_mount( wall );
-        translate( [16,0,0] ) scale( [1.25,1,1] ) rotate( [0, 0, 45] )
-            cube( strap_width+3*wall+1, center=true );
-    }
-}
-
-// Define the front rectangular portion of the viewer
-module body_front_outer()
-{
-    scale( [1,phone_width/phone_height,1] )
-        polyprism( len=1.2*phone_width/2, bottom=phone_height/2, top=phone_height/4, sides=4 );
-}
-
-//  wall    - thickness of the walls of the visor
-module body_front_inner( wall )
-{
-    scale( [1,(phone_width-wall)/(phone_height-wall),1] )
-        polyprism_hole( len=1.2*phone_width/2, bottom=phone_height/2, top=phone_height/4, wall=wall, sides=4 );
-}
-
-// Define the rear "squashed octagon" portion of the viewer
-//  fwidth  - the width of the front of this part of the body
-//  fheight - the height of the front of this part of the body
-//  depth   - the measured from front of visor to the back
-//  face    - width of the face
-module shell_outer( fwidth, fheight, depth, face )
-{
-    scale( [1,fheight/fwidth,1] )
-        polyprism( len=depth, bottom=fwidth/2, top=face/2, sides=8 );
-}
-
-//  fwidth  - the width of the front of this part of the body
-//  fheight - the height of the front of this part of the body
-//  depth   - the measured from front of visor to the back
-//  wall    - thickness of the walls of the visor
-//  face    - width of the face
-module shell_inner( fwidth, fheight, depth, wall, face )
-{
-    scale( [1,(fheight-wall)/(fwidth-wall),1] )
-        polyprism_hole( len=depth, bottom=fwidth/2, top=face/2, wall=wall, sides=8 );
 }
 
 // Define the portions to remove to fit a forehead.
