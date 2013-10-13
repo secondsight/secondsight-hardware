@@ -167,8 +167,10 @@ module strap_mount( wall )
                 }
             }
             // support
-            translate( [ 1.8*thickness, strap_width/6, 0] ) strap_support( thickness );
-            translate( [ 1.8*thickness, -strap_width/6, 0] ) strap_support( thickness );
+            for( y = [ strap_width/4, 0, -strap_width/4 ] )
+            {
+                translate( [ 1.8*thickness, y, 0] ) strap_support( thickness );
+            }
         }
         translate( [-length/2-wall,0,0] ) rotate([0,-20,0]) cube( [1.5*width,1.5*width,thickness], center=true );
         // holes to increase vertical support strength
@@ -204,8 +206,11 @@ module remove_strap_support( wall )
     {
         union()
         {
-            translate( [ 1.8*thickness+0.75, strap_width/6, 0] ) scale( [1,2,1.1] ) strap_support( thickness );
-            translate( [ 1.8*thickness+0.75, -strap_width/6, 0] ) scale( [1,2,1.1] ) strap_support( thickness );
+            for( y = [ strap_width/4, 0, -strap_width/4 ] )
+            {
+                translate( [ 1.8*thickness+0.75, y, 0] )
+                    scale( [1,2,1.1] ) strap_support( thickness );
+            }
         }
         translate( [length/2 - 2.6*wall,width/2,0] ) rotate( [90,0,0] )
             polyprism( len=width, top=thickness/2, bottom=thickness/2, sides=8 );
