@@ -86,8 +86,10 @@ module holder( lens )
     rad=lens_rad(lens);
     difference()
     {
-        cylinder_tube( height=eye_lens_distance, radius=rad+holder_wall, wall=holder_wall+2*gap );
-        translate( [ 0, 0, eye_lens_distance-0.2 ] ) cylinder( h=2*rad, r2=2*rad, r1=0, center=true );
+        cylinder_tube( height=eye_lens_distance, radius=rad+holder_wall, wall=holder_wall+slide_gap );
+        translate( [ 0, 0, eye_lens_distance] ) rotate( [180,0,0] ) lens_model( lens );
+        translate( [ 0, 0, eye_lens_distance-lens_rim_thickness(lens)/2] )
+            cylinder( h=lens_rim_thickness(lens)+slide_gap, r=lens_rad(lens)+slide_gap );
     }
 }
 
@@ -101,11 +103,13 @@ module holder_cap( lens )
 
     union()
     {
-        cylinder_tube( height=cap_len, radius=outer_rad+fit_gap, wall=cap_wall );
+        cylinder_tube( height=cap_len, radius=outer_rad, wall=cap_wall-fit_gap );
         difference()
         {
-            cylinder_tube( height=cap_wall, radius=outer_rad+gap, wall=holder_wall+cap_wall+0.75 );
-            translate( [ 0, 0, cap_wall-0.2 ] ) cylinder( h=2*rad, r2=2*rad, r1=0, center=true );
+            cylinder_tube( height=cap_wall, radius=outer_rad, wall=holder_wall+cap_wall+1 );
+            translate( [ 0, 0, cap_wall] ) lens_model( lens );
+            translate( [ 0, 0, lens_rim_thickness(lens)/2] )
+                cylinder( h=lens_rim_thickness(lens)+slide_gap, r=rad+slide_gap );
         }
     }
 }
