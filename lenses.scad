@@ -9,6 +9,7 @@ function lens_descriptor(name) = (name == "ebay 50x50") ? [ 50, 50, 42, 75, 2, 7
     : [];
 
 function lens_diam( lens ) = lens[0];
+function lens_rad( lens ) = lens[0]/2;
 function lens_focal_length( lens ) = lens[1];
 function lens_phone_offset( lens ) = lens[2];
 function lens_fov( lens ) = lens[3];
