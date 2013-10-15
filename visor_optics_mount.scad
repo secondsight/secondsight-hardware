@@ -19,11 +19,27 @@ IPD_min=52;
 IPD_avg=63;
 lens_diam=37;
 thick=3;
+assembled=false;
 
 bl_lens=lens_descriptor( "b&l 35 5x" );
-lens_plate( bl_lens, 67-2*3, 126-2*3 );
-//% translate( [ IPD_avg/2, 0, 0 ] ) cylinder( h=1, r=lens_diam(bl_lens)/2, center=true );
-//% translate( [-IPD_avg/2, 0, 0 ] ) cylinder( h=1, r=lens_diam(bl_lens)/2, center=true );
+if( assembled )
+{
+    lens_plate( bl_lens, 67-2*3, 126-2*3 );
+    translate( [IPD_avg/2, 0, -5] )
+    union()
+    {
+        translate( [0,0,eye_lens_distance+2+0.25] ) rotate( [180,0,0] ) holder( bl_lens );
+        holder_cap( bl_lens );
+    }
+}
+else
+{
+    lens_plate( bl_lens, 67-2*3, 126-2*3 );
+    //% translate( [ IPD_avg/2, 0, 0 ] ) cylinder( h=1, r=lens_diam(bl_lens)/2, center=true );
+    //% translate( [-IPD_avg/2, 0, 0 ] ) cylinder( h=1, r=lens_diam(bl_lens)/2, center=true );
+    translate( [ 30, 60, 0] ) holder( bl_lens );
+    translate( [-30, 60, 0] ) holder_cap( bl_lens );
+}
 
 module lens_plate( lens, height, width )
 {
@@ -35,8 +51,8 @@ module lens_plate( lens, height, width )
             cube( [ width, height, thick ], center=true );
             rotate( [0,0,45] ) cube( 0.9*width, center=true );
         }
-        translate( [ IPD_min/2, 0, 0 ] ) lens_slot( diam, thick );
-        translate( [-IPD_max/2, 0, 0 ] ) lens_slot( diam, thick );
+        translate( [ IPD_min/2, 0, 0 ] ) lens_slot( diam+0.25, thick );
+        translate( [-IPD_max/2, 0, 0 ] ) lens_slot( diam+0.25, thick );
     }
 }
 
@@ -50,10 +66,8 @@ module lens_slot( diam, thick )
     }
 }
 
-translate( [ 30, 2*lens_diam(bl_lens), 0] ) lensie( bl_lens );
-translate( [-30, 2*lens_diam(bl_lens), 0] ) lensie_cap( bl_lens );
 
-module lensie( lens )
+module holder( lens )
 {
     rad=lens_diam(lens)/2;
     difference()
@@ -63,7 +77,7 @@ module lensie( lens )
     }
 }
 
-module lensie_cap( lens )
+module holder_cap( lens )
 {
     rad=lens_diam(lens)/2;
 
