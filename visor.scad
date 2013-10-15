@@ -89,7 +89,7 @@ module visor_plate( width, height, plate, lens )
         difference()
         {
             child(0);
-            optics_slots( width, eyes, thick );
+//            optics_slots( width, eyes, thick );
             if( plate == "assembled" )
             {
                 // remove strap mount supports if assembled
@@ -116,12 +116,12 @@ module optics_plate( width, height, lens )
 {
     angle=side_slope( width, lens );
     xoff=lens_diam( lens ) < 40 ? 42 : 38;
-    translate( [ 10,  20, 0] ) slider_inside( thick, angle );
-    translate( [-10,  20, 0] ) slider_inside( thick, angle );
-    translate( [ 10, -20, 0] ) slider_outside( thick, angle );
-    translate( [-10, -20, 0] ) slider_outside( thick, angle );
-    translate( [-xoff,  5, 0] ) lens_holder( (phone_height+5)/2, lens );
-    translate( [ xoff, -5, 0] ) rotate( [0, 0, 180] ) lens_holder( (phone_height+5)/2, lens );
+//    translate( [ 10,  20, 0] ) slider_inside( thick, angle );
+//    translate( [-10,  20, 0] ) slider_inside( thick, angle );
+//    translate( [ 10, -20, 0] ) slider_outside( thick, angle );
+//    translate( [-10, -20, 0] ) slider_outside( thick, angle );
+//    translate( [-xoff,  5, 0] ) lens_holder( (phone_height+5)/2, lens );
+//    translate( [ xoff, -5, 0] ) rotate( [0, 0, 180] ) lens_holder( (phone_height+5)/2, lens );
 
     translate( [ 0, -height/2-10, 0] ) phone_support_ridge( thick, 52, 32, 3 );
 }
@@ -141,16 +141,16 @@ module optics_assembled( width, height, lens )
     theta=90-angle;
     mount_x=width/2-lens_z*sin(angle);
 
-    // Left side assembly
-    color( "Khaki" ) translate( [-mount_x+5,  0, lens_z] ) rotate( [0, theta,180] ) slider_inside( thick, angle );
-    color( "Tan" )   translate( [-mount_x-2, 0, lens_z] ) rotate( [0,180+theta,180] ) slider_outside( thick, angle );
-    color( "Olive" ) translate( [-xoff, 0, lens_z-2] ) rotate( [0, 0, 180] ) lens_holder( (phone_height+5)/2, lens );
-    // right side assembly
-    color( "Khaki" ) translate( [ mount_x-5,  0, lens_z] ) rotate( [0, theta,0] ) slider_inside( thick, angle );
-    color( "Tan" )   translate( [ mount_x+2, 0, lens_z] ) rotate( [0,180+theta,0] ) slider_outside( thick, angle );
-    color( "Olive" ) translate( [ xoff, 0, lens_z-2] ) lens_holder( (phone_height+5)/2, lens );
-
-    color( "Orange" ) translate( [ 0, -height/2+1, 5] ) rotate( [ 180, 0, 0 ] ) phone_support_ridge( thick, 52, 32, 3 );
+//    // Left side assembly
+//    color( "Khaki" ) translate( [-mount_x+5,  0, lens_z] ) rotate( [0, theta,180] ) slider_inside( thick, angle );
+//    color( "Tan" )   translate( [-mount_x-2, 0, lens_z] ) rotate( [0,180+theta,180] ) slider_outside( thick, angle );
+//    color( "Olive" ) translate( [-xoff, 0, lens_z-2] ) rotate( [0, 0, 180] ) lens_holder( (phone_height+5)/2, lens );
+//    // right side assembly
+//    color( "Khaki" ) translate( [ mount_x-5,  0, lens_z] ) rotate( [0, theta,0] ) slider_inside( thick, angle );
+//    color( "Tan" )   translate( [ mount_x+2, 0, lens_z] ) rotate( [0,180+theta,0] ) slider_outside( thick, angle );
+//    color( "Olive" ) translate( [ xoff, 0, lens_z-2] ) lens_holder( (phone_height+5)/2, lens );
+//
+//    color( "Orange" ) translate( [ 0, -height/2+1, 5] ) rotate( [ 180, 0, 0 ] ) phone_support_ridge( thick, 52, 32, 3 );
 
     // lenses
 %   translate( [-xoff, 0, lens_z] ) cylinder( h=1, r=dlens/2, center=true );
