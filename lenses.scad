@@ -17,3 +17,43 @@ function lens_rim_thickness( lens ) = lens[4];
 function lens_front_height( lens ) = lens[5];
 function lens_thickness( lens ) = lens[6];
 function lens_back_height( lens ) = lens[6]-lens[5]-lens[4];
+
+// Define a model of the lens described by 'lens'
+//
+// lens - descriptor for the lens to model
+module lens_model( lens )
+{
+    union()
+    {
+        //front
+        if( lens_front_height(lens) > 0 )
+        {
+            assign( rad_up=(lens_rad(lens)*lens_rad(lens)+lens_front_height(lens)*lens_front_height(lens))/(2*lens_front_height(lens)) )
+            {
+                translate( [0,0,lens_rim_thickness(lens)/2] )
+                intersection()
+                {
+                    translate( [0,0,lens_front_height(lens)-rad_up] )
+                        sphere( r=rad_up, center=true, $fn=50 );
+                    cylinder( r=lens_rad(lens), h=lens_front_height(lens) );
+                }
+            }
+        }
+        //rim
+        cylinder( h=lens_rim_thickness(lens), r=lens_rad(lens), center=true );
+        //back
+        if( lens_back_height(lens) > 0 )
+        {
+            assign( rad_up=(lens_rad(lens)*lens_rad(lens)+lens_back_height(lens)*lens_back_height(lens))/(2*lens_back_height(lens)) )
+            {
+                translate( [0,0,-lens_rim_thickness(lens)/2] )
+                intersection()
+                {
+                    translate( [0,0,-lens_back_height(lens)+rad_up] )
+                        sphere( r=rad_up, center=true, $fn=50 );
+                    translate( [ 0,0, -lens_back_height(lens) ] ) cylinder( r=lens_rad(lens), h=lens_back_height(lens) );
+                }
+            }
+        }
+    }
+}
