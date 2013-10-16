@@ -2,7 +2,7 @@
 
 include <lenses.scad>;
 include <MCAD/regular_shapes.scad>;
-include <visor_body.scad>;
+include <polybody.scad>;
 
 slot_width=10;
 min_bfl=20;
@@ -59,9 +59,9 @@ module lens_plate( lens, height, width )
 {
     diam=lens_diam(lens)+holder_wall;
     t_off=3;
-    face=[ 133-2*3, 67-2*3, 63-3, 52-3 ];
+    face=make_poly_inside( wid=133, ht=67, horiz=63, vert=52, wall=3 );
     translate( [ 0, 0, thick/2 ] ) difference() {
-        solid_body( face, face, 1.5 /* thick */ );
+        polybody( face, face, 1.5 /* thick */ );
         translate( [ IPD_min/2, 0, 0 ] ) lens_slot( diam+1+slide_gap, thick );
         translate( [-IPD_min/2, 0, 0 ] ) rotate( [ 0, 0, 180 ] ) lens_slot( diam+1+slide_gap, thick );
     }
