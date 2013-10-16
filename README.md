@@ -112,6 +112,16 @@ This file defines the elastic band mounting system for the phone. Although not
 the *coolest* design, this is functional and allows testing of the hardware.
 It's main advantage is that it is simple and works with all phones.
 
+### visor\_optics\_mount.scad
+
+This file defines the hardware to support the lenses in the visor body. The
+design has a few constraints that make the problem of mounting interesting.  We
+want the lens to be held firmly, but weight is a consideration. Also not all
+users are the same. Also, the *Interpupillary Distance* (IPD) is different from
+person to person. We would like this to be easily adjustable for the user.
+
+The optics mounting hardware takes these issues into account.
+
 ### lenses.scad
 
 This file contains functions to define and use descriptions of particular
@@ -140,6 +150,12 @@ with random vector indices. All lengths are in mm.
    * lens\_front\_height(lens) - distance from rim to the front of the lens
    * lens\_thickness(lens) - overall thickness of the lens
    * lens\_back\_height(lens) - distance from the rim to the back of the lens
+
+### polybody.scad
+
+The visor body is designed around a ten-sided polyhedron. Some of the
+parameters and code for this polyhedron are needed in multiple files.
+Separating the code into this file makes it easier to reuse.
 
 ### user\_params.scad
 
