@@ -21,7 +21,7 @@ function polybody_points( phone, face, depth )=[
             [-_width(face)/2, _vert_side(face)/2, depth ], [-_horiz_side(face)/2, _height(face)/2, depth ], // f-tl  (14,15)
         ];
 
-// Ten-sided polyhedron making the visor body.
+// Ten-sided polyhedron making the smooth visor body.
 //
 // phone - a vector containing parameters for the phone side of the body
 // face  - a vector containing parameters for the face side of the body
@@ -37,16 +37,20 @@ module polybody( phone, face, depth )
     polyhedron(
         points=polybody_points( phone, face, depth ),
         triangles=[
-            [1,2,3], [3,0,1], [0,3,4], [4,7,0], [7,4,5], [5,6,7],              // phone
-            [0,15,14], [14,1,0], [7,8,15], [15,0,7], [8,7,9], [9,7,6],         // top
-            [5,10,9], [9,6,5],                                                 // right
-            [4,11,10], [10,5,4], [3,12,11], [11,4,3], [2,13,3], [13,12,3],     // bottom
-            [2,1,14], [14,13,2],                                               // left
-            [8,14,15], [8,9,14], [9,13,14], [9,10,13], [10,12,13], [10,11,12]  // face
+            [1,2,3], [3,0,1], [0,3,4], [4,7,0], [7,4,5], [5,6,7], // phone
+            [0,15,14], [14,1,0],  // top-left
+            [7,8,15], [15,0,7],   // top
+            [8,7,9], [9,7,6],     // top-right
+            [5,10,9], [9,6,5],    // right
+            [4,11,10], [10,5,4],  // bottom-right
+            [3,12,11], [11,4,3],  // bottom
+            [2,13,3], [13,12,3],  // bottom-left
+            [2,1,14], [14,13,2],  // left
+            [8,14,15], [8,9,14], [9,13,14], [9,10,13], [10,12,13], [10,11,12] // face
         ]
     );
 }
-// Ten-sided polyhedron making the visor body.
+// Ten-sided polyhedron making the grooved visor body.
 //
 // phone - a vector containing parameters for the phone side of the body
 // face  - a vector containing parameters for the face side of the body
@@ -62,12 +66,16 @@ module polybody_concave( phone, face, depth )
     polyhedron(
         points=polybody_points( phone, face, depth ),
         triangles=[
-            [1,2,3], [3,0,1], [0,3,4], [4,7,0], [7,4,5], [5,6,7],              // phone
-            [0,15,1], [1,15,14], [7,8,15], [15,0,7], [6,8,7], [6,9,8],         // top
-            [5,10,9], [9,6,5],                                                 // right
-            [4,11,5], [5,11,10], [3,12,11], [11,4,3], [2,12,3], [2,13,12],     // bottom
-            [2,1,14], [14,13,2],                                               // left
-            [8,14,15], [8,9,14], [9,13,14], [9,10,13], [10,12,13], [10,11,12]  // face
+            [1,2,3], [3,0,1], [0,3,4], [4,7,0], [7,4,5], [5,6,7], // phone
+            [0,15,1], [1,15,14],  // top-left
+            [7,8,15], [15,0,7],   // top
+            [6,8,7], [6,9,8],     // top-right
+            [5,10,9], [9,6,5],    // right
+            [4,11,5], [5,11,10],  // bottom-right
+            [3,12,11], [11,4,3],  // bottom
+            [2,12,3], [2,13,12],  // bottom-left
+            [2,1,14], [14,13,2],  // left
+            [8,14,15], [8,9,14], [9,13,14], [9,10,13], [10,12,13], [10,11,12] // face
         ]
     );
 }
