@@ -17,6 +17,7 @@ holder_wall=1;
 cap_len=7;
 cap_wall=2;
 cap_top=1.5;
+rim_thick=3;
 
 IPD_max=78;
 IPD_min=52;
@@ -28,13 +29,13 @@ bl_lens=lens_descriptor( "b&l 35 5x" );
 if( assembled )
 {
     color( "lightgreen" ) lens_plate( bl_lens, 67-4*3, 126 );
-    translate( [IPD_avg/2, 0, -cap_len] )
+    translate( [IPD_avg/2, 0, -rim_thick] )
         color( "orange" ) union()
     {
         translate( [0,0,eye_lens_distance+cap_top+fit_gap] ) rotate( [180,0,0] ) holder( bl_lens );
         holder_cap( bl_lens );
     }
-    translate( [-IPD_avg/2, 0, -cap_len] )
+    translate( [-IPD_avg/2, 0, -rim_thick] )
         color( "orange" ) union()
     {
         translate( [0,0,eye_lens_distance+cap_top+fit_gap] ) rotate( [180,0,0] ) holder( bl_lens );
@@ -43,7 +44,7 @@ if( assembled )
 }
 else
 {
-    lens_plate( bl_lens, 67-4*3, 126 );
+//    lens_plate( bl_lens, 67-4*3, 126 );
     translate( [ 30, 60, 0] ) holder( bl_lens );
     translate( [-30, 60, 0] ) holder_cap( bl_lens );
 }
@@ -64,7 +65,7 @@ module lens_plate( lens, height, width )
             rotate( [0,0,45] ) cube( 0.9*width, center=true );
         }
         translate( [ IPD_min/2, 0, 0 ] ) lens_slot( diam+1+slide_gap, thick );
-        translate( [-IPD_max/2, 0, 0 ] ) lens_slot( diam+1+slide_gap, thick );
+        translate( [-IPD_min/2, 0, 0 ] ) rotate( [ 0, 0, 180 ] ) lens_slot( diam+1+slide_gap, thick );
     }
 }
 
@@ -72,13 +73,13 @@ module lens_plate( lens, height, width )
 //
 // diam  - lens diameter
 // thick - thickness of plate
-module lens_slot( diam, thick )
+module lens_slot( diam, thick, wall=1 )
 {
     height=thick+overlap;
     hull()
     {
-        cylinder( h=height, r=diam/2, center=true );
-        translate( [(IPD_max-IPD_min)/2, 0, 0 ] ) cylinder( h=height, r=diam/2, center=true );
+        translate( [-wall/2, 0, 0 ] ) cylinder( h=height, r=diam/2, center=true );
+        translate( [(IPD_max-IPD_min)/2+wall, 0, 0 ] ) cylinder( h=height, r=diam/2, center=true );
     }
 }
 
@@ -104,16 +105,15 @@ module holder_cap( lens )
 {
     rad=lens_rad(lens);
     outer_rad=rad+holder_wall+cap_wall;
-    rim=3;
 
     intersection()
     {
         union()
         {
-            cylinder_tube( height=cap_len, radius=outer_rad, wall=cap_wall-fit_gap );
+            cylinder_tube( height=cap_len, radius=rad+holder_wall+1, wall=1-fit_gap );
             difference()
             {
-                cylinder_tube( height=cap_top, radius=outer_rad, wall=holder_wall+cap_wall+1 );
+                cylinder_tube( height=rim_thick, radius=outer_rad, wall=holder_wall+cap_wall+1 );
                 translate( [ 0, 0, cap_top] ) lens_model( lens );
                 translate( [ 0, 0, lens_rim_thickness(lens)/2] )
                     cylinder( h=lens_rim_thickness(lens)+slide_gap, r=rad+slide_gap );
@@ -121,9 +121,9 @@ module holder_cap( lens )
         }
         union()
         {
-            translate( [ 0, 0, cap_len/2+rim ] )
-                cube( [ 2*outer_rad, 2*rad, cap_len ], center=true );
-            cube( [ 2*outer_rad, 2*outer_rad, 2*rim ], center=true );
+            translate( [ 0, 0, cap_len/2+rim_thick ] )
+                cube( [ 2*outer_rad, 2*rad+1, cap_len ], center=true );
+            cube( [ 2*outer_rad, 2*outer_rad, 2*rim_thick ], center=true );
         }
     }
 }
