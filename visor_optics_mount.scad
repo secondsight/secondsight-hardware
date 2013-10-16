@@ -45,7 +45,7 @@ if( assembled )
 }
 else
 {
-//    lens_plate( bl_lens, 67-4*3, 133 );
+    lens_plate( bl_lens, 67-4*3, 133 );
     translate( [ 30, 60, 0] ) holder( bl_lens );
     translate( [-30, 60, 0] ) holder_cap( bl_lens );
 }
@@ -59,13 +59,9 @@ module lens_plate( lens, height, width )
 {
     diam=lens_diam(lens)+holder_wall;
     t_off=3;
+    face=[ 133-2*3, 67-2*3, 63-3, 52-3 ];
     translate( [ 0, 0, thick/2 ] ) difference() {
-  *     intersection()
-        {
-            cube( [ width, height, thick ], center=true );
-            rotate( [0,0,45] ) cube( 0.9*width, center=true );
-        }
-        face_plate( [ 133-2*3, 67-2*3, 63-3, 52-3 ], 1.5 /* thick */ );
+        solid_body( face, face, 1.5 /* thick */ );
         translate( [ IPD_min/2, 0, 0 ] ) lens_slot( diam+1+slide_gap, thick );
         translate( [-IPD_min/2, 0, 0 ] ) rotate( [ 0, 0, 180 ] ) lens_slot( diam+1+slide_gap, thick );
     }
@@ -130,19 +126,6 @@ module holder_cap( lens )
             cube( [ 2*outer_rad, 2*outer_rad, 2*rim_thick ], center=true );
         }
     }
-}
-
-module face_plate( face, thick )
-{
-    linear_extrude( thick, center=true, convexity=10, twist=0, slices=20 )
-    polygon(
-        points=[
-            [ _horiz_side(face)/2, _height(face)/2 ], [ _width(face)/2, _vert_side(face)/2 ], // f-tr  (8,9)
-            [ _width(face)/2,-_vert_side(face)/2 ], [ _horiz_side(face)/2, -_height(face)/2 ],// f-br  (10,11)
-            [-_horiz_side(face)/2,-_height(face)/2 ], [-_width(face)/2,-_vert_side(face)/2 ], // f-bl  (12,13)
-            [-_width(face)/2, _vert_side(face)/2 ], [-_horiz_side(face)/2, _height(face)/2 ], // f-tl  (14,15)
-        ]
-    );
 }
 
 // Calculate the nominal distance between the wearer's eye and the phone

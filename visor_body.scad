@@ -64,16 +64,14 @@ module smooth_body( fwidth, fheight, depth, wall, face, forehead_depth )
         solid_body(
             [ fwidth, fheight, phone_top, phone_side ],
             [ face, height, face_top, face_side ],
-            depth,
-            wall
+            depth
         );
 
         // hollow
         translate( [0,0,-protrude] ) solid_body(
             [ fwidth-2*wall, fheight-2*wall, phone_top-wall, phone_side-wall ],
             [ face-2*wall, height-2*wall, face_top-wall, face_side-wall ],
-            depth+2*protrude,
-            wall
+            depth+2*protrude
         );
     }
 }
@@ -99,16 +97,14 @@ module grooved_body( fwidth, fheight, depth, wall, face, forehead_depth )
         solid_body_concave(
             [ fwidth, fheight, phone_top, phone_side ],
             [ face, height, face_top, face_side ],
-            depth,
-            wall
+            depth
         );
 
         // hollow
         translate( [0,0,-protrude] ) solid_body_concave(
             [ fwidth-2*wall, fheight-2*wall, phone_top-wall, phone_side-wall ],
             [ face-2*wall, height-2*wall, face_top-wall, face_side-wall ],
-            depth+2*protrude,
-            wall
+            depth+2*protrude
         );
     }
 }
