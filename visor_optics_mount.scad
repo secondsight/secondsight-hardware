@@ -48,10 +48,10 @@ if( assembled )
 else
 {
     lens_plate( bl_lens, 67, 133 );
-    translate( [ 30, 60, 0] ) holder( bl_lens );
-    translate( [-30, 60, 0] ) holder_cap( bl_lens );
-    translate( [ 30,-60, 0] ) holder( bl_lens );
-    translate( [-30,-60, 0] ) holder_cap( bl_lens );
+//    translate( [ 30, 60, 0] ) holder( bl_lens );
+//    translate( [-30, 60, 0] ) holder_cap( bl_lens );
+//    translate( [ 30,-60, 0] ) holder( bl_lens );
+//    translate( [-30,-60, 0] ) holder_cap( bl_lens );
 }
 
 // Plate supporting lens holders
@@ -62,15 +62,26 @@ else
 module lens_plate( lens, height, width )
 {
     diam=lens_diam(lens)+holder_wall;
-    t_off=3;
     face=make_poly_inside( wid=width, ht=height, horiz=63, vert=52, wall=3 );
-    translate( [ 0, 0, thick/2 ] ) difference() {
-        polybody( face, face, 1.5 /* thick */ );
+    p_thick=1.5; // thick
+    difference()
+    {
+        polybody( face, face, p_thick );
 
-        translate( [ IPD_min/2, 0, 0 ] ) lens_slot( diam+thin_wall+2*fit_gap, thick );
-        translate( [-IPD_min/2, 0, 0 ] ) rotate( [ 0, 0, 180 ] ) lens_slot( diam+thin_wall+2*fit_gap, thick );
+        translate( [ IPD_min/2, 0, p_thick/2 ] ) lens_slot( diam+thin_wall+2*fit_gap, thick );
+        translate( [-IPD_min/2, 0, p_thick/2 ] ) rotate( [ 0, 0, 180 ] ) lens_slot( diam+thin_wall+2*fit_gap, thick );
         // nose
-        translate( [ 0, -height/2+2, 0 ] ) rotate( [ -90, 0, 0] ) cylinder( h=height/3, r1=25, r2=(IPD_min-lens_diam(lens))/2, center=true );
+        translate( [ 0, -0.4*height, p_thick/2 ] ) plate_nose_slice( height, p_thick );
+    }
+}
+
+module plate_nose_slice( height, thick )
+{
+    linear_extrude( height=thick+0.2, center=true, convexity=10 )
+        projection( cut=false ) rotate( [ -90, 0, 0] ) union()
+    {
+        cylinder( h=0.45*height, r1=15, r2=3, center=true );
+        translate( [0,0,0.45*height/2] ) sphere( r=3, center=true );
     }
 }
 
