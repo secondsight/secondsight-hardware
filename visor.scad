@@ -17,8 +17,8 @@ IPD_avg=63;
 // Potentially user-specific data
 include <user_params.scad>;
 
-variant="C";
-plate="assembled";
+variant="test";
+plate="optics";
 
 strap_width=40;
 front_width=126;
@@ -58,20 +58,30 @@ if( variant == "D" )
 }
 if( variant == "test" )
 {
-//    rotate( [0,0,90] ) assign( angle=side_slope( phone_height, lens ) )
-//    {
-//        lens_holder( (phone_height+5)/2, lens_descriptor( "b&l 35 5x" ) );
-//    }
-    intersection()
+    if( assembled )
     {
-        difference()
+        color( "lightgreen" ) lens_plate( lens, height, template_distance(lens) );
+        translate( [IPD_avg/2, 0, -rim_thick] )
+            color( "orange" ) union()
         {
-            translate( [0,0,-60] )
-            visor_plate( phone_height, phone_width, "body", lens )
-                grooved_body( phone_height, phone_width, depth, thick, temple_distance(lens), forehead_depth );
-            translate( [ 0.1*phone_height, 0, phone_height/2+3 ] ) cube( phone_height, center=true );
+            translate( [0,0,holder_len+cap_top+fit_gap] ) rotate( [180,0,0] ) holder( lens );
+            holder_cap( lens );
         }
-        translate( [ -phone_height/2, 0, phone_height/2 ] ) cube( phone_height, center=true );
+        translate( [-IPD_avg/2, 0, -rim_thick] )
+            color( "orange" ) union()
+        {
+            translate( [0,0,holder_len+cap_top+fit_gap] ) rotate( [180,0,0] ) holder( lens );
+            holder_cap( lens );
+        }
+    }
+    else
+    {
+    echo( temple_distance( lens ) );
+        lens_plate( lens, height, temple_distance( lens ) );
+    //    translate( [ 30, 60, 0] ) holder( lens );
+    //    translate( [-30, 60, 0] ) holder_cap( lens );
+    //    translate( [ 30,-60, 0] ) holder( lens );
+    //    translate( [-30,-60, 0] ) holder_cap( lens );
     }
 }
 

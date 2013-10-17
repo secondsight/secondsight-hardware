@@ -25,63 +25,42 @@ thin_wall=1;
 IPD_max=78;
 IPD_min=52;
 IPD_avg=63;
-thick=3;
-assembled=false;
-
-bl_lens=lens_descriptor( "b&l 35 5x" );
-if( assembled )
-{
-    color( "lightgreen" ) lens_plate( bl_lens, 67, 133 );
-    translate( [IPD_avg/2, 0, -rim_thick] )
-        color( "orange" ) union()
-    {
-        translate( [0,0,holder_len+cap_top+fit_gap] ) rotate( [180,0,0] ) holder( bl_lens );
-        holder_cap( bl_lens );
-    }
-    translate( [-IPD_avg/2, 0, -rim_thick] )
-        color( "orange" ) union()
-    {
-        translate( [0,0,holder_len+cap_top+fit_gap] ) rotate( [180,0,0] ) holder( bl_lens );
-        holder_cap( bl_lens );
-    }
-}
-else
-{
-    lens_plate( bl_lens, 67, 133 );
-//    translate( [ 30, 60, 0] ) holder( bl_lens );
-//    translate( [-30, 60, 0] ) holder_cap( bl_lens );
-//    translate( [ 30,-60, 0] ) holder( bl_lens );
-//    translate( [-30,-60, 0] ) holder_cap( bl_lens );
-}
 
 // Plate supporting lens holders
 //
 // lens   - lens descriptor
 // height - height of plate
 // width  - width of plate
-module lens_plate( lens, height, width )
+// thick  - thickness of the plate
+module lens_plate( lens, height, width, thick=1.5 )
 {
     diam=lens_diam(lens)+holder_wall;
     face=make_poly_inside( wid=width, ht=height, horiz=63, vert=52, wall=3 );
-    p_thick=1.5; // thick
     difference()
     {
-        polybody( face, face, p_thick );
+        polybody( face, face, thick );
 
-        translate( [ IPD_min/2, 0, p_thick/2 ] ) lens_slot( diam+thin_wall+2*fit_gap, thick );
-        translate( [-IPD_min/2, 0, p_thick/2 ] ) rotate( [ 0, 0, 180 ] ) lens_slot( diam+thin_wall+2*fit_gap, thick );
+        translate( [ IPD_min/2, 0, thick/2 ] ) lens_slot( diam+thin_wall+2*fit_gap, thick );
+        translate( [-IPD_min/2, 0, thick/2 ] ) rotate( [ 0, 0, 180 ] ) lens_slot( diam+thin_wall+2*fit_gap, thick );
         // nose
-        translate( [ 0, -0.4*height, p_thick/2 ] ) plate_nose_slice( height, p_thick );
+        translate( [ 0, -2, thick/2 ] ) plate_nose_slice( height, p_thick );
     }
 }
 
+// Negative space to remove from the lens plate for the nose.
+//
+// height - height of inside of the visor
+// thick  - thickness of the plate
 module plate_nose_slice( height, thick )
 {
-    linear_extrude( height=thick+0.2, center=true, convexity=10 )
+    h_nose=0.5*height;
+    top=8;
+    bottom=30;
+    linear_extrude( height=thick+overlap, center=true, convexity=10 )
         projection( cut=false ) rotate( [ -90, 0, 0] ) union()
     {
-        cylinder( h=0.45*height, r1=15, r2=3, center=true );
-        translate( [0,0,0.45*height/2] ) sphere( r=3, center=true );
+        translate( [ 0, 0, -h_nose/2 ] ) cylinder( h=h_nose, r1=bottom/2, r2=top/2, center=true );
+        sphere( r=top/2, center=true );
     }
 }
 
