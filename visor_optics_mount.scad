@@ -28,17 +28,17 @@ IPD_avg=63;
 
 clip_width=5;
 clip_thick=2;
-clip_length=rim_thick+2*(plate_thick+clip_thick+fit_gap);
+function clip_length(plate)=rim_thick+2*(plate+clip_thick+fit_gap);
 plate_thick=2;
 
 module plate_clip()
 {
     clip_arm=5+clip_thick;
     width=clip_width-2*fit_gap;
-    gap=clip_length-2*clip_thick;
+    gap=clip_length(plate_thick)-2*plate_thick;
     translate( [ 0, 0, clip_width/2 ] ) difference()
     {
-        cube( [ gap+2*clip_thick, clip_arm, width ], center=true ); 
+        cube( [ clip_length(plate_thick), clip_arm, width ], center=true ); 
         translate( [ 0, -clip_thick, 0 ] ) cube( [ gap, clip_arm, width+overlap ], center=true ); 
     }
 }
