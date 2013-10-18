@@ -18,7 +18,7 @@ IPD_avg=63;
 include <user_params.scad>;
 
 variant="test";
-plate="optics";
+plate="assembled";
 
 overlap=0.1;
 strap_width=40;
@@ -59,29 +59,35 @@ if( variant == "D" )
 }
 if( variant == "test" )
 {
-    if( assembled )
+    if( plate == "assembled" )
     {
+        front_lens_plate( lens, height, temple_distance( lens ) );
         color( "lightgreen" ) lens_plate( lens, height, template_distance(lens) );
-        translate( [IPD_avg/2, 0, -rim_thick] )
+        translate( [IPD_avg/2, 0, plate_thick] )
             color( "orange" ) union()
         {
             translate( [0,0,holder_len+cap_top+fit_gap] ) rotate( [180,0,0] ) holder( lens );
             holder_cap( lens );
         }
-        translate( [-IPD_avg/2, 0, -rim_thick] )
+        translate( [-IPD_avg/2, 0, plate_thick] )
             color( "orange" ) union()
         {
             translate( [0,0,holder_len+cap_top+fit_gap] ) rotate( [180,0,0] ) holder( lens );
             holder_cap( lens );
         }
+        color( "tan" ) translate( [ 0, 0, plate_thick+rim_thick ] ) lens_plate( lens, height, temple_distance( lens ) );
+
+        translate( [ 0, height/2-thick-clip_thick/2+clip_length, 0 ] ) rotate( [ 0, 90, 0 ] ) plate_clip();
+        translate( [ 0,-53, 0 ] ) plate_clip();
+        translate( [ 0,-67, 0 ] ) plate_clip();
     }
     else
     {
         translate( [ 0, height/2, 0 ] ) front_lens_plate( lens, height, temple_distance( lens ) );
         translate( [ 0,-height/2, 0 ] ) lens_plate( lens, height, temple_distance( lens ) );
         translate( [ 0,  5, 0 ] ) plate_clip();
-        translate( [ 0,-55, 0 ] ) plate_clip();
-        translate( [ 0,-65, 0 ] ) plate_clip();
+        translate( [ 0,-53, 0 ] ) plate_clip();
+        translate( [ 0,-67, 0 ] ) plate_clip();
     //    translate( [ 30, 60, 0] ) holder( lens );
     //    translate( [-30, 60, 0] ) holder_cap( lens );
     //    translate( [ 30,-60, 0] ) holder( lens );

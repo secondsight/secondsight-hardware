@@ -28,16 +28,18 @@ IPD_avg=63;
 
 clip_width=5;
 clip_thick=2;
+clip_length=rim_thick+2*(plate_thick+clip_thick+fit_gap);
 plate_thick=2;
 
 module plate_clip()
 {
-    clip_arm=5;
-    width=clip_width-fit_gap;
+    clip_arm=5+clip_thick;
+    width=clip_width-2*fit_gap;
+    gap=clip_length-2*clip_thick;
     translate( [ 0, 0, clip_width/2 ] ) difference()
     {
-        cube( [ rim_thick+2*(clip_thick+plate_thick)+fit_gap, clip_arm, width ], center=true ); 
-        translate( [ 0, -clip_thick, 0 ] ) cube( [ rim_thick+2*plate_thick+fit_gap, clip_arm, width+overlap ], center=true ); 
+        cube( [ gap+2*clip_thick, clip_arm, width ], center=true ); 
+        translate( [ 0, -clip_thick, 0 ] ) cube( [ gap, clip_arm, width+overlap ], center=true ); 
     }
 }
 
@@ -54,7 +56,7 @@ module front_lens_plate( lens, height, width, thick=2 )
         {
             polybody( face, face, thick );
             translate( [ 0, 0, thick+rim_thick/2 ] ) eye_positions( offset )
-                rect_oval_tube( outer_rad+1, offset, rim_thick+overlap, 1-slide_gap );
+                rect_oval_tube( outer_rad+1+slide_gap, offset, rim_thick+overlap, 1 );
         }
 
         // slots
