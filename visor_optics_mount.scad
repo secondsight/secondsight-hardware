@@ -26,24 +26,30 @@ IPD_max=78;
 IPD_min=52;
 IPD_avg=63;
 
+plate_thick=2;
 clip_width=5;
 clip_thick=2;
-function clip_length(plate)=rim_thick+2*(plate+clip_thick+fit_gap);
-plate_thick=2;
+clip_length=rim_thick+2*(plate_thick+clip_thick+fit_gap);
 
 module plate_clip()
 {
     clip_arm=5+clip_thick;
     width=clip_width-2*fit_gap;
-    gap=clip_length(plate_thick)-2*plate_thick;
+    gap=clip_length-2*plate_thick;
     translate( [ 0, 0, clip_width/2 ] ) difference()
     {
-        cube( [ clip_length(plate_thick), clip_arm, width ], center=true ); 
+        cube( [ clip_length, clip_arm, width ], center=true ); 
         translate( [ 0, -clip_thick, 0 ] ) cube( [ gap, clip_arm, width+overlap ], center=true ); 
     }
 }
 
-module front_lens_plate( lens, height, width, thick=2 )
+// Front plate of the lens support system.
+//
+//  lens   - lens descriptor
+//  height - height of the plate
+//  width  - width of the plate
+//  thick  - optional thickness of the plate, defaults to 2
+module front_lens_plate( lens, height, width, thick=plate_thick )
 {
     diam=lens_diam(lens)+holder_wall;
     wall=3;
@@ -86,7 +92,7 @@ module eye_positions( offset )
 // height - height of plate
 // width  - width of plate
 // thick  - thickness of the plate
-module lens_plate( lens, height, width, thick=2 )
+module lens_plate( lens, height, width, thick=plate_thick )
 {
     wall=3;
     face=make_poly_inside( wid=width, ht=height, horiz=63, vert=52, wall=wall );
@@ -139,6 +145,7 @@ module lens_slot( diam, thick, wall=1 )
     translate( [ offset/2, 0, 0 ] ) rect_oval( diam/2, offset, thick );
 }
 
+// Combination of a rectangle and two circles extrude to height.
 //
 // radius - radius of the circles at each end
 // offset - distance between the centers of the circles
@@ -152,6 +159,8 @@ module rect_oval( radius, offset, height )
     }
 }
 
+// Tube version of the combination of a rectangle and two circles extrude to
+//   height.
 //
 // radius - radius of the circles at each end
 // offset - distance between the centers of the circles
