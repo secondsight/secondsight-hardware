@@ -56,6 +56,7 @@ module front_lens_plate( lens, height, width, thick=plate_thick )
     face=make_poly_inside( wid=width, ht=height, horiz=63, vert=52, wall=wall );
     outer_rad=diam/2+holder_wall+cap_wall;
     offset=(IPD_max-IPD_min)/2;
+    clip_length=rim_thick+thick+fit_gap+1;
     difference()
     {
         union()
@@ -63,19 +64,40 @@ module front_lens_plate( lens, height, width, thick=plate_thick )
             polybody( face, face, thick );
             translate( [ 0, 0, thick+rim_thick/2 ] ) eye_positions( offset )
                 rect_oval_tube( outer_rad+1+slide_gap, offset, rim_thick+overlap, 1 );
+            translate( [ 0, height/4, thick] ) support_pin( clip_length, 3 );
+            translate( [-(0.46*width-wall), -0.3*height, thick] ) support_pin( clip_length, 2 );
+            translate( [ (0.46*width-wall), -0.3*height, thick] ) support_pin( clip_length, 2 );
         }
 
         // slots
         translate( [ 0, 0, thick/2 ] ) eye_positions( offset ) rect_oval( diam/2, offset, thick+overlap );
         // nose
         translate( [ 0, -2, thick/2 ] ) plate_nose_slice( height, p_thick );
-        // clips
-        translate( [ 0, 0, thick/2 ] ) union()
+    }
+}
+
+module support_hole( length, rad )
+{
+    translate( [ 0, 0, length/2] ) union()
+    {
+        cylinder( h=length+overlap, r=rad, center=true );
+        translate( [ 0, 0, length/2+overlap-0.5] ) cylinder( h=1+overlap, r1=rad, r2=rad+0.5, center=true );
+    }
+}
+
+module support_pin( length, rad )
+{
+    translate( [ 0, 0, length/2 ] ) intersection() {
+        difference()
         {
-            translate( [ 0, height/2-wall-1+overlap, 0 ] ) cube( [ clip_width, clip_thick, thick+overlap ], center=true );
-            translate( [ width/2-wall-1+overlap, 0, 0 ] )  cube( [ clip_thick, clip_width, thick+overlap ], center=true );
-            translate( [-width/2+wall+1-overlap, 0, 0 ] )  cube( [ clip_thick, clip_width, thick+overlap ], center=true );
+            union()
+            {
+                cylinder( h=length+overlap, r=rad, center=true );
+                translate( [ 0, 0, length/2+overlap-0.5] ) cylinder( h=1, r1=rad-overlap, r2=rad+0.5, center=true );
+            }
+            translate( [ 0, 0, (rad+1)/2 ] ) rotate( [ 0, 90, 0 ] ) rect_oval( 0.75, rad+1, 2*(rad+1), $fn=16 );
         }
+        cube( [ 1.9*rad, 3*rad, length+rad ], center=true );
     }
 }
 
@@ -108,12 +130,9 @@ module lens_plate( lens, height, width, thick=plate_thick )
         // nose
         translate( [ 0, 2.8, thick/2 ] ) plate_nose_slice( height, thick );
         // clips
-        translate( [ 0, 0, thick/2 ] ) union()
-        {
-            translate( [ 0, height/2-wall-1+overlap, 0 ] ) cube( [ 5, 2, thick+overlap ], center=true );
-            translate( [ width/2-wall-1+overlap, 0, 0 ] ) cube( [ 2, 5, thick+overlap ], center=true );
-            translate( [-width/2+wall+1-overlap, 0, 0 ] ) cube( [ 2, 5, thick+overlap ], center=true );
-        }
+        translate( [ 0, height/4, 0 ] ) support_hole( thick, 3 );
+        translate( [-(0.46*width-wall), -0.3*height, 0 ] ) support_hole( thick, 2 );
+        translate( [ (0.46*width-wall), -0.3*height, 0 ] ) support_hole( thick, 2 );
     }
 }
 
