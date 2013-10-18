@@ -20,6 +20,7 @@ include <user_params.scad>;
 variant="test";
 plate="optics";
 
+overlap=0.1;
 strap_width=40;
 front_width=126;
 height=67;
@@ -77,7 +78,7 @@ if( variant == "test" )
     else
     {
     echo( temple_distance( lens ) );
-        lens_plate( lens, height, temple_distance( lens ) );
+        front_lens_plate( lens, height, temple_distance( lens ) );
     //    translate( [ 30, 60, 0] ) holder( lens );
     //    translate( [-30, 60, 0] ) holder_cap( lens );
     //    translate( [ 30,-60, 0] ) holder( lens );

@@ -26,6 +26,36 @@ IPD_max=78;
 IPD_min=52;
 IPD_avg=63;
 
+module front_lens_plate( lens, height, width, thick=1.5 )
+{
+    diam=lens_diam(lens)+holder_wall;
+    face=make_poly_inside( wid=width, ht=height, horiz=63, vert=52, wall=3 );
+    outer_rad=diam/2+holder_wall+cap_wall;
+    difference()
+    {
+        union()
+        {
+            polybody( face, face, thick );
+            translate( [IPD_min/2, 0, thick+rim_thick/2 ] ) difference()
+            {
+                lens_slot( 2*(outer_rad+1), rim_thick+overlap );
+                lens_slot( 2*outer_rad+slide_gap, rim_thick+2*overlap );
+            }
+            translate( [-IPD_min/2, 0, thick+rim_thick/2 ] ) rotate( [ 0, 0, 180 ] ) difference()
+            {
+                lens_slot( 2*(outer_rad+1), rim_thick+overlap );
+                lens_slot( 2*outer_rad+slide_gap, rim_thick+2*overlap );
+            }
+        }
+
+        translate( [ IPD_min/2, 0, thick/2 ] ) lens_slot( diam, thick+overlap );
+        translate( [-IPD_min/2, 0, thick/2 ] ) rotate( [ 0, 0, 180 ] ) lens_slot( diam, thick+overlap );
+        // nose
+        translate( [ 0, -2, thick/2 ] ) plate_nose_slice( height, p_thick );
+    }
+}
+
+
 // Plate supporting lens holders
 //
 // lens   - lens descriptor
@@ -40,10 +70,10 @@ module lens_plate( lens, height, width, thick=1.5 )
     {
         polybody( face, face, thick );
 
-        translate( [ IPD_min/2, 0, thick/2 ] ) lens_slot( diam+thin_wall+2*fit_gap, thick );
-        translate( [-IPD_min/2, 0, thick/2 ] ) rotate( [ 0, 0, 180 ] ) lens_slot( diam+thin_wall+2*fit_gap, thick );
+        translate( [ IPD_min/2, 0, thick/2 ] ) lens_slot( diam+thin_wall+2*fit_gap, thick+overlap );
+        translate( [-IPD_min/2, 0, thick/2 ] ) rotate( [ 0, 0, 180 ] ) lens_slot( diam+thin_wall+2*fit_gap, thick+overlap );
         // nose
-        translate( [ 0, -2, thick/2 ] ) plate_nose_slice( height, p_thick );
+        translate( [ 0, -2, thick/2 ] ) plate_nose_slice( height, thick );
     }
 }
 
@@ -71,11 +101,10 @@ module plate_nose_slice( height, thick )
 // wall  - thickness extra wall for holder cap
 module lens_slot( diam, thick, wall=1 )
 {
-    height=thick+overlap;
     hull()
     {
-        translate( [-wall/2, 0, 0 ] ) cylinder( h=height, r=diam/2, center=true );
-        translate( [(IPD_max-IPD_min)/2+wall, 0, 0 ] ) cylinder( h=height, r=diam/2, center=true );
+        translate( [-wall/2, 0, 0 ] ) cylinder( h=thick, r=diam/2, center=true );
+        translate( [(IPD_max-IPD_min)/2+wall, 0, 0 ] ) cylinder( h=thick, r=diam/2, center=true );
     }
 }
 
