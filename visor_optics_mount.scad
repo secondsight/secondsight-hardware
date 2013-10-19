@@ -27,21 +27,6 @@ IPD_min=52;
 IPD_avg=63;
 
 plate_thick=2;
-clip_width=5;
-clip_thick=2;
-clip_length=rim_thick+2*(plate_thick+clip_thick+fit_gap);
-
-module plate_clip()
-{
-    clip_arm=5+clip_thick;
-    width=clip_width-2*fit_gap;
-    gap=clip_length-2*plate_thick;
-    translate( [ 0, 0, clip_width/2 ] ) difference()
-    {
-        cube( [ clip_length, clip_arm, width ], center=true ); 
-        translate( [ 0, -clip_thick, 0 ] ) cube( [ gap, clip_arm, width+overlap ], center=true ); 
-    }
-}
 
 // Front plate of the lens support system.
 //
@@ -56,7 +41,7 @@ module front_lens_plate( lens, height, width, thick=plate_thick )
     face=make_poly_inside( wid=width, ht=height, horiz=63, vert=52, wall=wall );
     outer_rad=diam/2+holder_wall+cap_wall;
     offset=(IPD_max-IPD_min)/2;
-    clip_length=rim_thick+thick+fit_gap+1;
+    pin_length=rim_thick+thick+fit_gap+1;
     difference()
     {
         union()
@@ -64,9 +49,9 @@ module front_lens_plate( lens, height, width, thick=plate_thick )
             polybody( face, face, thick );
             translate( [ 0, 0, thick+rim_thick/2 ] ) eye_positions( offset )
                 rect_oval_tube( outer_rad+1+slide_gap, offset, rim_thick+overlap, 1 );
-            translate( [ 0, height/4, thick] ) support_pin( clip_length, 3 );
-            translate( [-(0.46*width-wall), -0.3*height, thick] ) support_pin( clip_length, 2 );
-            translate( [ (0.46*width-wall), -0.3*height, thick] ) support_pin( clip_length, 2 );
+            translate( [ 0, height/4, thick] ) support_pin( pin_length, 3 );
+            translate( [-(0.46*width-wall), -0.3*height, thick] ) support_pin( pin_length, 2 );
+            translate( [ (0.46*width-wall), -0.3*height, thick] ) support_pin( pin_length, 2 );
         }
 
         // slots
@@ -76,15 +61,23 @@ module front_lens_plate( lens, height, width, thick=plate_thick )
     }
 }
 
+// Hole for the support pin to connect to
+//
+// length - length of the hole
+// rad    - radius of the hole
 module support_hole( length, rad )
 {
     translate( [ 0, 0, length/2] ) union()
     {
-        cylinder( h=length+overlap, r=rad, center=true );
-        translate( [ 0, 0, length/2+overlap-0.5] ) cylinder( h=1+overlap, r1=rad, r2=rad+0.5, center=true );
+        cylinder( h=length+overlap, r=rad+slide_gap, center=true );
+        translate( [ 0, 0, length/2+overlap-0.5] ) cylinder( h=1+overlap, r1=rad+fit_gap, r2=rad+0.5+fit_gap, center=true );
     }
 }
 
+// Pin to connect the two plates
+//
+// length - length of the pin
+// rad    - radius of the pin
 module support_pin( length, rad )
 {
     translate( [ 0, 0, length/2 ] ) intersection() {
@@ -129,7 +122,7 @@ module lens_plate( lens, height, width, thick=plate_thick )
         translate( [ 0, 0, thick/2 ] ) eye_positions( offset ) rect_oval( radius, offset, thick+overlap );
         // nose
         translate( [ 0, 2.8, thick/2 ] ) plate_nose_slice( height, thick );
-        // clips
+        // supports
         translate( [ 0, height/4, 0 ] ) support_hole( thick, 3 );
         translate( [-(0.46*width-wall), -0.3*height, 0 ] ) support_hole( thick, 2 );
         translate( [ (0.46*width-wall), -0.3*height, 0 ] ) support_hole( thick, 2 );
