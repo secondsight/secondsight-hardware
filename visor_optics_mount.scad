@@ -28,6 +28,29 @@ IPD_avg=63;
 
 plate_thick=2;
 
+module support_test()
+{
+    pin_length=rim_thick+thick+fit_gap+1;
+    translate( [ 0, 20, plate_thick/2 ] ) union()
+    {
+        cube( [ 35, 35, plate_thick ], center=true );
+
+        translate( [ 0, 0, plate_thick ] ) rect_oval_tube( 3+1, 6, rim_thick+overlap, 1 );
+        translate( [ 0, 10, plate_thick/2] ) support_pin( pin_length, 3 );
+        translate( [-10, -10, plate_thick/2] ) support_pin( pin_length, 2 );
+        translate( [ 10, -10, plate_thick/2] ) support_pin( pin_length, 2 );
+    }
+
+
+    translate( [ 0, -20, plate_thick/2 ] ) difference()
+    {
+        cube( [ 35, 35, plate_thick ], center=true );
+        translate( [  0, 10, -thick/2] ) support_hole( thick, 3 );
+        translate( [-10,-10, -thick/2] ) support_hole( thick, 2 );
+        translate( [ 10,-10, -thick/2] ) support_hole( thick, 2 );
+    }
+}
+
 // Front plate of the lens support system.
 //
 //  lens   - lens descriptor
@@ -67,10 +90,13 @@ module front_lens_plate( lens, height, width, thick=plate_thick )
 // rad    - radius of the hole
 module support_hole( length, rad )
 {
+    lip=rad < 3 ? rad/5 : 0.5;
+    $fn=16;
     translate( [ 0, 0, length/2] ) union()
     {
         cylinder( h=length+overlap, r=rad+slide_gap, center=true );
-        translate( [ 0, 0, length/2+overlap-0.5] ) cylinder( h=1+overlap, r1=rad+fit_gap, r2=rad+0.5+fit_gap, center=true );
+        translate( [ 0, 0,  (length/2+overlap-0.5)] ) cylinder( h=0.8*length+overlap, r1=rad+fit_gap, r2=rad+lip+fit_gap, center=true );
+        translate( [ 0, 0, -(length/2+overlap-0.5)] ) cylinder( h=0.8*length+overlap, r2=rad+fit_gap, r1=rad+lip+fit_gap, center=true );
     }
 }
 
@@ -80,17 +106,20 @@ module support_hole( length, rad )
 // rad    - radius of the pin
 module support_pin( length, rad )
 {
-    translate( [ 0, 0, length/2 ] ) intersection() {
-        difference()
+    lip=rad < 3 ? 0.25 : 0.5;
+    translate( [ 0, 0, length/2 ] ) difference()
+    {
+        union()
         {
-            union()
+            cylinder( h=length+overlap, r=rad, center=true );
+            translate( [ 0, 0, length/2+overlap-0.75] ) union()
             {
-                cylinder( h=length+overlap, r=rad, center=true );
-                translate( [ 0, 0, length/2+overlap-0.5] ) cylinder( h=1, r1=rad-overlap, r2=rad+0.5, center=true );
+                cylinder( h=0.5, r1=rad-overlap, r2=rad+lip, center=true );
+                translate( [ 0, 0, 0.5 ] ) cylinder( h=0.5, r2=rad, r1=rad+lip, center=true, $fn=16 );
             }
-            translate( [ 0, 0, (rad+1)/2 ] ) rotate( [ 0, 90, 0 ] ) rect_oval( 0.75, rad+1, 2*(rad+1), $fn=16 );
         }
-        cube( [ 1.9*rad, 3*rad, length+rad ], center=true );
+        translate( [ 0, 0, (length-rad)/2 ] ) rotate( [ 0, 90, 0 ] ) rect_oval( rad/4, rad+1, 2*(rad+1), $fn=16 );
+        translate( [ 0, 0, (length-rad)/2 ] ) cylinder( h=1.25*rad+1, r=rad/2, center=true, $fn=16 );
     }
 }
 
