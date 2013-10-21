@@ -83,9 +83,9 @@ if( variant == "test" )
     }
     else
     {
-        support_test();
-//        translate( [ 0, height/2, 0 ] ) front_lens_plate( lens, height, temple_distance( lens ) );
-//        translate( [ 0,-height/2, 0 ] ) lens_plate( lens, height, temple_distance( lens ) );
+//      support_test();
+        translate( [ 0, height/2, 0 ] ) front_lens_plate( lens, height, temple_distance( lens ) );
+        translate( [ 0,-height/2, 0 ] ) lens_plate( lens, height, temple_distance( lens ) );
     //    translate( [ 30, 60, 0] ) holder( lens );
     //    translate( [-30, 60, 0] ) holder_cap( lens );
     //    translate( [ 30,-60, 0] ) holder( lens );
