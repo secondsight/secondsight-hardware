@@ -17,7 +17,7 @@ IPD_avg=63;
 // Potentially user-specific data
 include <user_params.scad>;
 
-variant="test";
+variant="C";
 plate="optics";
 
 overlap=0.1;
@@ -42,8 +42,8 @@ include <visor_elastic_mount.scad>;
 function calc_temple_distance( lens ) = lens_diam(lens)+IPD_max+2*thick+12; // 12 is for optics mount hardware.
 function temple_distance( lens ) = max(user_temple_distance,calc_temple_distance( lens ));
 function side_slope( width, lens ) = atan2( (width-temple_distance(lens))/2, depth );
-function is_print_body( p ) = p == "body" || p == "both" || p == "assembled";
-function is_print_optics( p ) = p == "optics" || p == "both";
+function is_print_body( p ) = p == "body" || p == "assembled";
+function is_print_optics( p ) = p == "optics";
 
 if( variant == "C" )
 {
@@ -83,7 +83,6 @@ if( variant == "test" )
     }
     else
     {
-//      support_test();
         translate( [ 0, height/2, 0 ] ) front_lens_plate( lens, height, temple_distance( lens ) );
         translate( [ 0,-height/2, 0 ] ) lens_plate( lens, height, temple_distance( lens ) );
     //    translate( [ 30, 60, 0] ) holder( lens );
@@ -107,7 +106,6 @@ module visor_plate( width, height, plate, lens )
         difference()
         {
             child(0);
-//            optics_slots( width, eyes, thick );
             if( plate == "assembled" )
             {
                 // remove strap mount supports if assembled
@@ -115,6 +113,8 @@ module visor_plate( width, height, plate, lens )
             }
             translate( [0, height/2, 7] ) rotate( [ 90, 0, 180 ] ) logo();
         }
+
+        phone_support_ridge( thick, 52, 32, 3 );
     }
     if( is_print_optics( plate ) )
     {
@@ -132,16 +132,12 @@ module visor_plate( width, height, plate, lens )
 //  lens   -   descriptor for the lenses to use
 module optics_plate( width, height, lens )
 {
-    angle=side_slope( width, lens );
-    xoff=lens_diam( lens ) < 40 ? 42 : 38;
-//    translate( [ 10,  20, 0] ) slider_inside( thick, angle );
-//    translate( [-10,  20, 0] ) slider_inside( thick, angle );
-//    translate( [ 10, -20, 0] ) slider_outside( thick, angle );
-//    translate( [-10, -20, 0] ) slider_outside( thick, angle );
-//    translate( [-xoff,  5, 0] ) lens_holder( (phone_height+5)/2, lens );
-//    translate( [ xoff, -5, 0] ) rotate( [0, 0, 180] ) lens_holder( (phone_height+5)/2, lens );
-
-    translate( [ 0, -height/2-10, 0] ) phone_support_ridge( thick, 52, 32, 3 );
+    translate( [ 0, height, 0 ] ) front_lens_plate( lens, height, temple_distance( lens ) );
+    translate( [ 0,-height, 0 ] ) lens_plate( lens, height, temple_distance( lens ) );
+    translate( [ 58, 12, 0] ) holder( lens );
+    translate( [ 20, -12, 0] ) holder_cap( lens );
+    translate( [-20, 12, 0] ) holder( lens );
+    translate( [-58, -12, 0] ) holder_cap( lens );
 }
 
 // Display the optics in it's assembled form
