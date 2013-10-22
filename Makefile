@@ -1,8 +1,10 @@
 # Makefile for creating the aetherAR viewer
 
 STLS=\
-	 visor-C.stl\
-	 visor-D.stl\
+	 visor-C-body.stl\
+	 visor-D-body.stl\
+	 visor-C-optics.stl\
+	 visor-D-optics.stl\
 	 visor-C-assembled.stl\
 	 visor-D-assembled.stl
 
@@ -29,11 +31,17 @@ all: $(STLS)
 
 visor.stl: $(SOURCES) Makefile
 
-visor-C.stl: $(SOURCES) Makefile
-	$(OPENSCAD) -D 'variant="C"' -D 'plate="both"' -o $@ $<
+visor-C-body.stl: $(SOURCES) Makefile
+	$(OPENSCAD) -D 'variant="C"' -D 'plate="body"' -o $@ $<
 
-visor-D.stl: $(SOURCES) Makefile
-	$(OPENSCAD) -D 'variant="D"' -D 'plate="both"' -o $@ $<
+visor-D-body.stl: $(SOURCES) Makefile
+	$(OPENSCAD) -D 'variant="D"' -D 'plate="body"' -o $@ $<
+
+visor-C-optics.stl: $(SOURCES) Makefile
+	$(OPENSCAD) -D 'variant="C"' -D 'plate="optics"' -o $@ $<
+
+visor-D-optics.stl: $(SOURCES) Makefile
+	$(OPENSCAD) -D 'variant="D"' -D 'plate="optics"' -o $@ $<
 
 visor-C-assembled.stl: $(SOURCES) Makefile
 	$(OPENSCAD) -D 'variant="C"' -D 'plate="assembled"' -o $@ $<
