@@ -33,30 +33,6 @@ function x_off_sp(wid,wall)=0.46*wid-wall;
 function y_off_sp(h)=-0.3*h;
 function y_off_lp(h)=h/4;
 
-module support_test()
-{
-    pin_length=rim_thick+plate_thick+fit_gap+1;
-    translate( [ 0, 20, plate_thick/2 ] ) union()
-    {
-        cube( [ 35, 35, plate_thick ], center=true );
-
-        translate( [ 0, 0, plate_thick/2+rim_thick/2 ] ) rect_oval_tube( 3+1, 6, rim_thick+overlap, 1 );
-        translate( [ 0, 10, 0] ) support_pin( pin_length, 3 );
-        translate( [-10, -10, 0] ) support_pin( pin_length, 2 );
-        translate( [ 10, -10, 0] ) support_pin( pin_length, 2 );
-    }
-
-
-    translate( [ 0, -20, plate_thick/2 ] ) difference()
-    {
-        cube( [ 35, 35, plate_thick ], center=true );
-        translate( [  0, 10, -thick/2] ) support_hole( thick, 3 );
-        translate( [-10,-10, -thick/2] ) support_hole( thick, 2 );
-        translate( [ 10,-10, -thick/2] ) support_hole( thick, 2 );
-    }
-}
-
-
 // Front plate of the lens support system.
 //
 //  lens   - lens descriptor
