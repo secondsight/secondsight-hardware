@@ -5,8 +5,9 @@ aetherAR-hardware
 
 ## STL Files
 
-Each of these two files contains the complete visor. You only need to print
-one to get a usable aetherAR visor.
+To get a full visor, you will need to print one of the body variants
+(*visor-C.stl* or *visor-D.stl*), the *lens_holders.stl* and the
+*optics_support.stl*.
 
 ### visor-C.stl
 
@@ -18,6 +19,17 @@ flaring at all. The optics mounting hardware is printed inside the visor.
 In this variant, the body slopes smoothly from the face to the phone with no
 flaring at all. The corners are slightly grooved to give less of a round feel.
 The optics mounting hardware is printed inside the visor.
+
+### lens\_holders.stl
+
+This file contains the parts that support the lenses themeslves. The lens is
+held between the longer barrel and the cap. This file contains parts for a pair
+of lens holders.
+
+### optics\_support.stl
+
+This file contains the two support plates that connect the lens holders to the
+visor body.
 
 ## Example Assemblies
 

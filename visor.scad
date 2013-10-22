@@ -18,7 +18,7 @@ IPD_avg=63;
 include <user_params.scad>;
 
 variant="C";
-plate="optics";
+plate="lens_holders";
 
 overlap=0.1;
 strap_width=40;
@@ -45,53 +45,59 @@ function side_slope( width, lens ) = atan2( (width-temple_distance(lens))/2, dep
 function is_print_body( p ) = p == "body" || p == "assembled";
 function is_print_optics( p ) = p == "optics";
 
-if( variant == "C" )
+if( plate == "lens_holders" )
 {
-    // Single smooth body
-    visor_plate( phone_height, phone_width, plate, lens )
-        smooth_body( phone_height, phone_width, depth, thick, temple_distance(lens), forehead_depth );
+    optics_lens_holders( lens );
 }
-if( variant == "D" )
+else if( plate == "optics_support" )
 {
-    // Single smooth body, with corner grooves
-    visor_plate( phone_height, phone_width, plate, lens )
-        grooved_body( phone_height, phone_width, depth, thick, temple_distance(lens), forehead_depth );
+    optics_support_plate( height, lens );
 }
-if( variant == "test" )
+else
 {
-    if( plate == "assembled" )
+    if( variant == "C" )
     {
-        front_lens_plate( lens, height, temple_distance( lens ) );
-        color( "lightgreen" ) lens_plate( lens, height, template_distance(lens) );
-        translate( [IPD_avg/2, 0, plate_thick] )
-            color( "orange" ) union()
-        {
-            translate( [0,0,holder_len+cap_top+fit_gap] ) rotate( [180,0,0] ) holder( lens );
-            holder_cap( lens );
-        }
-        translate( [-IPD_avg/2, 0, plate_thick] )
-            color( "orange" ) union()
-        {
-            translate( [0,0,holder_len+cap_top+fit_gap] ) rotate( [180,0,0] ) holder( lens );
-            holder_cap( lens );
-        }
-        color( "tan" ) translate( [ 0, 0, plate_thick+rim_thick ] ) lens_plate( lens, height, temple_distance( lens ) );
-
-        translate( [ 0, height/2-thick-clip_thick/2+clip_length, 0 ] ) rotate( [ 0, 90, 0 ] ) plate_clip();
-        translate( [ 0,-53, 0 ] ) plate_clip();
-        translate( [ 0,-67, 0 ] ) plate_clip();
+        // Single smooth body
+        visor_plate( phone_height, phone_width, plate, lens )
+            smooth_body( phone_height, phone_width, depth, thick, temple_distance(lens), forehead_depth );
     }
-    else
+    if( variant == "D" )
     {
-        translate( [ 0, height/2, 0 ] ) front_lens_plate( lens, height, temple_distance( lens ) );
-        translate( [ 0,-height/2, 0 ] ) lens_plate( lens, height, temple_distance( lens ) );
-    //    translate( [ 30, 60, 0] ) holder( lens );
-    //    translate( [-30, 60, 0] ) holder_cap( lens );
-    //    translate( [ 30,-60, 0] ) holder( lens );
-    //    translate( [-30,-60, 0] ) holder_cap( lens );
+        // Single smooth body, with corner grooves
+        visor_plate( phone_height, phone_width, plate, lens )
+            grooved_body( phone_height, phone_width, depth, thick, temple_distance(lens), forehead_depth );
+    }
+    if( variant == "test" )
+    {
+        if( plate == "assembled" )
+        {
+            front_lens_plate( lens, height, temple_distance( lens ) );
+            color( "lightgreen" ) lens_plate( lens, height, template_distance(lens) );
+            translate( [IPD_avg/2, 0, plate_thick] )
+                color( "orange" ) union()
+            {
+                translate( [0,0,holder_len+cap_top+fit_gap] ) rotate( [180,0,0] ) holder( lens );
+                holder_cap( lens );
+            }
+            translate( [-IPD_avg/2, 0, plate_thick] )
+                color( "orange" ) union()
+            {
+                translate( [0,0,holder_len+cap_top+fit_gap] ) rotate( [180,0,0] ) holder( lens );
+                holder_cap( lens );
+            }
+            color( "tan" ) translate( [ 0, 0, plate_thick+rim_thick ] ) lens_plate( lens, height, temple_distance( lens ) );
+
+            translate( [ 0, height/2-thick-clip_thick/2+clip_length, 0 ] ) rotate( [ 0, 90, 0 ] ) plate_clip();
+            translate( [ 0,-53, 0 ] ) plate_clip();
+            translate( [ 0,-67, 0 ] ) plate_clip();
+        }
+        else
+        {
+            translate( [ 0, height/2, 0 ] ) front_lens_plate( lens, height, temple_distance( lens ) );
+            translate( [ 0,-height/2, 0 ] ) lens_plate( lens, height, temple_distance( lens ) );
+        }
     }
 }
-
 
 // Everything to be printed for the visor
 //  width -   front width of the visor
@@ -126,7 +132,7 @@ module visor_plate( width, height, plate, lens )
     }
 }
 
-// Plate for printing the lenses
+// Plate for printing the lens whole support system
 //  width  -   front width of visor
 //  height -   front height of visor
 //  lens   -   descriptor for the lenses to use
@@ -138,6 +144,25 @@ module optics_plate( width, height, lens )
     translate( [ 20, -12, 0] ) holder_cap( lens );
     translate( [-20, 12, 0] ) holder( lens );
     translate( [-58, -12, 0] ) holder_cap( lens );
+}
+
+// Plate for printing the lens support plates
+//  height -   front height of visor
+//  lens   -   descriptor for the lenses to use
+module optics_support_plate( height, lens )
+{
+    translate( [ 0, height/2+5, 0 ] ) front_lens_plate( lens, height, temple_distance( lens ) );
+    translate( [ 0,-height/2-5, 0 ] ) lens_plate( lens, height, temple_distance( lens ) );
+}
+
+// Plate for printing the lens holders
+//  lens   -   descriptor for the lenses to use
+module optics_lens_holders( lens )
+{
+    translate( [ 35, 35, 0] ) holder( lens );
+    translate( [ 35,-35, 0] ) holder_cap( lens );
+    translate( [-35, 35, 0] ) holder( lens );
+    translate( [-35,-35, 0] ) holder_cap( lens );
 }
 
 // Display the optics in it's assembled form

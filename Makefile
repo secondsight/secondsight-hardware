@@ -1,12 +1,15 @@
 # Makefile for creating the aetherAR viewer
 
 STLS=\
-	 visor-C-body.stl\
-	 visor-D-body.stl\
-	 visor-C-optics.stl\
-	 visor-D-optics.stl\
+	 visor-C.stl\
+	 visor-D.stl\
+	 lens_holders.stl\
+	 optics_support.stl\
 	 visor-C-assembled.stl\
 	 visor-D-assembled.stl
+
+EXTRA_STLS=\
+	 full_optics.stl
 
 SOURCES=\
 	visor.scad\
@@ -31,17 +34,20 @@ all: $(STLS)
 
 visor.stl: $(SOURCES) Makefile
 
-visor-C-body.stl: $(SOURCES) Makefile
+visor-C.stl: $(SOURCES) Makefile
 	$(OPENSCAD) -D 'variant="C"' -D 'plate="body"' -o $@ $<
 
-visor-D-body.stl: $(SOURCES) Makefile
+visor-D.stl: $(SOURCES) Makefile
 	$(OPENSCAD) -D 'variant="D"' -D 'plate="body"' -o $@ $<
 
-visor-C-optics.stl: $(SOURCES) Makefile
-	$(OPENSCAD) -D 'variant="C"' -D 'plate="optics"' -o $@ $<
+lens_holders.stl: $(SOURCES) Makefile
+	$(OPENSCAD) -D 'plate="lens_holders"' -o $@ $<
 
-visor-D-optics.stl: $(SOURCES) Makefile
-	$(OPENSCAD) -D 'variant="D"' -D 'plate="optics"' -o $@ $<
+optics_support.stl: $(SOURCES) Makefile
+	$(OPENSCAD) -D 'plate="optics_support"' -o $@ $<
+
+full_optics.stl: $(SOURCES) Makefile
+	$(OPENSCAD) -D 'variant="C"' -D 'plate="optics"' -o $@ $<
 
 visor-C-assembled.stl: $(SOURCES) Makefile
 	$(OPENSCAD) -D 'variant="C"' -D 'plate="assembled"' -o $@ $<
@@ -56,4 +62,4 @@ test.stl: $(SOURCES) Makefile
 .SECONDARY:
 
 clobber:
-	rm *.stl *.gcode
+	rm $(STLS) $(EXTRA_STLS) visor-*.stl *.gcode
