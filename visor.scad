@@ -18,7 +18,7 @@ IPD_avg=63;
 include <user_params.scad>;
 
 variant="C";
-plate="lens_holders";
+plate="assembled";
 
 overlap=0.1;
 strap_width=40;
@@ -120,7 +120,14 @@ module visor_plate( width, height, plate, lens )
             translate( [0, height/2, 7] ) rotate( [ 90, 0, 180 ] ) logo();
         }
 
-        phone_support_ridge( thick, 52, 32, 3 );
+        if( plate == "assembled" )
+        {
+            translate( [ 0, -height/2+thick/2, 1.5*thick ] ) rotate( [ 180, 0, 0 ] ) phone_support_ridge( thick, 52, 32, 3 );
+        }
+        else
+        {
+            phone_support_ridge( thick, 52, 32, 3 );
+        }
     }
     if( is_print_optics( plate ) )
     {
@@ -174,26 +181,22 @@ module optics_assembled( width, height, lens )
     xoff=IPD_avg/2;
     lens_z=lens_phone_offset( lens );
 
-    // non-tweakable
-    dlens=lens_diam( lens );
-    angle=side_slope( width, lens );
-    theta=90-angle;
-    mount_x=width/2-lens_z*sin(angle);
+    translate( [ 0, 0, lens_z-plate_thick] ) front_lens_plate( lens, height, temple_distance( lens ) );
+    translate( [ 0, 0, lens_z+rim_thick] ) color( "tan" ) lens_plate( lens, height, temple_distance(lens) );
+    translate( [xoff, 0, lens_z] ) union()
+    {
+        color( "orange" ) translate( [0,0,holder_len+cap_top+fit_gap] ) rotate( [180,0,0] ) holder( lens );
+        color( "yellowgreen" ) holder_cap( lens );
 
-//    // Left side assembly
-//    color( "Khaki" ) translate( [-mount_x+5,  0, lens_z] ) rotate( [0, theta,180] ) slider_inside( thick, angle );
-//    color( "Tan" )   translate( [-mount_x-2, 0, lens_z] ) rotate( [0,180+theta,180] ) slider_outside( thick, angle );
-//    color( "Olive" ) translate( [-xoff, 0, lens_z-2] ) rotate( [0, 0, 180] ) lens_holder( (phone_height+5)/2, lens );
-//    // right side assembly
-//    color( "Khaki" ) translate( [ mount_x-5,  0, lens_z] ) rotate( [0, theta,0] ) slider_inside( thick, angle );
-//    color( "Tan" )   translate( [ mount_x+2, 0, lens_z] ) rotate( [0,180+theta,0] ) slider_outside( thick, angle );
-//    color( "Olive" ) translate( [ xoff, 0, lens_z-2] ) lens_holder( (phone_height+5)/2, lens );
-//
-//    color( "Orange" ) translate( [ 0, -height/2+1, 5] ) rotate( [ 180, 0, 0 ] ) phone_support_ridge( thick, 52, 32, 3 );
+ %      translate( [ 0, 0, plate_thick ] ) lens_model( lens );
+    }
+    translate( [-xoff, 0, lens_z] ) union()
+    {
+        color( "orange" ) translate( [0,0,holder_len+cap_top+fit_gap] ) rotate( [180,0,0] ) holder( lens );
+        color( "yellowgreen" ) holder_cap( lens );
 
-    // lenses
-%   translate( [-xoff, 0, lens_z] ) cylinder( h=1, r=dlens/2, center=true );
-%   translate( [ xoff, 0, lens_z] ) cylinder( h=1, r=dlens/2, center=true );
+ %      translate( [ 0, 0, plate_thick ] ) lens_model( lens );
+    }
 }
 
 module logo()
