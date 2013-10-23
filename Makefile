@@ -15,7 +15,8 @@ SOURCES=\
 	visor.scad\
 	visor_body.scad\
 	visor_elastic_mount.scad\
-	visor_optics_mount.scad \
+	visor_optics_mount.scad\
+	optic_plate_support.scad\
 	lenses.scad
 
 # This is system-specific

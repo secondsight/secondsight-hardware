@@ -134,6 +134,11 @@ person to person. We would like this to be easily adjustable for the user.
 
 The optics mounting hardware takes these issues into account.
 
+### optic\_plate\_support.scad
+
+Defines the pieces of the model that supports the optics lens front plate in
+the body of the visor. Defines the ledges, the tabs and the slots.
+
 ### lenses.scad
 
 This file contains functions to define and use descriptions of particular

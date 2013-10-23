@@ -3,6 +3,7 @@
 include <lenses.scad>;
 include <MCAD/regular_shapes.scad>;
 include <polybody.scad>;
+include <optic_plate_support.scad>;
 
 slot_width=10;
 min_bfl=20;
@@ -52,11 +53,18 @@ module front_lens_plate( lens, height, width, thick=plate_thick )
         union()
         {
             polybody( face, face, thick );
+            // rim around lens holes
             translate( [ 0, 0, thick+rim_thick/2 ] ) eye_positions( offset )
                 rect_oval_tube( outer_rad+1+slide_gap, offset, rim_thick+overlap, 1 );
+
+            // support pins
             translate( [ 0, y_off_lp(height), thick] ) support_pin( pin_length, 3 );
             translate( [-x_off_sp(width,wall), y_off_sp(height), thick] ) support_pin( pin_length, 2 );
             translate( [ x_off_sp(width,wall), y_off_sp(height), thick] ) support_pin( pin_length, 2 );
+
+            // support tabs
+
+            support_ledge_tabs( _width(face)/2, _height(face)/2, 0 );
         }
 
         // slots
@@ -66,7 +74,7 @@ module front_lens_plate( lens, height, width, thick=plate_thick )
     }
 }
 
-// Hole for the support pin to connect to
+// Hole for the support pin to connect to other plate
 //
 // length - length of the hole
 // rad    - radius of the hole

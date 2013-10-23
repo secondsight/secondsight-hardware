@@ -1,6 +1,7 @@
 // aetherAR visor - main body shape.
 
 include <polybody.scad>;
+include <optic_plate_support.scad>;
 
 // Factor out all of the logic that makes the adds everything except the
 // core body shape. In addition to the supplied parameters, this module expects
@@ -39,6 +40,20 @@ module make_body( fwidth, fheight, depth, wall, face, forehead_depth )
     }
 }
 
+// A ledge for the optics support plate to rest on.
+//
+//  len  - length of this section of the ledge
+module support_ledge( len )
+{
+    depth=3; 
+    height=4;
+    translate( [ 0, -depth/2, -height/2 ] ) difference()
+    {
+        cube( [ len, depth, height ], center=true );
+        translate( [ 0, -(depth+height)/2-0.6, 0 ] ) rotate( [30,0,0] ) cube( [ len+overlap, depth+height, 3*height ], center=true );
+    }
+}
+
 // Build body from pieces and the convex polygon
 //  fwidth         - the width of the front of this part of the body
 //  fheight        - the height of the front of this part of the body
@@ -46,7 +61,8 @@ module make_body( fwidth, fheight, depth, wall, face, forehead_depth )
 //  wall           - thickness of the walls of the visor
 //  face           - width of the face
 //  forehead_depth - distance from forehead touch to temples of viewer
-module smooth_body( fwidth, fheight, depth, wall, face, forehead_depth )
+//  zoff           - distance from phone to support plate
+module smooth_body( fwidth, fheight, depth, wall, face, forehead_depth, zoff )
 {
     protrude=0.1;
     phone_top=116;   // TODO: should depend on fwidth
@@ -64,12 +80,35 @@ module smooth_body( fwidth, fheight, depth, wall, face, forehead_depth )
         );
 
         // hollow
-        translate( [0,0,-protrude] ) polybody(
-            make_poly_inside( fwidth, fheight, phone_top, phone_side, wall ),
-            make_poly_inside( face, height, face_top, face_side, wall ),
-            depth+2*protrude
-        );
+        translate( [0,0,-protrude] ) difference()
+        {
+            union()
+            {
+                polybody(
+                    make_poly_inside( fwidth, fheight, phone_top, phone_side, wall ),
+                    make_poly_inside( face, height, face_top, face_side, wall ),
+                    depth+2*protrude
+                );
+                support_ledge_slots( face/2-wall, height/2-wall, zoff+protrude );
+            }
+            support_ledge_diff( face/2-wall, height/2-wall, face_top, face_side, zoff+protrude );
+        }
     }
+}
+
+// Define the four ledges that support the optics plate.
+//
+//  x_off  - offset to the sides of the plate.
+//  y_off  - offset to the top/bottom of the plate
+//  top    - width of the horizontal flat portion of the body
+//  side   - height of the vertical flat portion of the body
+module support_ledge_diff( x_off, y_off, top, side, z_off )
+{
+    gap=1.1;
+    translate( [ 0,  y_off+gap, z_off ] ) support_ledge( top );
+    translate( [ 0,-(y_off+gap), z_off ] ) rotate( [ 0, 0,180 ] ) support_ledge( top );
+    translate( [  x_off+gap, 0, z_off ] )  rotate( [ 0, 0,-90 ] ) support_ledge( side+2 );
+    translate( [-(x_off+gap), 0, z_off ] ) rotate( [ 0, 0, 90 ] ) support_ledge( side+2 );
 }
 
 // Build body from pieces and the concave polygon
