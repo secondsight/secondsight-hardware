@@ -17,8 +17,8 @@ IPD_avg=63;
 // Potentially user-specific data
 include <user_params.scad>;
 
-variant="test";
-plate="unassembled";
+variant="C";
+plate="assembled";
 
 overlap=0.1;
 strap_width=40;
@@ -59,13 +59,13 @@ else
     {
         // Single smooth body
         visor_plate( phone_height, phone_width, plate, lens )
-            smooth_body( phone_height, phone_width, depth, thick, temple_distance(lens), forehead_depth );
+            smooth_body( phone_height, phone_width, depth, thick, temple_distance(lens), forehead_depth, lens_phone_offset(lens)-plate_thick );
     }
     if( variant == "D" )
     {
         // Single smooth body, with corner grooves
         visor_plate( phone_height, phone_width, plate, lens )
-            grooved_body( phone_height, phone_width, depth, thick, temple_distance(lens), forehead_depth );
+            grooved_body( phone_height, phone_width, depth, thick, temple_distance(lens), forehead_depth, lens_phone_offset(lens)-plate_thick );
     }
     if( variant == "test" )
     {
@@ -125,6 +125,7 @@ module visor_plate( width, height, plate, lens )
     if( plate == "assembled" )
     {
         optics_assembled( width, height, lens );
+        echo( "If this doesn't render correctly, got to advanced preferences and change 'Turn off rendering' to 3000 or greater." );
     }
 }
 

@@ -118,7 +118,7 @@ module support_ledge_diff( x_off, y_off, top, side, z_off )
 //  wall           - thickness of the walls of the visor
 //  face           - width of the face
 //  forehead_depth - distance from forehead touch to temples of viewer
-module grooved_body( fwidth, fheight, depth, wall, face, forehead_depth )
+module grooved_body( fwidth, fheight, depth, wall, face, forehead_depth, zoff )
 {
     protrude=0.1;
     phone_top=116;   // TODO: should depend on fwidth
@@ -136,11 +136,19 @@ module grooved_body( fwidth, fheight, depth, wall, face, forehead_depth )
         );
 
         // hollow
-        translate( [0,0,-protrude] ) polybody_concave(
-            make_poly_inside( fwidth, fheight, phone_top, phone_side, wall ),
-            make_poly_inside( face, height, face_top, face_side, wall ),
-            depth+2*protrude
-        );
+        translate( [0,0,-protrude] ) difference()
+        {
+            union()
+            {
+                polybody_concave(
+                    make_poly_inside( fwidth, fheight, phone_top, phone_side, wall ),
+                    make_poly_inside( face, height, face_top, face_side, wall ),
+                    depth+2*protrude
+                );
+                support_ledge_slots( face/2-wall, height/2-wall, zoff+protrude );
+            }
+            support_ledge_diff( face/2-wall, height/2-wall, face_top, face_side, zoff+protrude );
+        }
     }
 }
 
