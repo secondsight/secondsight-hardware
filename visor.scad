@@ -18,7 +18,7 @@ IPD_avg=63;
 include <user_params.scad>;
 
 variant="C";
-plate="assembled";
+plate="unassembled";
 
 overlap=0.1;
 strap_width=40;
