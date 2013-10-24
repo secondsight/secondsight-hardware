@@ -57,7 +57,7 @@ visor-D-assembled.stl: $(SOURCES) Makefile
 	$(OPENSCAD) -D 'variant="D"' -D 'plate="assembled"' -o $@ $<
 
 test.stl: $(SOURCES) Makefile
-	$(OPENSCAD) -D 'variant="test"' -o $@ $<
+	$(OPENSCAD) -D 'variant="test"' -D 'plate="unassembled"' -o $@ $<
 
 .PHONY: clobber
 .SECONDARY:
