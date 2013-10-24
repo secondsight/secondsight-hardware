@@ -191,10 +191,16 @@ module plate_nose_slice( height, thick )
     h_nose=0.5*height;
     top=11;
     bottom=30;
+    // eyeballed from the visor_body code. I wonder how I can make this
+    //  dependency explicit (without horribly convoluting the code).
+    bottom2=51;
     linear_extrude( height=thick+overlap, center=true, convexity=10 )
         projection( cut=false ) rotate( [ -90, 0, 0] ) union()
     {
+        // bridge of the nose.
         translate( [ 0, 0, -h_nose/2 ] ) cylinder( h=h_nose, r1=bottom/2, r2=top/2, center=true );
+        // match with the lower opening in the body.
+        translate( [ 0, 0, -0.65*h_nose ] ) cylinder( h=0.7*h_nose, r1=bottom2/2, r2=top/2, center=true );
         sphere( r=top/2, center=true );
     }
 }
