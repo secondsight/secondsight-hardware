@@ -62,8 +62,8 @@ choose what variations you want to print.
         generate *visor-D.stl*.
    * plate - Choose the subset of the visor to print.
       - "body": Print the main body of the visor.
-      - "optics": Print the lens support hardware.
-      - "both": Print all parts of the visor.
+      - "optics\_support": Print the lens support plates.
+      - "lens\_holders": Print the lens holders.
       - "assembled": Show the assembled visor. Not printable!
 
 You can either change these parameters in the *visor.scad* file or supply them

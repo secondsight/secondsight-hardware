@@ -18,7 +18,10 @@ IPD_avg=63;
 include <user_params.scad>;
 
 variant="C";
-plate="unassembled";
+plate="assembled";
+//plate="body";
+//plate="optics_support";
+//plate="lens_holders";
 
 overlap=0.1;
 strap_width=40;
@@ -75,7 +78,7 @@ else
                 smooth_body( phone_height, phone_width, depth, thick, temple_distance(lens), forehead_depth, lens_phone_offset(lens)-plate_thick );
                 if( plate == "assembled" )
                 {
-                    translate( [ 0, 0, lens_phone_offset( lens )-plate_thick] ) front_lens_plate( lens, height, temple_distance( lens ) );
+                    color( "tan" ) translate( [ 0, 0, lens_phone_offset( lens )-plate_thick] ) front_lens_plate( lens, height, temple_distance( lens ) );
                 }
             }
             translate( [ 0, 0,-0.75*phone_height ] ) cube( 1.5*phone_height, center=true );

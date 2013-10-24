@@ -34,6 +34,29 @@ function x_off_sp(wid,wall)=0.46*wid-wall;
 function y_off_sp(h)=-0.3*h;
 function y_off_lp(h)=h/4;
 
+module support_test()
+{
+    pin_length=rim_thick+plate_thick+fit_gap+1;
+    translate( [ 0, 20, plate_thick/2 ] ) union()
+    {
+        cube( [ 35, 35, plate_thick ], center=true );
+
+        translate( [ 0, 0, plate_thick/2+rim_thick/2 ] ) rect_oval_tube( 3+1, 6, rim_thick+overlap, 1 );
+        translate( [ 0, 10, 0] ) support_pin( pin_length, 3 );
+        translate( [-10, -10, 0] ) support_pin( pin_length, 2 );
+        translate( [ 10, -10, 0] ) support_pin( pin_length, 2 );
+    }
+
+
+    translate( [ 0, -20, plate_thick/2 ] ) difference()
+    {
+        cube( [ 35, 35, plate_thick ], center=true );
+        translate( [  0, 10, -thick/2] ) support_hole( thick, 3 );
+        translate( [-10,-10, -thick/2] ) support_hole( thick, 2 );
+        translate( [ 10,-10, -thick/2] ) support_hole( thick, 2 );
+    }
+}
+
 // Front plate of the lens support system.
 //
 //  lens   - lens descriptor
@@ -97,7 +120,7 @@ module support_hole( length, rad )
 module support_pin( length, rad )
 {
     $fn=16;
-    lip=rad < 3 ? rad/5 : 0.5;
+    lip=rad < 3 ? 0.25 : 0.5;
     gap=rad < 3 ? rad/3.5 : rad/4;
     translate( [ 0, 0, length/2 ] ) difference()
     {
@@ -106,8 +129,15 @@ module support_pin( length, rad )
             cylinder( h=length+overlap, r=rad, center=true );
             translate( [ 0, 0, length/2+overlap-0.75] ) union()
             {
-                cylinder( h=0.5, r1=rad-overlap, r2=rad+lip, center=true );
-                translate( [ 0, 0, 0.5 ] ) cylinder( h=0.5, r1=rad+lip, r2=rad, center=true );
+                if( rad < 3 )
+                {
+                    cylinder( h=0.5, r=rad+fit_gap, center=true );
+                }
+                else
+                {
+                    cylinder( h=0.5, r1=rad-overlap, r2=rad+lip, center=true );
+                    translate( [ 0, 0, 0.5 ] ) cylinder( h=0.5, r1=rad+lip, r2=rad, center=true );
+                }
             }
         }
         translate( [ 0, 0, (length-rad)/2 ] ) {
@@ -159,7 +189,7 @@ module lens_plate( lens, height, width, thick=plate_thick )
 module plate_nose_slice( height, thick )
 {
     h_nose=0.5*height;
-    top=8;
+    top=11;
     bottom=30;
     linear_extrude( height=thick+overlap, center=true, convexity=10 )
         projection( cut=false ) rotate( [ -90, 0, 0] ) union()
