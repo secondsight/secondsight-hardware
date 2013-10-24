@@ -1,3 +1,6 @@
+// secondsight Visor project
+// Copyright 2013 by secondsight.io, Some Rights Reserved.
+//
 // Simple phone mounting structure
 //  provides points for elastic bands to attach to.
 

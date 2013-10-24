@@ -1,3 +1,6 @@
+// secondsight Visor project
+// Copyright 2013 by secondsight.io, Some Rights Reserved.
+//
 // Raw definition for the polyhedron used in the visor body.
 
 function make_poly_face( wid, ht, horiz, vert )=[ wid, ht, horiz, vert ]; 

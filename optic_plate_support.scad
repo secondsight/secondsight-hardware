@@ -1,6 +1,7 @@
-//  Define the tab/slot system for attaching the optics plate to the body.
+// secondsight Visor project
+// Copyright 2013 by secondsight.io, Some Rights Reserved.
 //
-//   Part of the AetherAR SecondSight project
+//  Define the tab/slot system for attaching the optics plate to the body.
 
 // Fit factors
 slide_gap=0.25;

@@ -1,4 +1,8 @@
-// Standardize a lens description.
+// secondsight Visor project
+// Copyright 2013 by secondsight.io, Some Rights Reserved.
+//
+// Standardize a lens description for the secondsight headset.
+
 //  Creating a pseudo-object using a vector and a set of functions to access
 //  the defined attributes.
 

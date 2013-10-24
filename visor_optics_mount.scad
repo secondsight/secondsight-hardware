@@ -1,3 +1,6 @@
+// secondsight Visor project
+// Copyright 2013 by secondsight.io, Some Rights Reserved.
+//
 //  Optics-mounting parts for secondsight visor
 
 include <lenses.scad>;

@@ -1,4 +1,7 @@
-// Definition of the aetherAR secondsight visor
+// secondsight Visor project
+// Copyright 2013 by secondsight.io, Some Rights Reserved.
+//
+// Main definition of the secondsight visor
 
 // Use dimensions for Galaxy S4
 //    Dimensions are portrait mode.

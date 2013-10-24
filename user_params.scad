@@ -1,4 +1,7 @@
-// Definition of user-specific parameters for the aetherAR secondsight hardware
+// secondsight Visor project
+// Copyright 2013 by secondsight.io, Some Rights Reserved.
+//
+// Definition of user-specific parameters for the secondsight hardware
 
 user_temple_distance=116; // temple-to-temple distance
 forehead_depth=27.5;      // temple to front of forehead distance

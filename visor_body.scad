@@ -1,4 +1,7 @@
-// aetherAR visor - main body shape.
+// secondsight Visor project
+// Copyright 2013 by secondsight.io, Some Rights Reserved.
+//
+// secondsight visor - main body shape.
 
 include <polybody.scad>;
 include <optic_plate_support.scad>;
