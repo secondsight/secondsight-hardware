@@ -70,7 +70,7 @@ module front_lens_plate( lens, height, width, thick=plate_thick )
         // slots
         translate( [ 0, 0, thick/2 ] ) eye_positions( offset ) rect_oval( diam/2, offset, thick+overlap );
         // nose
-        translate( [ 0, -2, thick/2 ] ) plate_nose_slice( height, thick );
+        translate( [ 0, -2, (thick+rim_thick+overlap)/2 ] ) plate_nose_slice( height, thick+rim_thick+overlap );
     }
 }
 
