@@ -1,7 +1,7 @@
-aetherAR-hardware
-=================
+secondsight
+===========
 
-3D Printable Head Mount Display for aetherAR &amp; associated peripherals
+3D Printable Head Mount Display for secondsight &amp; associated peripherals
 
 ## STL Files
 
@@ -64,6 +64,8 @@ choose what variations you want to print.
       - "body": Print the main body of the visor.
       - "optics\_support": Print the lens support plates.
       - "lens\_holders": Print the lens holders.
+      - "full\_optics": Print the lens holders and support plates all at once.
+        Requires a fairly large build area. Not recommended.
       - "assembled": Show the assembled visor. Not printable!
 
 You can either change these parameters in the *visor.scad* file or supply them

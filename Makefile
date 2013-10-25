@@ -36,10 +36,10 @@ all: $(STLS)
 visor.stl: $(SOURCES) Makefile
 
 visor-C.stl: $(SOURCES) Makefile
-	$(OPENSCAD) -D 'variant="C"' -D 'plate="body"' -o $@ $<
+	$(OPENSCAD) -D 'plate="body"' -D 'variant="C"' -o $@ $<
 
 visor-D.stl: $(SOURCES) Makefile
-	$(OPENSCAD) -D 'variant="D"' -D 'plate="body"' -o $@ $<
+	$(OPENSCAD) -D 'plate="body"' -D 'variant="D"' -o $@ $<
 
 lens_holders.stl: $(SOURCES) Makefile
 	$(OPENSCAD) -D 'plate="lens_holders"' -o $@ $<
@@ -48,16 +48,16 @@ optics_support.stl: $(SOURCES) Makefile
 	$(OPENSCAD) -D 'plate="optics_support"' -o $@ $<
 
 full_optics.stl: $(SOURCES) Makefile
-	$(OPENSCAD) -D 'variant="C"' -D 'plate="optics"' -o $@ $<
+	$(OPENSCAD) -D 'plate="full_optics"' -o $@ $<
 
 visor-C-assembled.stl: $(SOURCES) Makefile
-	$(OPENSCAD) -D 'variant="C"' -D 'plate="assembled"' -o $@ $<
+	$(OPENSCAD) -D 'plate="assembled"' -D 'variant="C"' -o $@ $<
 
 visor-D-assembled.stl: $(SOURCES) Makefile
-	$(OPENSCAD) -D 'variant="D"' -D 'plate="assembled"' -o $@ $<
+	$(OPENSCAD) -D 'plate="assembled"' -D 'variant="D"' -o $@ $<
 
 test.stl: $(SOURCES) Makefile
-	$(OPENSCAD) -D 'variant="test"' -D 'plate="unassembled"' -o $@ $<
+	$(OPENSCAD) -D 'plate="test"' -D 'variant="C"' -o $@ $<
 
 .PHONY: clobber
 .SECONDARY:
