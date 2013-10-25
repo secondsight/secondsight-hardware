@@ -5,8 +5,9 @@ aetherAR-hardware
 
 ## STL Files
 
-Each of these two files contains the complete visor. You only need to print
-one to get a usable aetherAR visor.
+To get a full visor, you will need to print one of the body variants
+(*visor-C.stl* or *visor-D.stl*), the *lens_holders.stl* and the
+*optics_support.stl*.
 
 ### visor-C.stl
 
@@ -18,6 +19,17 @@ flaring at all. The optics mounting hardware is printed inside the visor.
 In this variant, the body slopes smoothly from the face to the phone with no
 flaring at all. The corners are slightly grooved to give less of a round feel.
 The optics mounting hardware is printed inside the visor.
+
+### lens\_holders.stl
+
+This file contains the parts that support the lenses themeslves. The lens is
+held between the longer barrel and the cap. This file contains parts for a pair
+of lens holders.
+
+### optics\_support.stl
+
+This file contains the two support plates that connect the lens holders to the
+visor body.
 
 ## Example Assemblies
 
@@ -50,8 +62,8 @@ choose what variations you want to print.
         generate *visor-D.stl*.
    * plate - Choose the subset of the visor to print.
       - "body": Print the main body of the visor.
-      - "optics": Print the lens support hardware.
-      - "both": Print all parts of the visor.
+      - "optics\_support": Print the lens support plates.
+      - "lens\_holders": Print the lens holders.
       - "assembled": Show the assembled visor. Not printable!
 
 You can either change these parameters in the *visor.scad* file or supply them
@@ -112,6 +124,21 @@ This file defines the elastic band mounting system for the phone. Although not
 the *coolest* design, this is functional and allows testing of the hardware.
 It's main advantage is that it is simple and works with all phones.
 
+### visor\_optics\_mount.scad
+
+This file defines the hardware to support the lenses in the visor body. The
+design has a few constraints that make the problem of mounting interesting.  We
+want the lens to be held firmly, but weight is a consideration. Also not all
+users are the same. Also, the *Interpupillary Distance* (IPD) is different from
+person to person. We would like this to be easily adjustable for the user.
+
+The optics mounting hardware takes these issues into account.
+
+### optic\_plate\_support.scad
+
+Defines the pieces of the model that supports the optics lens front plate in
+the body of the visor. Defines the ledges, the tabs and the slots.
+
 ### lenses.scad
 
 This file contains functions to define and use descriptions of particular
@@ -140,6 +167,12 @@ with random vector indices. All lengths are in mm.
    * lens\_front\_height(lens) - distance from rim to the front of the lens
    * lens\_thickness(lens) - overall thickness of the lens
    * lens\_back\_height(lens) - distance from the rim to the back of the lens
+
+### polybody.scad
+
+The visor body is designed around a ten-sided polyhedron. Some of the
+parameters and code for this polyhedron are needed in multiple files.
+Separating the code into this file makes it easier to reuse.
 
 ### user\_params.scad
 

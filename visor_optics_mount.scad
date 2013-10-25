@@ -1,6 +1,12 @@
-//  Optics-mounting parts for aetherAR visor
+// secondsight Visor project
+// Copyright 2013 by secondsight.io, Some Rights Reserved.
+//
+//  Optics-mounting parts for secondsight visor
 
 include <lenses.scad>;
+include <MCAD/regular_shapes.scad>;
+include <polybody.scad>;
+include <optic_plate_support.scad>;
 
 slot_width=10;
 min_bfl=20;
@@ -9,121 +15,292 @@ min_bfl=20;
 eye_lens_distance=12;
 
 // Other
-gap=0.25;
-inner_height=5;
-inner_width=4;
+slide_gap=0.25;
+fit_gap=0.15;
+overlap=0.1;
+holder_wall=1;
+holder_len=eye_lens_distance+1;
+cap_len=7;
+cap_wall=2;
+cap_top=1.5;
+rim_thick=3;
+thin_wall=1;
+
+IPD_max=78;
+IPD_min=52;
+IPD_avg=63;
+
+plate_thick=2;
+
+// Calculate the positions of the small pins
+function x_off_sp(wid,wall)=0.46*wid-wall;
+function y_off_sp(h)=-0.3*h;
+function y_off_lp(h)=h/4;
+
+module support_test()
+{
+    pin_length=rim_thick+plate_thick+fit_gap+1;
+    translate( [ 0, 20, plate_thick/2 ] ) union()
+    {
+        cube( [ 35, 35, plate_thick ], center=true );
+
+        translate( [ 0, 0, plate_thick/2+rim_thick/2 ] ) rect_oval_tube( 3+1, 6, rim_thick+overlap, 1 );
+        translate( [ 0, 10, 0] ) support_pin( pin_length, 3 );
+        translate( [-10, -10, 0] ) support_pin( pin_length, 2 );
+        translate( [ 10, -10, 0] ) support_pin( pin_length, 2 );
+    }
+
+
+    translate( [ 0, -20, plate_thick/2 ] ) difference()
+    {
+        cube( [ 35, 35, plate_thick ], center=true );
+        translate( [  0, 10, -thick/2] ) support_hole( thick, 3 );
+        translate( [-10,-10, -thick/2] ) support_hole( thick, 2 );
+        translate( [ 10,-10, -thick/2] ) support_hole( thick, 2 );
+    }
+}
+
+// Front plate of the lens support system.
+//
+//  lens   - lens descriptor
+//  height - height of the plate
+//  width  - width of the plate
+//  thick  - optional thickness of the plate, defaults to 2
+module front_lens_plate( lens, height, width, thick=plate_thick )
+{
+    diam=lens_diam(lens)+holder_wall;
+    wall=3;
+    face=make_poly_inside( wid=width, ht=height, horiz=63, vert=52, wall=wall );
+    outer_rad=diam/2+holder_wall+cap_wall;
+    offset=(IPD_max-IPD_min)/2;
+    pin_length=rim_thick+thick+fit_gap+1;
+    difference()
+    {
+        union()
+        {
+            polybody( face, face, thick );
+            // rim around lens holes
+            translate( [ 0, 0, thick+rim_thick/2 ] ) eye_positions( offset )
+                rect_oval_tube( outer_rad+1+slide_gap, offset, rim_thick+overlap, 1 );
+
+            // support pins
+            translate( [ 0, y_off_lp(height), thick] ) support_pin( pin_length, 3 );
+            translate( [-x_off_sp(width,wall), y_off_sp(height), thick] ) support_pin( pin_length, 2 );
+            translate( [ x_off_sp(width,wall), y_off_sp(height), thick] ) support_pin( pin_length, 2 );
+
+            // support tabs
+
+            support_ledge_tabs( _width(face)/2, _height(face)/2, 0 );
+        }
+
+        // slots
+        translate( [ 0, 0, thick/2 ] ) eye_positions( offset ) rect_oval( diam/2, offset, thick+overlap );
+        // nose
+        translate( [ 0, -2, (thick+rim_thick+overlap)/2 ] ) plate_nose_slice( height, thick+rim_thick+overlap );
+    }
+}
+
+// Hole for the support pin to connect to other plate
+//
+// length - length of the hole
+// rad    - radius of the hole
+module support_hole( length, rad )
+{
+    $fn=16;
+    lip=rad < 3 ? rad/5 : 0.5;
+    union()
+    {
+        translate( [ 0, 0, length/2] )              cylinder( h=length+overlap, r=rad+slide_gap, center=true );
+        translate( [ 0, 0,  (length+overlap-0.5)] ) cylinder( h=0.8*length+overlap, r1=rad+fit_gap, r2=rad+lip+fit_gap, center=true );
+        translate( [ 0, 0, -(overlap-0.5)] )        cylinder( h=0.8*length+overlap, r1=rad+lip+fit_gap, r2=rad+fit_gap, center=true );
+    }
+}
+
+// Pin to connect the two plates
+//
+// length - length of the pin
+// rad    - radius of the pin
+module support_pin( length, rad )
+{
+    $fn=16;
+    lip=rad < 3 ? 0.25 : 0.5;
+    gap=rad < 3 ? rad/3.5 : rad/4;
+    translate( [ 0, 0, length/2 ] ) difference()
+    {
+        union()
+        {
+            cylinder( h=length+overlap, r=rad, center=true );
+            translate( [ 0, 0, length/2+overlap-0.75] ) union()
+            {
+                if( rad < 3 )
+                {
+                    cylinder( h=0.5, r=rad+fit_gap, center=true );
+                }
+                else
+                {
+                    cylinder( h=0.5, r1=rad-overlap, r2=rad+lip, center=true );
+                    translate( [ 0, 0, 0.5 ] ) cylinder( h=0.5, r1=rad+lip, r2=rad, center=true );
+                }
+            }
+        }
+        translate( [ 0, 0, (length-rad)/2 ] ) {
+            rotate( [ 0, 90, 0 ] ) rect_oval( gap, rad+1, 2*(rad+1) );
+            cylinder( h=1.25*rad+1, r=rad/2, center=true );
+        }
+    }
+}
+
+// Position the child shape in two places, one for each eye
+module eye_positions( offset )
+{
+    translate( [ IPD_min/2+offset/2, 0, 0 ] ) child(0);
+    translate( [-IPD_min/2-offset/2, 0, 0 ] ) mirror( [ 1, 0, 0 ] ) child(0);
+}
+
+// Plate supporting lens holders
+//
+// lens   - lens descriptor
+// height - height of plate
+// width  - width of plate
+// thick  - thickness of the plate
+module lens_plate( lens, height, width, thick=plate_thick )
+{
+    wall=3;
+    face=make_poly_inside( wid=width, ht=height, horiz=63, vert=52, wall=wall );
+    offset=(IPD_max-IPD_min)/2;
+    diam=lens_diam(lens)+holder_wall;
+    radius=(diam+thin_wall)/2+slide_gap;
+    difference()
+    {
+        polybody( face, face, thick );
+
+        // lens slots
+        translate( [ 0, 0, thick/2 ] ) eye_positions( offset ) rect_oval( radius, offset, thick+overlap );
+        // nose
+        translate( [ 0, 2.8, thick/2 ] ) plate_nose_slice( height, thick );
+        // supports
+        translate( [ 0, y_off_lp(height), 0 ] ) support_hole( thick, 3 );
+        translate( [-x_off_sp(width,wall), y_off_sp(height), 0 ] ) support_hole( thick, 2 );
+        translate( [ x_off_sp(width,wall), y_off_sp(height), 0 ] ) support_hole( thick, 2 );
+    }
+}
+
+// Negative space to remove from the lens plate for the nose.
+//
+// height - height of inside of the visor
+// thick  - thickness of the plate
+module plate_nose_slice( height, thick )
+{
+    h_nose=0.5*height;
+    top=11;
+    bottom=30;
+    // eyeballed from the visor_body code. I wonder how I can make this
+    //  dependency explicit (without horribly convoluting the code).
+    bottom2=51;
+    linear_extrude( height=thick+overlap, center=true, convexity=10 )
+        projection( cut=false ) rotate( [ -90, 0, 0] ) union()
+    {
+        // bridge of the nose.
+        translate( [ 0, 0, -h_nose/2 ] ) cylinder( h=h_nose, r1=bottom/2, r2=top/2, center=true );
+        // match with the lower opening in the body.
+        translate( [ 0, 0, -0.65*h_nose ] ) cylinder( h=0.7*h_nose, r1=bottom2/2, r2=top/2, center=true );
+        sphere( r=top/2, center=true );
+    }
+}
+
+// Definition of the slot where the lens holder mounts
+//
+// diam  - lens diameter
+// thick - thickness of plate
+// wall  - thickness extra wall for holder cap
+module lens_slot( diam, thick, wall=1 )
+{
+    offset = (IPD_max-IPD_min)/2+wall;
+    translate( [ offset/2, 0, 0 ] ) rect_oval( diam/2, offset, thick );
+}
+
+// Combination of a rectangle and two circles extrude to height.
+//
+// radius - radius of the circles at each end
+// offset - distance between the centers of the circles
+// height - height of the structure
+module rect_oval( radius, offset, height )
+{
+    hull()
+    {
+        translate( [-offset/2, 0, 0 ] ) cylinder( h=height, r=radius, center=true );
+        translate( [ offset/2, 0, 0 ] ) cylinder( h=height, r=radius, center=true );
+    }
+}
+
+// Tube version of the combination of a rectangle and two circles extrude to
+//   height.
+//
+// radius - radius of the circles at each end
+// offset - distance between the centers of the circles
+// height - height of the structure
+// wall   - thickness of tube wall
+module rect_oval_tube( radius, offset, height, wall )
+{
+    difference()
+    {
+        rect_oval( radius, offset, height, wall );
+        rect_oval( radius-wall, offset, height+overlap, wall );
+    }
+}
+
+// Lens holder (eye side)
+//
+// lens - descriptor for the lens we're using
+module holder( lens )
+{
+    rad=lens_rad(lens);
+    eye_rim=2;
+    eye_thick=1;
+    difference()
+    {
+        union()
+        {
+            cylinder_tube( height=holder_len, radius=rad+holder_wall, wall=holder_wall+slide_gap );
+            cylinder_tube( height=eye_thick, radius=rad+holder_wall+eye_rim, wall=holder_wall+eye_rim );
+        }
+        translate( [ 0, 0, holder_len] ) rotate( [180,0,0] ) lens_model( lens );
+        translate( [ 0, 0, holder_len-lens_rim_thickness(lens)/2] )
+            cylinder( h=lens_rim_thickness(lens)+slide_gap, r=lens_rad(lens)+slide_gap );
+    }
+}
+
+// Cap for lens holder
+//
+// lens - descriptor for the lens we're using
+module holder_cap( lens )
+{
+    rad=lens_rad(lens);
+    outer_rad=rad+holder_wall+cap_wall;
+
+    intersection()
+    {
+        union()
+        {
+            cylinder_tube( height=cap_len, radius=rad+holder_wall+thin_wall+fit_gap, wall=thin_wall );
+            difference()
+            {
+                cylinder_tube( height=rim_thick, radius=outer_rad, wall=holder_wall+cap_wall+thin_wall );
+                translate( [ 0, 0, cap_top] ) lens_model( lens );
+                translate( [ 0, 0, lens_rim_thickness(lens)/2] )
+                    cylinder( h=lens_rim_thickness(lens)+slide_gap, r=rad+slide_gap );
+            }
+        }
+        union()
+        {
+            translate( [ 0, 0, cap_len/2+rim_thick ] )
+                cube( [ 2*outer_rad, 2*rad+thin_wall, cap_len ], center=true );
+            cube( [ 2*outer_rad, 2*outer_rad, 2*rim_thick ], center=true );
+        }
+    }
+}
 
 // Calculate the nominal distance between the wearer's eye and the phone
 //   given a description of the lens.
 function nominal_eye_phone_distance(lens) = lens_phone_offset(lens)+eye_lens_distance+lens_thickness(lens);
-
-// Crescent with a stick to hold the lens
-// half_width  - Approximately half of the width of the visor
-// lens        - lens descriptor
-module lens_holder( half_width, lens )
-{
-    rad_lens=lens_diam( lens )/2;
-    arm_len=half_width-lens_diam(lens);
-    // difference in diameter between dlens and outer circle of holder
-    rim=2;
-    indent=0.25;
-    translate( [0,0,inner_width/2] ) union()
-    {
-        difference()
-        {
-            // outer part of lens holder
-            cylinder( h=inner_width, r=rad_lens+rim, center=true );
-            // inner opening around the lens.
-            cylinder( h=inner_width+1, r=rad_lens-0.1, center=true );
-            // indention for the lens rim.
-            cylinder( h=lens_rim_thickness(lens), r=rad_lens+indent, center=true );
-            // opening
-            translate( [ -rad_lens, 0, 0 ] ) cube( [ 10, 0.5, 10 ], center=true );
-        }
-        translate( [arm_len/2+rad_lens+indent, 0, -gap/2 ] ) cube( [ arm_len, inner_height-gap, inner_width-gap ], center=true );
-        translate( [arm_len+rad_lens+indent, 0, -gap/2 ] ) cylinder( h=inner_width-gap, r=(inner_height-gap)/2, center=true, $fn=8 );
-    }
-}
-
-// The part of the slider that sits outside the visor, connects with the inside
-//  part to support the lens holder.
-//   wall - thickness of the wall of the visor
-//   angle - the angle that the side of the visor makes with the perpendicular
-//           of the phone
-module slider_outside( wall, angle )
-{
-    b_thick=2;
-    inset=b_thick + wall;
-    length=10;
-    height=b_thick+1.1*wall;
-    width=slot_width+2*b_thick;
-    intersection()
-    {
-        difference()
-        {
-            union()
-            {
-                translate( [0,0,b_thick/2] ) cube( [ length, width, b_thick ], center=true );
-                rotate( [0,angle,0] ) translate( [-0.25,0,(inset+b_thick)/2] ) cube( [ length, slot_width-gap/2, inset ], center=true );
-            }
-            rotate( [0,angle,0] ) translate( [-0.25,0,2.5] ) cube( [ inner_width+3, inner_height+3, inset+6 ], center=true );
-            // mark top
-            translate( [length/2, 0, 1.5*b_thick] ) rotate( [0,90,0] ) cylinder( h=1, r=0.5, center=true, $fn=8 );
-        }
-        translate([0,0,height/2]) cube( [length, width, height], center=true );
-    }
-}
-
-// The part of the slider that sits inside the visor, connects with the outside
-//  part to support the lens holder.
-//   wall - thickness of the wall of the visor
-//   angle - the angle that the side of the visor makes with the perpendicular
-//           of the phone
-module slider_inside( wall, angle )
-{
-    b_thick=2;
-    inset=2*b_thick + wall;
-    length=10;
-    height=2*b_thick+1.08*wall;
-    width=slot_width+2*b_thick;
-    intersection()
-    {
-        difference()
-        {
-            union()
-            {
-                translate( [0,0,b_thick/2] ) cube( [ length, slot_width+2*b_thick, b_thick ], center=true );
-                rotate( [0,angle,0] ) translate( [-0.25,0,(inset+b_thick)/2] ) cube( [ inner_width+3-gap, inner_height+3-gap, inset ], center=true );
-            }
-            rotate( [0,angle,0] ) translate( [-0.25,0,3.5] ) cube( [ inner_width+gap, inner_height+gap, inset+6 ], center=true );
-            // mark top
-            translate( [-length/2+2, 0, 2.5*b_thick] ) rotate( [0,90,0] ) cylinder( h=1, r=0.5, center=true, $fn=8 );
-        }
-        translate([0,0,height/2]) cube( [length, width, height], center=true );
-    }
-}
-
-// Definition of the slots in the sides of the visor that support the optics.
-//  fwidth - the front width of the visor
-//  z_eyes - distance from the front of the visor to the user's eyes
-//  wall   - thickness of the visor wall
-module optics_slots( fwidth, z_eyes, wall )
-{
-    translate( [ fwidth/2-wall, 0, 0] ) single_optics_mount_slot( z_eyes, wall );
-    translate( [-fwidth/2+wall, 0, 0] ) single_optics_mount_slot( z_eyes, wall );
-}
-
-// Define one slot
-//  z_eyes - distance from the front of the visor to the user's eyes
-//  wall   - thickness of the visor wall
-module single_optics_mount_slot( z_eyes, wall )
-{
-    hull()
-    {
-        for( z = [ min_bfl, z_eyes-eye_lens_distance/2] )
-        {
-            translate( [0, 0, z] ) rotate( [0,90,0] ) scale( [0.5,1,1] ) cylinder( h=wall*6, r=slot_width/2, center=true );
-        }
-    }
-}
 

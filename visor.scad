@@ -1,4 +1,7 @@
-// Definition of the aetherAR secondsight visor
+// secondsight Visor project
+// Copyright 2013 by secondsight.io, Some Rights Reserved.
+//
+// Main definition of the secondsight visor
 
 // Use dimensions for Galaxy S4
 //    Dimensions are portrait mode.
@@ -18,8 +21,12 @@ IPD_avg=63;
 include <user_params.scad>;
 
 variant="C";
-plate="both"; // options are optics, body, both, assembled
+//plate="body";
+//plate="optics_support";
+//plate="lens_holders";
+plate="assembled";
 
+overlap=0.1;
 strap_width=40;
 front_width=126;
 height=67;
@@ -41,40 +48,51 @@ include <visor_elastic_mount.scad>;
 function calc_temple_distance( lens ) = lens_diam(lens)+IPD_max+2*thick+12; // 12 is for optics mount hardware.
 function temple_distance( lens ) = max(user_temple_distance,calc_temple_distance( lens ));
 function side_slope( width, lens ) = atan2( (width-temple_distance(lens))/2, depth );
-function is_print_body( p ) = p == "body" || p == "both" || p == "assembled";
-function is_print_optics( p ) = p == "optics" || p == "both";
+function is_print_body( p ) = p == "body" || p == "assembled";
+function is_print_optics( p ) = p == "optics";
 
-if( variant == "C" )
+if( plate == "lens_holders" )
 {
-    // Single smooth body
-    visor_plate( phone_height, phone_width, plate, lens )
-        smooth_body( phone_height, phone_width, depth, thick, temple_distance(lens), forehead_depth );
+    optics_lens_holders( lens );
 }
-if( variant == "D" )
+else if( plate == "optics_support" )
 {
-    // Single smooth body, with corner grooves
-    visor_plate( phone_height, phone_width, plate, lens )
-        grooved_body( phone_height, phone_width, depth, thick, temple_distance(lens), forehead_depth );
+    optics_support_plate( height, lens );
 }
-if( variant == "test" )
+else
 {
-//    rotate( [0,0,90] ) assign( angle=side_slope( phone_height, lens ) )
-//    {
-//        lens_holder( (phone_height+5)/2, lens_descriptor( "b&l 35 5x" ) );
-//    }
-    intersection()
+    if( variant == "C" )
+    {
+        // Single smooth body
+        visor_plate( phone_height, phone_width, plate, lens )
+            smooth_body( phone_height, phone_width, depth, thick, temple_distance(lens), forehead_depth, lens_phone_offset(lens)-plate_thick );
+    }
+    if( variant == "D" )
+    {
+        // Single smooth body, with corner grooves
+        visor_plate( phone_height, phone_width, plate, lens )
+            grooved_body( phone_height, phone_width, depth, thick, temple_distance(lens), forehead_depth, lens_phone_offset(lens)-plate_thick );
+    }
+    if( variant == "test" )
     {
         difference()
         {
-            translate( [0,0,-60] )
-            visor_plate( phone_height, phone_width, "body", lens )
-                grooved_body( phone_height, phone_width, depth, thick, face_width(lens), forehead_depth );
-            translate( [ 0.1*phone_height, 0, phone_height/2+3 ] ) cube( phone_height, center=true );
+            translate( [ 0, 0, -32 ] ) {
+                smooth_body( phone_height, phone_width, depth, thick, temple_distance(lens), forehead_depth, lens_phone_offset(lens)-plate_thick );
+                if( plate == "assembled" )
+                {
+                    color( "tan" ) translate( [ 0, 0, lens_phone_offset( lens )-plate_thick] ) front_lens_plate( lens, height, temple_distance( lens ) );
+                }
+            }
+            translate( [ 0, 0,-0.75*phone_height ] ) cube( 1.5*phone_height, center=true );
+            translate( [ 0, 0, 0.75*phone_height+18 ] ) cube( 1.5*phone_height, center=true );
         }
-        translate( [ -phone_height/2, 0, phone_height/2 ] ) cube( phone_height, center=true );
+        if( plate != "assembled" )
+        {
+            translate( [ 0, height+5, 0]  ) front_lens_plate( lens, height, temple_distance( lens ) );
+        }
     }
 }
-
 
 // Everything to be printed for the visor
 //  width -   front width of the visor
@@ -89,13 +107,21 @@ module visor_plate( width, height, plate, lens )
         difference()
         {
             child(0);
-            optics_slots( width, eyes, thick );
             if( plate == "assembled" )
             {
                 // remove strap mount supports if assembled
                 both_strap_mounts( temple_distance(lens), depth, thick ) remove_strap_support( thick );
             }
             translate( [0, height/2, 7] ) rotate( [ 90, 0, 180 ] ) logo();
+        }
+
+        if( plate == "assembled" )
+        {
+            translate( [ 0, -height/2+thick/2, 1.5*thick ] ) rotate( [ 180, 0, 0 ] ) phone_support_ridge( thick, 52, 32, 3 );
+        }
+        else
+        {
+            phone_support_ridge( thick, 52, 32, 3 );
         }
     }
     if( is_print_optics( plate ) )
@@ -105,25 +131,41 @@ module visor_plate( width, height, plate, lens )
     if( plate == "assembled" )
     {
         optics_assembled( width, height, lens );
+        echo( "If this doesn't render correctly, got to advanced preferences and change 'Turn off rendering' to 3000 or greater." );
     }
 }
 
-// Plate for printing the lenses
+// Plate for printing the lens whole support system
 //  width  -   front width of visor
 //  height -   front height of visor
 //  lens   -   descriptor for the lenses to use
 module optics_plate( width, height, lens )
 {
-    angle=side_slope( width, lens );
-    xoff=lens_diam( lens ) < 40 ? 42 : 38;
-    translate( [ 10,  20, 0] ) slider_inside( thick, angle );
-    translate( [-10,  20, 0] ) slider_inside( thick, angle );
-    translate( [ 10, -20, 0] ) slider_outside( thick, angle );
-    translate( [-10, -20, 0] ) slider_outside( thick, angle );
-    translate( [-xoff,  5, 0] ) lens_holder( (phone_height+5)/2, lens );
-    translate( [ xoff, -5, 0] ) rotate( [0, 0, 180] ) lens_holder( (phone_height+5)/2, lens );
+    translate( [ 0, height, 0 ] ) front_lens_plate( lens, height, temple_distance( lens ) );
+    translate( [ 0,-height, 0 ] ) lens_plate( lens, height, temple_distance( lens ) );
+    translate( [ 58, 12, 0] ) holder( lens );
+    translate( [ 20, -12, 0] ) holder_cap( lens );
+    translate( [-20, 12, 0] ) holder( lens );
+    translate( [-58, -12, 0] ) holder_cap( lens );
+}
 
-    translate( [ 0, -height/2-10, 0] ) phone_support_ridge( thick, 52, 32, 3 );
+// Plate for printing the lens support plates
+//  height -   front height of visor
+//  lens   -   descriptor for the lenses to use
+module optics_support_plate( height, lens )
+{
+    translate( [ 0, height/2+5, 0 ] ) front_lens_plate( lens, height, temple_distance( lens ) );
+    translate( [ 0,-height/2-5, 0 ] ) lens_plate( lens, height, temple_distance( lens ) );
+}
+
+// Plate for printing the lens holders
+//  lens   -   descriptor for the lenses to use
+module optics_lens_holders( lens )
+{
+    translate( [ 35, 35, 0] ) holder( lens );
+    translate( [ 35,-35, 0] ) holder_cap( lens );
+    translate( [-35, 35, 0] ) holder( lens );
+    translate( [-35,-35, 0] ) holder_cap( lens );
 }
 
 // Display the optics in it's assembled form
@@ -135,26 +177,22 @@ module optics_assembled( width, height, lens )
     xoff=IPD_avg/2;
     lens_z=lens_phone_offset( lens );
 
-    // non-tweakable
-    dlens=lens_diam( lens );
-    angle=side_slope( width, lens );
-    theta=90-angle;
-    mount_x=width/2-lens_z*sin(angle);
+    translate( [ 0, 0, lens_z-plate_thick] ) front_lens_plate( lens, height, temple_distance( lens ) );
+    translate( [ 0, 0, lens_z+rim_thick] ) color( "tan" ) lens_plate( lens, height, temple_distance(lens) );
+    translate( [xoff, 0, lens_z] ) union()
+    {
+        color( "orange" ) translate( [0,0,holder_len+cap_top+fit_gap] ) rotate( [180,0,0] ) holder( lens );
+        color( "yellowgreen" ) holder_cap( lens );
 
-    // Left side assembly
-    color( "Khaki" ) translate( [-mount_x+5,  0, lens_z] ) rotate( [0, theta,180] ) slider_inside( thick, angle );
-    color( "Tan" )   translate( [-mount_x-2, 0, lens_z] ) rotate( [0,180+theta,180] ) slider_outside( thick, angle );
-    color( "Olive" ) translate( [-xoff, 0, lens_z-2] ) rotate( [0, 0, 180] ) lens_holder( (phone_height+5)/2, lens );
-    // right side assembly
-    color( "Khaki" ) translate( [ mount_x-5,  0, lens_z] ) rotate( [0, theta,0] ) slider_inside( thick, angle );
-    color( "Tan" )   translate( [ mount_x+2, 0, lens_z] ) rotate( [0,180+theta,0] ) slider_outside( thick, angle );
-    color( "Olive" ) translate( [ xoff, 0, lens_z-2] ) lens_holder( (phone_height+5)/2, lens );
+ %      translate( [ 0, 0, plate_thick ] ) lens_model( lens );
+    }
+    translate( [-xoff, 0, lens_z] ) union()
+    {
+        color( "orange" ) translate( [0,0,holder_len+cap_top+fit_gap] ) rotate( [180,0,0] ) holder( lens );
+        color( "yellowgreen" ) holder_cap( lens );
 
-    color( "Orange" ) translate( [ 0, -height/2+1, 5] ) rotate( [ 180, 0, 0 ] ) phone_support_ridge( thick, 52, 32, 3 );
-
-    // lenses
-%   translate( [-xoff, 0, lens_z] ) cylinder( h=1, r=dlens/2, center=true );
-%   translate( [ xoff, 0, lens_z] ) cylinder( h=1, r=dlens/2, center=true );
+ %      translate( [ 0, 0, plate_thick ] ) lens_model( lens );
+    }
 }
 
 module logo()
