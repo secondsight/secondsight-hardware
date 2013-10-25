@@ -155,6 +155,13 @@ module grooved_body( fwidth, fheight, depth, wall, face, forehead_depth, zoff )
     }
 }
 
+strap_fudge=1;
+mount_length=40;
+overlap=0.1;
+function mount_width(wall,strap)=strap+3.5*wall+strap_fudge;
+function mount_thickness(wall)=2*wall;
+function support_length(thick)=2.5*thick+overlap;
+
 // Take a strap mount as a child and translate/rotate/duplicate as needed to
 //  attach to both sides of the visor.
 //
@@ -164,18 +171,11 @@ module grooved_body( fwidth, fheight, depth, wall, face, forehead_depth, zoff )
 module both_strap_mounts( face, depth, wall )
 {
     d_angle=5;
-    z_offset=depth-5;
-    x_offset=face/2-0.25*wall;
+    z_offset=depth-8;
+    x_offset=(face+mount_thickness(wall))/2-0.5;
     translate([ x_offset, 0, z_offset]) rotate([180,-90+d_angle,0]) child( 0 );
     translate([-x_offset, 0, z_offset]) rotate([0,-90-d_angle,0]) child( 0 );
 }
-
-strap_fudge=1;
-mount_length=35;
-overlap=0.2;
-function mount_width(wall,strap)=strap+3.5*wall+strap_fudge;
-function mount_thickness(wall)=2*wall;
-function support_length(thick)=2.5*thick+overlap;
 
 // Mount point for the strap.
 //   lying flat, must be rotated up to mount.
@@ -211,10 +211,10 @@ module strap_mount( wall )
             // support
             for( y = [ strap_width/4, 0, -strap_width/4 ] )
             {
-                translate( [ 1.8*thickness, y, 0] ) strap_support( thickness );
+                translate( [ 2*thickness, y, 0] ) strap_support( thickness );
             }
         }
-        translate( [-length/2-wall,0,0] ) rotate([0,-20,0]) cube( [1.5*width,1.5*width,thickness], center=true );
+        translate( [-length/2-wall,0,0] ) rotate([0,-12,0]) cube( [1.5*width,1.5*width,thickness], center=true );
         // holes to increase vertical support strength
         for( pos=[  [0,0], [-0.25, -0.25], [-0.25,0.25], [0.25,-0.25], [0.25,0.25] ] )
         {
@@ -232,7 +232,7 @@ module strap_mount( wall )
 //  thickness - the thickness of the mount hardware.
 module strap_support( thickness )
 {
-    cube( [ support_length( thickness ), 0.5, thickness ], center=true );
+    cube( [ support_length( thickness )-2, 0.5, thickness ], center=true );
 }
 
 // Define a model that can be differenced from the visor body in the right
@@ -250,8 +250,8 @@ module remove_strap_support( wall )
         {
             for( y = [ strap_width/4, 0, -strap_width/4 ] )
             {
-                translate( [ 1.8*thickness+0.75, y, 0] )
-                    scale( [1,2,1.1] ) strap_support( thickness );
+                translate( [ 2*thickness+0.5, y, 0] )
+                    scale( [0.915,2,1.1] ) strap_support( thickness );
             }
         }
         translate( [length/2 - 2.6*wall,width/2,0] ) rotate( [90,0,0] )
