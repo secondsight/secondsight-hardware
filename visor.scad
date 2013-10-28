@@ -22,8 +22,8 @@ include <user_params.scad>;
 
 // Choose a variant, only uncomment one.
 
-//variant="C";
-variant="D";
+variant="C";
+//variant="D";
 
 // Choose a plate, only uncomment one.
 
@@ -40,7 +40,6 @@ front_width=126;
 height=67;
 thick=3;
 lens_name="b&l 35 5x";
-//lens_name="edmund 25x50";
 
 include <lenses.scad>;
 lens=lens_descriptor( lens_name );
@@ -181,8 +180,10 @@ module assembled_plate( width, height, wall, lens )
     }
 
     // This needs to be more generic: phone_holder_assembled?
-    translate( [ 0, -height/2, 1.5*wall ] ) rotate( [ 180, 0, 0 ] )
-        color( "goldenrod" ) phone_support_ridge( wall, 52, 32, 3 );
+//    translate( [ 0, -height/2, 1.5*wall ] ) rotate( [ 180, 0, 0 ] )
+//        color( "goldenrod" ) phone_support_ridge( wall, 52, 32, 3 );
+    translate( [ 0, 0, -(phone_thickness+2) ] ) 
+        color( "goldenrod" ) phone_holder( phone_height, phone_width, phone_thickness, 2, slide_gap );
 
     optics_assembled( width, height, lens );
     echo( "If this doesn't render correctly, go to advanced preferences and change 'Turn off rendering' to 3000 or greater." );
