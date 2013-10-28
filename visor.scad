@@ -107,18 +107,22 @@ else if( plate == "test" )
 //      translate( [0,0,-depth/2] ) cube( [phone_height, phone_height, depth], center=true );
 //  }
 
-if( false )
-{
-    intersection()
+    if( false )
     {
-        smooth_body( phone_height, phone_width, depth, thick, temple_distance(lens), forehead_depth, lens_phone_offset(lens)-plate_thick );
-        translate( [ 0, 0, 5 ] ) cube( [ phone_height+10, phone_width+10, 10 ], center=true );
+        intersection()
+        {
+            smooth_body( phone_height, phone_width, depth, thick, temple_distance(lens), forehead_depth, lens_phone_offset(lens)-plate_thick );
+            translate( [ 0, 0, 5 ] ) cube( [ phone_height+10, phone_width+10, 10 ], center=true );
+        }
     }
-}
-else
-{
-    phone_holder( phone_height, phone_width, phone_thickness, 2, slide_gap );
-}
+    else
+    {
+        intersection()
+        {
+            translate( [ 0, 0,-8 ] ) phone_holder( phone_height, phone_width, phone_thickness, 2, slide_gap );
+            translate( [ 0, 0, 5 ] ) cube( [ phone_height+10, phone_width+10, 10 ], center=true );
+        }
+    }
 }
 // end of plate dispatch
 
