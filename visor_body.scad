@@ -35,7 +35,8 @@ module make_body( fwidth, fheight, depth, wall, face, forehead_depth )
             }
             // add straps
             both_strap_mounts( face, depth, wall ) strap_mount( wall );
-            phone_mount_wide( fwidth, fheight, wall );
+            // This needs to be something more generic: phone_mount_attachment?
+            phone_mount_add( fwidth, fheight, wall );
         }
         // This must be subtracted last to deal with any added parts that might
         //  intrude on the middle volume.

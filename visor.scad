@@ -22,8 +22,8 @@ include <user_params.scad>;
 
 // Choose a variant, only uncomment one.
 
-variant="C";
-//variant="D";
+//variant="C";
+variant="D";
 
 // Choose a plate, only uncomment one.
 
@@ -31,8 +31,8 @@ variant="C";
 //plate="optics_support";
 //plate="lens_holders";
 //plate="full_optics";
-plate="assembled";
-//plate="test";
+//plate="assembled";
+plate="test";
 
 overlap=0.1;
 strap_width=40;
@@ -51,7 +51,8 @@ eyes=nominal_eye_phone_distance( lens );
 depth=eyes-eye_forehead_offset+forehead_depth;
 
 include <visor_body.scad>;
-include <visor_elastic_mount.scad>;
+//include <visor_elastic_mount.scad>;
+include <visor_slide_phone_mount.scad>;
 
 function calc_temple_distance( lens ) = lens_diam(lens)+IPD_max+2*thick+12; // 12 is for optics mount hardware.
 function temple_distance( lens ) = max(user_temple_distance,calc_temple_distance( lens ));
@@ -100,11 +101,24 @@ else if( plate == "assembled" )
 else if( plate == "test" )
 {
 //        optics_plate_test();
-    difference()
+//  difference()
+//  {
+//      translate( [0,0,-depth/2-10] ) smooth_body( phone_height, phone_width, depth, thick, temple_distance(lens), forehead_depth, lens_phone_offset(lens)-plate_thick );
+//      translate( [0,0,-depth/2] ) cube( [phone_height, phone_height, depth], center=true );
+//  }
+
+if( false )
+{
+    intersection()
     {
-        translate( [0,0,-depth/2-10] ) smooth_body( phone_height, phone_width, depth, thick, temple_distance(lens), forehead_depth, lens_phone_offset(lens)-plate_thick );
-        translate( [0,0,-depth/2] ) cube( [phone_height, phone_height, depth], center=true );
+        smooth_body( phone_height, phone_width, depth, thick, temple_distance(lens), forehead_depth, lens_phone_offset(lens)-plate_thick );
+        translate( [ 0, 0, 5 ] ) cube( [ phone_height+10, phone_width+10, 10 ], center=true );
     }
+}
+else
+{
+    phone_holder( phone_height, phone_width, phone_thickness, 2, slide_gap );
+}
 }
 // end of plate dispatch
 
@@ -142,6 +156,7 @@ module body_plate( width, height, wall )
         translate( [0, height/2, 7] ) rotate( [ 90, 0, 180 ] ) logo();
     }
 
+    // This needs to be more generic: phone_holder?
     phone_support_ridge( wall, 52, 32, 3 );
 }
 
@@ -161,6 +176,7 @@ module assembled_plate( width, height, wall, lens )
         translate( [0, height/2, 7] ) rotate( [ 90, 0, 180 ] ) logo();
     }
 
+    // This needs to be more generic: phone_holder_assembled?
     translate( [ 0, -height/2, 1.5*wall ] ) rotate( [ 180, 0, 0 ] )
         color( "goldenrod" ) phone_support_ridge( wall, 52, 32, 3 );
 
