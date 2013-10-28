@@ -118,7 +118,7 @@ else if( plate == "test" )
     {
         intersection()
         {
-            translate( [ 0, 0,-8 ] ) phone_holder( phone_height, phone_width, phone_thickness, 2, slide_gap );
+            translate( [ 0, 0,-8 ] ) phone_holder( phone_height, phone_width, phone_thickness, thick, slide_gap );
             translate( [ 0, 0, 5 ] ) cube( [ phone_height+10, phone_width+10, 10 ], center=true );
         }
     }
@@ -182,8 +182,8 @@ module assembled_plate( width, height, wall, lens )
     // This needs to be more generic: phone_holder_assembled?
 //    translate( [ 0, -height/2, 1.5*wall ] ) rotate( [ 180, 0, 0 ] )
 //        color( "goldenrod" ) phone_support_ridge( wall, 52, 32, 3 );
-    translate( [ 0, 0, -(phone_thickness+2) ] ) 
-        color( "goldenrod" ) phone_holder( phone_height, phone_width, phone_thickness, 2, slide_gap );
+    translate( [ 0, 0, -(phone_thickness+thick+2*overlap) ] ) 
+        color( "goldenrod" ) phone_holder( phone_height, phone_width, phone_thickness, thick, slide_gap );
 
     optics_assembled( width, height, lens );
     echo( "If this doesn't render correctly, go to advanced preferences and change 'Turn off rendering' to 3000 or greater." );

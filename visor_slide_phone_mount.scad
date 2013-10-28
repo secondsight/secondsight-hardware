@@ -12,19 +12,20 @@ overlap=0.1;
 //  wall    - thickness of walls
 module phone_mount_add( fwidth, fheight, wall )
 {
-    translate( [ 0, fheight/2, 0 ] ) slide_rail( 0.85*fwidth );
-    translate( [ 0,-fheight/2, 0 ] ) mirror( [ 0, 1, 0 ] ) slide_rail( 0.85*fwidth );
+    translate( [ 0, fheight/2, 0 ] ) slide_rail( 0.85*fwidth, wall );
+    translate( [ 0,-fheight/2, 0 ] ) mirror( [ 0, 1, 0 ] ) slide_rail( 0.85*fwidth, wall );
 //  translate( [ fwidth/2, 0, 0 ] ) rotate( [ 0, 0, -90 ] ) slide_rail( 0.8*fheight );
 }
 
-module slide_rail( length )
+module slide_rail( length, wall )
 {
-    width=1.5;
+    width=2.5;
     thickness=2;
-    translate( [ 0, (width-overlap)/2, thickness/2 ] ) difference()
+    rside=1.5*width;
+    translate( [ 0, wall-width-overlap, thickness/2 ] ) difference()
     {
         cube( [ length, width+overlap, thickness ], center=true );
-        translate( [ 0, 0.75*width, 0.75*width] ) rotate( [ 45, 0, 0 ] ) cube( [ length+overlap, 1.5*width, 1.5*width ], center=true );
+        translate( [ 0, rside/2, rside/2 ] ) rotate( [ 45, 0, 0 ] ) cube( [ length+overlap, rside, rside ], center=true );
         translate( [ length/2, width/2, 0 ] ) rotate( [ 0, 0, 45 ] ) cube( 1.5*width, center=true );
         translate( [-length/2, width/2, 0 ] ) rotate( [ 0, 0, 45 ] ) cube( 1.5*width, center=true );
     }
@@ -48,32 +49,25 @@ module phone_holder( height, width, thick, wall, space )
             rounded_plate( x_inside+2*wall, y_inside+2*wall, z_inside+wall, r_corner+wall );
             translate( [ 0, 0, wall ] ) rounded_plate( x_inside, y_inside, z_inside+overlap, r_corner );
         }
-       translate( [ 0, width/2, z_top] ) holder_rail( 0.85*height, wall );
-       translate( [ 0,-width/2, z_top] ) mirror( [ 0, 1, 0 ] ) holder_rail( 0.85*height, wall/2 );
-       translate( [ (height+wall)/2+overlap, 0, z_top+1 ] ) cube( [wall,5,wall] , center=true );
+        translate( [ 0, width/2+wall, z_top] ) holder_rail( 0.85*height, wall );
+        translate( [ 0,-width/2-wall, z_top] ) mirror( [ 0, 1, 0 ] ) holder_rail( 0.85*height, wall );
+        translate( [ (height+2*wall)/2-1+2*overlap, 0, z_top+1 ] ) cube( [wall-1,5,wall] , center=true );
     }
 }
 
 module holder_rail( length, wall )
 {
-    width=1.5;
+    width=2.5;
     thickness=2;
-    union()
+    rside=1.5*width;
+    translate( [ 0, width-2*wall-overlap, thickness/2 ] ) difference()
     {
-        translate( [ 0, width/2-overlap, thickness/2 ] ) difference()
+        translate( [ 0, width, overlap ] ) cube( [ length, width, thickness ], center=true );
+        translate( [ 0, width/2-0.25, 0 ] ) difference()
         {
-            translate( [ 0, width/2, 0 ] ) cube( [ length, width, thickness ], center=true );
-            translate( [ 0, 0, overlap ] ) difference()
-            {
-                cube( [ length+overlap, width+2*overlap, thickness ], center=true );
-                translate( [ 0, 0.75*width, 0.75*width] ) rotate( [ 45, 0, 0 ] ) cube( [ length+overlap*2, 1.5*width, 1.5*width ], center=true );
-            }
+            cube( [ length+overlap, width+2*overlap, thickness ], center=true );
+            translate( [ 0, rside/2, rside/2] ) rotate( [ 45, 0, 0 ] ) cube( [ length+overlap*2, rside, rside ], center=true );
         }
-//  *     translate( [ 0, (width+wall-overlap)/2, thickness/2-1.5*wall ] ) intersection()
-//        {
-//            cube( [ length, width+overlap, width+wall ], center=true );
-//            translate( [0, -0.45*(width+wall), 0.45*(width+wall) ] ) rotate( [ 45, 0, 0 ] ) cube( [ length+overlap, 1.5*(width+wall), 1.5*(width+wall) ], center=true );
-//        }
     }
 }
 
