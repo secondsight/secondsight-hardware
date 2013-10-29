@@ -5,6 +5,7 @@
 
 include <polybody.scad>;
 include <optic_plate_support.scad>;
+include <tuning.scad>;
 
 // Factor out all of the logic that makes the adds everything except the
 // core body shape. In addition to the supplied parameters, this module expects
@@ -20,7 +21,6 @@ include <optic_plate_support.scad>;
 //  forehead_depth - distance from forehead touch to temples of viewer
 module make_body( fwidth, fheight, depth, wall, face, forehead_depth )
 {
-    protrude=0.1;
     difference()
     {
         union()
@@ -68,7 +68,6 @@ module support_ledge( len )
 //  zoff           - distance from phone to support plate
 module smooth_body( fwidth, fheight, depth, wall, face, forehead_depth, zoff )
 {
-    protrude=0.1;
     phone_top=116;   // TODO: should depend on fwidth
     phone_side=55.8; // TODO: should depend on fheight
     face_top=63;     // TODO: should depend on face
@@ -84,18 +83,18 @@ module smooth_body( fwidth, fheight, depth, wall, face, forehead_depth, zoff )
         );
 
         // hollow
-        translate( [0,0,-protrude] ) difference()
+        translate( [0,0,-overlap] ) difference()
         {
             union()
             {
                 polybody(
                     make_poly_inside( fwidth, fheight, phone_top, phone_side, wall ),
                     make_poly_inside( face, height, face_top, face_side, wall ),
-                    depth+2*protrude
+                    depth+2*overlap
                 );
-                support_ledge_slots( face/2-wall, height/2-wall, zoff+protrude );
+                support_ledge_slots( face/2-wall, height/2-wall, zoff+overlap );
             }
-            support_ledge_diff( face/2-wall, height/2-wall, face_top, face_side, zoff+protrude );
+            support_ledge_diff( face/2-wall, height/2-wall, face_top, face_side, zoff+overlap );
         }
     }
 }
@@ -124,7 +123,6 @@ module support_ledge_diff( x_off, y_off, top, side, z_off )
 //  forehead_depth - distance from forehead touch to temples of viewer
 module grooved_body( fwidth, fheight, depth, wall, face, forehead_depth, zoff )
 {
-    protrude=0.1;
     phone_top=116;   // TODO: should depend on fwidth
     phone_side=55.8; // TODO: should depend on fheight
     face_top=63;     // TODO: should depend on face
@@ -140,25 +138,24 @@ module grooved_body( fwidth, fheight, depth, wall, face, forehead_depth, zoff )
         );
 
         // hollow
-        translate( [0,0,-protrude] ) difference()
+        translate( [0,0,-overlap] ) difference()
         {
             union()
             {
                 polybody_concave(
                     make_poly_inside( fwidth, fheight, phone_top, phone_side, wall ),
                     make_poly_inside( face, height, face_top, face_side, wall ),
-                    depth+2*protrude
+                    depth+2*overlap
                 );
-                support_ledge_slots( face/2-wall, height/2-wall, zoff+protrude );
+                support_ledge_slots( face/2-wall, height/2-wall, zoff+overlap );
             }
-            support_ledge_diff( face/2-wall, height/2-wall, face_top, face_side, zoff+protrude );
+            support_ledge_diff( face/2-wall, height/2-wall, face_top, face_side, zoff+overlap );
         }
     }
 }
 
 strap_fudge=1;
 mount_length=40;
-overlap=0.1;
 function mount_width(wall,strap)=strap+3.5*wall+strap_fudge;
 function mount_thickness(wall)=2*wall;
 function support_length(thick)=2.5*thick+overlap;

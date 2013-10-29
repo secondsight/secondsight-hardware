@@ -7,6 +7,7 @@ include <lenses.scad>;
 include <MCAD/regular_shapes.scad>;
 include <polybody.scad>;
 include <optic_plate_support.scad>;
+include <tuning.scad>;
 
 slot_width=10;
 min_bfl=20;
@@ -15,9 +16,6 @@ min_bfl=20;
 eye_lens_distance=12;
 
 // Other
-slide_gap=0.25;
-fit_gap=0.15;
-overlap=0.1;
 holder_wall=1;
 holder_len=eye_lens_distance+1;
 cap_len=7;

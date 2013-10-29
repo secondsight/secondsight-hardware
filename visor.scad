@@ -17,13 +17,11 @@ IPD_avg_male=64.7;
 IPD_avg_female=62.3;
 IPD_avg=63;
 
+include <tuning.scad>;
 // Potentially user-specific data
 include <user_params.scad>;
 
-// Choose a variant, only uncomment one.
-
-variant="C";
-//variant="D";
+variant="C";   // "C" or "D"
 
 // Choose a plate, only uncomment one.
 
@@ -34,7 +32,6 @@ variant="C";
 //plate="assembled";
 plate="test";
 
-overlap=0.1;
 strap_width=40;
 front_width=126;
 height=67;
@@ -106,7 +103,7 @@ else if( plate == "test" )
 //      translate( [0,0,-depth/2] ) cube( [phone_height, phone_height, depth], center=true );
 //  }
 
-    if( false )
+    if( true )
     {
         intersection()
         {

@@ -3,9 +3,7 @@
 //
 //  Define the tab/slot system for attaching the optics plate to the body.
 
-// Fit factors
-slide_gap=0.25;
-fit_gap=0.15;
+include <tuning.scad>;
 
 // Tab sizing
 tab_length=3;

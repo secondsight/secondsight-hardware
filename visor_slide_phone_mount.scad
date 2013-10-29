@@ -3,7 +3,7 @@
 //
 // Definition of slide-on phone support.
 
-overlap=0.1;
+include <tuning.scad>;
 
 // Add modification to the visor body to mount the phone holder.
 //
