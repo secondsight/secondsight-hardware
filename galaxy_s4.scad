@@ -34,21 +34,24 @@ module galaxy_s4()
 module _galaxy_s4_main( ph )
 {
     thick_main=5;
-    x_off=phone_width(ph)/2-phone_radius(ph);
-    y_off=phone_height(ph)/2-phone_radius(ph);
+    ph_rad=phone_radius(ph);
+    x_off=phone_width(ph)/2-ph_rad;
+    y_off=phone_height(ph)/2-ph_rad;
+    chamfer=1;
     hull()
     {
         for( pos=[ [x_off, y_off], [x_off,-y_off], [-x_off,-y_off], [-x_off, y_off] ] )
         {
             translate( [ pos[0], pos[1], 0 ] ) union()
             {
-                cylinder( h=thick_main, r=phone_radius(ph) );
+                translate( [ 0, 0, chamfer ] ) cylinder( h=thick_main-chamfer, r=ph_rad );
                 translate( [ 0, 0, thick_main ] )
-                    scale( [1, 1, (phone_thick(ph)-thick_main)/phone_radius(ph)] ) intersection()
+                    scale( [1, 1, (phone_thick(ph)-thick_main)/ph_rad] ) intersection()
                 {
-                    sphere( r=phone_radius(ph), center=true, $fn=32 );
-                    cube( 2*phone_radius(ph), center=true );
+                    sphere( r=ph_rad, center=true, $fn=32 );
+                    cube( 2*ph_rad, center=true );
                 }
+                cylinder( h=chamfer, r1=ph_rad-0.8*chamfer, r2=ph_rad );
             }
         }
     }
